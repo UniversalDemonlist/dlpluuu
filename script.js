@@ -294,13 +294,11 @@ function createDemonCard(demon) {
 
   const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
-  info.innerHTML = `
-    <h2>#${demon.position} — ${demon.name}</h2>
-    <p><strong>Author:</strong> ${demon.author}</p>
-    <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
-    <p><strong>Verifier:</strong> ${demon.verifier}</p>
-    <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
-  `;
+info.innerHTML = `
+  <h2>${d.name}</h2>
+  <p><strong>Verifier:</strong> ${d.verifier}</p>
+  <p><strong>Score:</strong> ${(350 / Math.sqrt(d.position)).toFixed(2)}</p>
+`;
 
   card.appendChild(img);
   card.appendChild(info);
