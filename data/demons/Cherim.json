@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Cherimoya",
+    "author": "c",
+    "creators": ["c"],
+    "verifier": "astroguy",
+    "verification": "https://youtu.be/5z1Fx_vHyQk?si=1i3rsGKIC7qJ0OS_",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
