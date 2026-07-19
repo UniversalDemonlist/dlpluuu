@@ -292,13 +292,13 @@ function createDemonCard(demon) {
   const info = document.createElement("div");
   info.className = "demon-info";
 
-  const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
+  const score = 350 / Math.sqrt(demon.position);
 
-info.innerHTML = `
-  <h2>${d.name}</h2>
-  <p><strong>Verifier:</strong> ${d.verifier}</p>
-  <p><strong>Score:</strong> ${(350 / Math.sqrt(d.position)).toFixed(2)}</p>
-`;
+  info.innerHTML = `
+    <h2>${demon.name}</h2>
+    <p>Verifier: ${demon.verifier}</p>
+    <p>Score: ${score.toFixed(2)}</p>
+  `;
 
   card.appendChild(img);
   card.appendChild(info);
@@ -307,6 +307,7 @@ info.innerHTML = `
 
   return card;
 }
+
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
