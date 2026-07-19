@@ -1,0 +1,18 @@
+{
+    "id": 109780665,
+    "name": "You When Bee Crusher",
+    "author": "Akunakunn",
+    "creators": ["Akunakunn"],
+    "verifier": "FireXY",
+    "verification": "https://www.youtube.com/watch?v=qTgH6QiRePQ",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "DraconYX",
+            "link": "https://www.youtube.com/watch?v=qTgH6QiRePQ",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

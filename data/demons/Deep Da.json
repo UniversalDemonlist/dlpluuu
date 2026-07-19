@@ -1,0 +1,21 @@
+{
+    "id": 109780665,
+    "name": "The Deep Dark Infinity",
+    "author": "squeeg",
+    "creators": ["squeeg"],
+    "verifier": "Squeeg",
+    "verification": "https://www.youtube.com/watch?v=nujhcG3-Y98",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "description": "A former Top 5, currently a very hard spam challenge.",
+    "thumbnail": "https://img.youtube.com/vi/ADjZwPVS8KQ/maxresdefault.jpg",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        },
+        "G1rcy"
+    ]
+}

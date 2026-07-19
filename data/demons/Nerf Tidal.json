@@ -1,0 +1,37 @@
+{
+    "id": 86407629,
+    "name": "Old Tidal Wave",
+    "author": "Onilink",
+    "creators": ["Onilink"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/9fsZ014qB3s",
+    "percentToQualify": 22,
+    "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/mxR1JQmQyrc/maxresdefault.jpg",
+    "records": [
+        {
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=t0o4wsg36l0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=mxR1JQmQyrc",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "mindzdraf",
+            "link": "https://www.youtube.com/watch?v=alp09R3eG_4",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Taiago",
+            "link": "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

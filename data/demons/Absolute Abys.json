@@ -1,0 +1,19 @@
+{
+    "id": 88201288,
+    "name": "The Absolute Abyss Rebirth",
+    "author": "squeeg",
+    "creators": ["squeeg"],
+    "verifier": "Squeeg",
+    "verification": "https://www.youtube.com/watch?v=dzmFK5iGffs",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "warning": "method",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

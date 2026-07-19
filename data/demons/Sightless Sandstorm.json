@@ -1,0 +1,18 @@
+{
+    "id": 68904235,
+    "name": "Sightless Sandstorm",
+    "author": "BradenBowl",
+    "creators": ["BradenBowl"],
+    "verifier": "BradenBowl",
+    "verification": "https://youtu.be/0DAojkSfR-8",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "id": 78687216,
+    "name": "Disruption",
+    "author": "Ka1sa",
+    "creators": [],
+    "verifier": "TrusTa",
+    "verification": "https://www.youtube.com/watch?v=hS8fT0P0MqU",
+    "percentToQualify": 100,
+    "password": "888888",
+    "records": [
+    {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=1HioxhfEgJM",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=8Z0W3y78S_0&t=1s&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

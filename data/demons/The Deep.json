@@ -1,0 +1,19 @@
+{
+    "id": 88201288,
+    "name": "The Deep Dark",
+    "author": "SomeDudev3",
+    "creators": ["SomeDudeV3"],
+    "verifier": "SomeDudeV3",
+    "verification": "https://youtu.be/S5b1bUQdKck",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/BotkApcNUxY/hqdefault.jpg",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

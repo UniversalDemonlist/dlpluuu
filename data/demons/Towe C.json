@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Tower C Unleashed",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "Apmars",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "background": "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

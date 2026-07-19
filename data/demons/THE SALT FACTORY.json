@@ -1,0 +1,18 @@
+{
+    "id": 113045735,
+    "name": "The Salt Factory",
+    "author": "nickname",
+    "creators": ["nickname"],
+    "verifier": "nickname",
+    "verification": "https://youtu.be/lQ7M-Sgov24",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

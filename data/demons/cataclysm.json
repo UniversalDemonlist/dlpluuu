@@ -1,0 +1,90 @@
+{
+    "id": 3979721,
+    "name": "Cataclysm",
+    "author": "GgB0y",
+    "creators": [],
+    "verifier": "Riot",
+    "verification": "https://www.youtube.com/watch?v=dYt5fp5VGVs",
+    "percentToQualify": 100,
+    "password": "666777",
+    "records": [
+            {
+            "user": "Jeremyiscool",
+            "link": "https://www.youtube.com/watch?v=YrPp75EJncM",
+            "percent": 100,
+            "hz": 240
+        },
+                    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/m9Sey5HDaXY",
+            "percent": 100,
+            "hz": 165
+        },
+        {
+            "user": "GhostPepper",
+            "link": "https://youtu.be/8KP7qwzGgOA",
+            "percent": 100,
+            "hz": 240
+        },
+         {
+            "user": "Cinasek",
+            "link": "https://www.youtube.com/watch?v=UkyHQUi4Tds",
+            "percent": 100,
+            "hz": 360
+        },
+         {
+            "user": "SkeletalVirus",
+            "link": "https://youtu.be/IxohIBmIClY",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "AREDÖ",
+            "link": "https://youtu.be/eYA6oiic25o",
+            "percent": 100,
+            "hz": 144
+        },
+        {
+            "user": "SEDTHEPRODIGY",
+            "link": "https://youtu.be/kysbvuFO28A",
+            "percent": 100,
+            "hz": 120
+        },
+        {
+            "user": "Fruitsalad",
+            "link": "https://youtu.be/3KGhh2MiJpw",
+            "percent": 100,
+            "hz": 144
+        },
+        {
+            "user": "Whacka",
+            "link": "https://youtu.be/zrVBFgAoPJ0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Bladey",
+            "link": "https://youtu.be/ppNzSVyeRdw",
+            "percent": 100,
+            "hz": 144
+        },
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=DW6wZoRQEkQ",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/7iv3KSbEfg8",
+            "percent": 100,
+            "hz": 144
+},
+        {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=Kgc8rwF39as&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

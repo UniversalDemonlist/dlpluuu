@@ -1,0 +1,30 @@
+{
+    "id": 109439644,
+    "name": "Kosetsu",
+    "author": "fwefwe",
+    "creators": ["fwefwe"],
+    "verifier": "Taiago",
+    "verification": "https://youtu.be/hZ8vFX8z_BU",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+         {
+            "user": "Hqmy",
+            "link": "https://www.youtube.com/watch?v=E6YkWA2Ixqs",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Thnnder",
+            "link": "https://www.youtube.com/watch?v=aXhopR6N1YQ",
+            "percent": 100,
+            "hz": 360
+        },
+       {
+            "user": "zLevii",
+            "link": "https://www.youtube.com/watch?v=qBC5VsOTiD0",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

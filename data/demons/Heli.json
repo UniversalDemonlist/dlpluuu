@@ -1,0 +1,18 @@
+{
+    "id": 0,
+    "name": "Heliopolis",
+    "author": "Mindcap",
+    "creators": ["Mindcap"],
+    "verifier": "HAPPY APRIL FOOLS",
+    "verification": "https://www.youtube.com/watch?v=_lY4ne0Cn0A",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=JZ10Un4EXYo",
+            "percent": 1,
+            "hz": 60
+        }
+    ]
+}

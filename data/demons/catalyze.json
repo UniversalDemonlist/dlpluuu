@@ -1,0 +1,17 @@
+{
+    "id": 50333567,
+    "name": "Catalyze",
+    "author": "ZephiroX",
+    "creators": [],
+    "verifier": "MrSpaghetti",
+    "verification": "https://www.youtube.com/watch?v=hF-TVX8wakc",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Shrixy",
+            "link": "https://youtu.be/SkLjZgLa0Fw",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "id": 126242564,
+    "name": "Flamewall",
+    "author": "Narwall",
+    "creators": ["Narwall"],
+    "verifier": "Cuatrocientos",
+    "verification": "https://youtu.be/x4Io4zkWVRw",
+    "percentToQualify": 25,
+    "password": "Not Copyable",
+
+    "history": [1],
+    "description": "A 7-minute long extreme demon megacollab, taking several years to come out. The verified died at 99% multiple times.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/134495078",
+    
+    "records": [
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=x-0Ay06OQ8o&pp=ygUFem9pbms%3D",
+            "percent": 100,
+            "hz": 360  
+        },
+        {
+            "user": "zLevii",
+            "link": "https://www.youtube.com/watch?v=LCd1aljMPWs",
+            "percent": 100,
+            "hz": 360  
+        }
+    ]
+}

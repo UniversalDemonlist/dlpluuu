@@ -1,0 +1,18 @@
+{
+    "id": 116732736,
+    "name": "Tidal Wave (wPopoff)",
+    "author": "Onilink",
+    "creators": ["Onilink"],
+    "verifier": "wPopoff",
+    "verification": "https://m.youtube.com/watch?v=1-ihSeRCpds",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

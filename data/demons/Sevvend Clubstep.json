@@ -1,0 +1,30 @@
+{
+    "id": 116732736,
+    "name": "Sevvend Clubstep",
+    "author": "cherryteam",
+    "creators": ["cherryteam"],
+    "verifier": "maybee",
+    "verification": "https://www.youtube.com/watch?v=TvA8EJTJFCc",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+         {
+            "user": "Komet01",
+            "link": "https://www.youtube.com/watch?v=OKkhc1DY7MA",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "NordstromUSA",
+            "link": "https://www.youtube.com/watch?v=dbZZRh2SXic",
+            "percent": 100,
+            "hz": 360
+        },
+       {
+            "user": "Kaza",
+            "link": "https://www.youtube.com/watch?v=kmNalYkgCG8",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

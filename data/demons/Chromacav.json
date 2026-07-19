@@ -1,0 +1,18 @@
+{
+    "id": 109780665,
+    "name": "Chromacave",
+    "author": "Optation",
+    "creators": ["Optation"],
+    "verifier": "GeoDom",
+    "verification": "https://www.youtube.com/watch?v=tfpsMZI6z-o",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

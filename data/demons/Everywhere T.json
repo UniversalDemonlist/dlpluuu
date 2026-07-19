@@ -1,0 +1,20 @@
+{
+    "id": 88201288,
+    "name": "Everywhere At The End Of Time",
+    "author": "DarkFeind",
+    "creators": ["DarkFeind"],
+    "verifier": "Striker820",
+    "verification": "https://www.youtube.com/watch?v=CZCinFnrMvQ",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/57hd4_hXsLo/maxresdefault.jpg",
+    "description": "A 6 hour long Extreme Demon, which uses the entire album.",
+    "records": [
+        {
+            "user": "Dragun GD",
+            "link": "https://www.youtube.com/watch?v=88EBrHoDssU",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "id": 62419475,
+    "name": "Faith",
+    "author": "ZeroSR",
+    "creators": ["ZeroSR and more"],
+    "verifier": "Technical49",
+    "verification": "https://www.youtube.com/watch?v=hOwAx1Mn6o8",
+    "percentToQualify": 100,
+    "records": [
+            {
+            "user": "Jeremyiscool",
+            "link": "https://www.youtube.com/watch?v=cqJpEz7bfrM",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "SEDTHEPRODIGY",
+            "link": "https://youtu.be/63DrjmjOr3U",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}

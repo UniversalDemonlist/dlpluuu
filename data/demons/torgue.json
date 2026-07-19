@@ -1,0 +1,17 @@
+{
+    "id": 60516506,
+    "name": "Torgue",
+    "author": "Ryder",
+    "creators": [],
+    "verifier": "Floppy",
+    "verification": "https://www.youtube.com/watch?v=GDKqYSlKHVE",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=sO2DTfY5mzU",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

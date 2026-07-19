@@ -1,0 +1,47 @@
+{
+    "id": 59899374,
+    "name": "Prismatic Haze",
+    "author": "[REDACTED",
+    "creators": ["[REDACTED], Gizbro"],
+    "verifier": "Gizbro",
+    "verification": "https://www.youtube.com/watch?v=RS5ZFcuaw3I",
+    "percentToQualify": 100,
+    "records": [
+          {
+            "user": "TurtleER",
+            "link": "https://youtu.be/QabdoTN6qoo",
+            "percent": 100,
+            "hz": 144
+        },
+        {
+            "user": "SmellyPossum",
+            "link": "https://www.youtube.com/watch?v=Y89UVQgWlSQ",
+            "percent": 100,
+            "hz": 120
+},
+        {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=BscjhHz2qOc&t=2s&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/g5R5ZE2SiTU",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Ryoui",
+            "link": "https://youtu.be/Kr-6J-kL29o",
+            "percent": 100,
+            "hz": 360
+},
+    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/_ICZ5Fzfw0I",
+            "percent": 100,
+            "hz": 330
+}
+]
+}

@@ -1,0 +1,54 @@
+{
+    "id": 30219145,
+    "name": "HyperSonic",
+    "author": "ViPriN",
+    "creators": ["Rustam, ViPriN, Manix648, ZenthicAlpha, nasgubb, Etzer, Serponge, Terron, Evasium, Dudex, Vlacc, Panman"],
+    "verifier": "combi",
+    "verification": "https://www.youtube.com/watch?v=RmrPEJ7Z6lY",
+    "percentToQualify": 100,
+    "password": "No Copy",
+    "records": [
+            {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/G68Dqcr5YH4",
+            "percent": 100,
+            "hz": 165
+        },
+        {
+            "user": "Cinasek",
+            "link": "https://www.youtube.com/watch?v=LIVghBhacRM",
+            "percent": 100,
+            "hz": 60
+        },
+        {
+            "user": "SEDTHEPRODIGY",
+            "link": "https://youtu.be/TOLgg6YY5SI",
+            "percent": 100,
+            "hz": 120
+        },
+        {
+            "user": "Matthijsgd",
+            "link": "https://www.youtube.com/watch?v=iOPhgmGqdCs",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=gkXCeXqvHdY",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Ryoui",
+            "link": "https://youtu.be/0Fr4Pu9vPtI",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/UJX2pVUM9Ig",
+            "percent": 100,
+            "hz": 288
+}
+    ]
+}

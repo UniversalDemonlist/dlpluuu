@@ -1,0 +1,54 @@
+{
+    "id": 109780665,
+    "name": "Random Processing",
+    "author": "Robtop",
+    "creators": ["Robtop"],
+    "verifier": "Glotch",
+    "verification": "https://youtu.be/sUbrXFCNWsA",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Doggie",
+            "link": "https://www.youtube.com/watch?v=nb9zJ5hDN7A",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "FGP",
+            "link": "https://www.youtube.com/watch?v=UD3PbHsc3h0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "KingSammelot",
+            "link": "https://www.youtube.com/watch?v=uWyQCOfWwp0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Mulpan",
+            "link": "https://youtu.be/SOwiYeRdu9Y",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Xiao",
+            "link": "https://www.youtube.com/watch?v=nXmNzijmftc",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Vortrox",
+            "link": "https://www.youtube.com/watch?v=yuQfBFKQdm8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=Rf-8SLH4qV4",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

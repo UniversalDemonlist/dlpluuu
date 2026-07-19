@@ -1,0 +1,42 @@
+{
+    "id": 113599729,
+    "name": "Subterminal Point",
+    "author": "SyQual",
+    "creators": ["SyQual"],
+    "verifier": "PoCle",
+    "verification": "https://youtu.be/h2wmRMgACH4",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=oKBEFNJalpA",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "GGonop",
+            "link": "https://www.youtube.com/watch?v=Ulz-vrwuTn8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "NordstromUSA",
+            "link": "https://www.youtube.com/watch?v=hKNRhHsHMts",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=wve1ls-pQR0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=z2WTloMTbsg",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

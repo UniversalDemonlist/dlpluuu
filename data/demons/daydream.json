@@ -1,0 +1,30 @@
+{
+    "id": 65633532,
+    "name": "Daydream",
+    "author": "Yendis",
+    "creators": [],
+    "verifier": "Yendis",
+    "verification": "https://www.youtube.com/watch?v=5HXK3TFG1H4",
+    "percentToQualify": 100,
+    "password": "696969",
+    "records": [
+            {
+            "user": "Jeremyiscool",
+            "link": "https://www.youtube.com/watch?v=pWsgh4VT2x0",
+            "percent": 100,
+            "hz": 288
+        },
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=rcvI98ihN78",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/AWE-FpcDvl0",
+            "percent": 100,
+            "hz": 288
+}
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "id": 114283297,
+    "name": "Andromeda",
+    "author": "insxne97",
+    "creators": ["insxne97"],
+    "verifier": "Taiago",
+    "verification": "https://www.youtube.com/watch?v=mk3TDemdkC0",
+    "percentToQualify": 50,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=iI0hymTllo0",
+            "percent": 100,
+            "hz": 360
+
+        },
+        {
+            "user": "w3rty",
+            "link": "https://www.youtube.com/watch?v=vI28nQFN9C4",
+            "percent": 100,
+            "hz": 360
+
+        },
+        {
+            "user": "nickname",
+            "link": "https://www.youtube.com/watch?v=70DK4hNHO4g",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=hv6-C_2VWI0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=H3H7Cg6QDnU",
+            "percent": 100,
+            "hz": 360
+
+        }
+    ]
+}

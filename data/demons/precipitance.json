@@ -1,0 +1,35 @@
+{
+    "id": 60197839,
+    "name": "Precipitance",
+    "author": "Extravagon",
+    "creators": [],
+    "verifier": "Extravagon",
+    "verification": "https://www.youtube.com/watch?v=_W9xA5lqmLs",
+    "percentToQualify": 100,
+    "records": [
+            {
+            "user": "Jeremyiscool",
+            "link": "https://www.youtube.com/watch?v=qBXhWjU93bo",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "NCKPlayZ",
+            "link": "https://youtu.be/1tTyY1t5xec",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "BenjiBean",
+            "link": "https://youtu.be/05F3A2SSP1E",
+            "percent": 100,
+            "hz": 120
+        },
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=SdD0oLYFUm4",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

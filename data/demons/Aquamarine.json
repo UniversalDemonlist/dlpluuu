@@ -1,0 +1,18 @@
+{
+    "id": 77331805,
+    "name": "Aquamarine",
+    "author": "sincos",
+    "creators": ["sincos"],
+    "verifier": "Seels",
+    "verification": "https://youtu.be/Q__EnRojGt4",
+    "percentToQualify": 50,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "ROZE",
+            "link": "https://www.youtube.com/watch?v=41JrFdenKEk",
+            "percent": 100,
+            "hz": 360            
+        }
+    ]
+}

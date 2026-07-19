@@ -1,0 +1,38 @@
+{
+    "id": 109780665,
+    "name": "Nullscapes",
+    "author": "Kiba",
+    "creators": ["Kiba"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/EztneTPp5CU",
+    "percentToQualify": 68,
+    "password": "Not Copyable",
+    "description": "Former Top 2, the sequel to Shardscapes. This level uses only robot. Known for having a CBF detecting system.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/109780665",
+    "records": [
+        {
+            "user": "spookkd",
+            "link": "https://www.youtube.com/watch?v=co4SRNnsf1Y",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "wfhyre",
+            "link": "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Hover",
+            "link": "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "w3rty",
+            "link": "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

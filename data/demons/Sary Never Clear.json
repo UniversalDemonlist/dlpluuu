@@ -1,0 +1,20 @@
+{
+    "id": 609629,
+    "name": "Sary Never Clear",
+    "author": "Optic Sunflow",
+    "creators": ["Optic Sunflow"],
+    "verifier": "Glow",
+    "verification": "https://youtu.be/Hpo77uVq75M?si=LPU92dAl3Kpx3gm3&t=726",
+    "percentToQualify": 24,
+    "password": "Not Copyable",
+    "description": "Old Top 5, legendary level from the early days of Geometry Dash, once considered impossible. Has a really hard cube section.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/609629",
+    "records": [
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=Oaej5DMZj-w",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

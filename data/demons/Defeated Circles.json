@@ -1,0 +1,36 @@
+{
+    "id": 120012581,
+    "name": "Defeated Circles",
+    "author": "GXQ",
+    "creators": ["GXQ"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/nU5AQPzd2YA",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "moliklee",
+            "link": "https://www.youtube.com/watch?v=R60DOyl8GYQ",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Netermind",
+            "link": "https://www.youtube.com/watch?v=4HZnramyHW8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "zThund3r",
+            "link": "https://www.youtube.com/watch?v=Dd0ZsxUcuMQ",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=S5NuCTPuOLk",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

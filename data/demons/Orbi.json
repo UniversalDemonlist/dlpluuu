@@ -1,0 +1,20 @@
+{
+    "id": 109780665,
+    "name": "Orbit",
+    "author": "Mindcap",
+    "creators": ["Mindcap"],
+    "verifier": "Zoink",
+    "verification": "https://www.youtube.com/watch?v=QKcv8DkNPd0",
+    "percentToQualify": 22,
+    "password": "Not Copyable",
+    "description": "Mindcap's masterpiece, being the first mythic classic extreme demon. Every click is an orb.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/133175713",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

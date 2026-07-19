@@ -1,0 +1,30 @@
+{
+    "id": 107805281,
+    "name": "Menace",
+    "author": "MannyHeffley",
+    "creators": ["MannyHeffley"],
+    "verifier": "Whizkid05",
+    "verification": "https://youtu.be/nnkgghxxsEE",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+         {
+            "user": "Thnnder",
+            "link": "https://www.youtube.com/watch?v=1CQXk6nuLmk",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=W8gCO5boRnI",
+            "percent": 100,
+            "hz": 360
+        },
+       {
+            "user": "Netermind",
+            "link": "https://www.youtube.com/watch?v=-kOsBAjd-LU",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

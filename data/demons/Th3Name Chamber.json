@@ -1,0 +1,18 @@
+{
+    "id": 109780665,
+    "name": "Th3Name Chamber Jitter",
+    "author": "Th3Name",
+    "creators": ["Th3Name"],
+    "verifier": "OmorGD",
+    "verification": "https://youtu.be/QwTJ-RRCWyM",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

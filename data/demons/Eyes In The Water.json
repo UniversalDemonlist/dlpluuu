@@ -1,0 +1,30 @@
+{
+    "id": 95851008,
+    "name": "Eyes In The Water",
+    "author": "hawkyre",
+    "creators": ["hawkyre"],
+    "verifier": "LordVadercraft",
+    "verification": "https://www.youtube.com/watch?v=yvLwiOy3KEA",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+         {
+            "user": "Netermind",
+            "link": "https://www.youtube.com/watch?v=p38r1KFtna8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Cookie",
+            "link": "https://www.youtube.com/watch?v=-8lNVY4puQI",
+            "percent": 100,
+            "hz": 360
+        },
+       {
+            "user": "Arshadow",
+            "link": "https://www.youtube.com/watch?v=ZuF_7lylSnQ",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

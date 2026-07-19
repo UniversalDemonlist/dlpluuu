@@ -1,0 +1,36 @@
+{
+    "id": 65561437,
+    "name": "Napalm",
+    "author": "Marwec",
+    "creators": ["Subwoofer, VictorinoxX, OpteX, Dominuus, Vapen, Sminx, Marwec, Eggnog, FerdeFunky, Buragoz, Zalspr"],
+    "verifier": "Luqualizer",
+    "verification": "https://www.youtube.com/watch?v=ND--Ai4XVfM",
+    "percentToQualify": 100,
+    "password": "236589",
+    "records": [
+                    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/LcfWMOUHptI",
+            "percent": 100,
+            "hz": 165
+        },
+                            {
+            "user": "M1Sushi",
+            "link": "https://youtu.be/Q7ja34zBICU",
+            "percent": 100,
+            "hz": 144
+        },
+                            {
+            "user": "NCKPlayZ",
+            "link": "https://www.youtube.com/watch?v=G8GviruZF6U&t=8s",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=9Xp5xtwEEoY",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

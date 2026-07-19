@@ -1,0 +1,30 @@
+{
+    "id": 4125776,
+    "name": "Silent Clubstep",
+    "author": "Sailent",
+    "creators": ["Sailent"],
+    "verifier": "Paqoe",
+    "verification": "https://youtu.be/GR4OMkS3SN8?si=-4h_hz6ZhiLdISka&t=4",
+    "percentToQualify": 32,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=57aQ3EmSqQ4",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Doggie",
+            "link": "https://www.youtube.com/watch?v=h9XRy_oAMks",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=uO2ISQnXm4Q",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

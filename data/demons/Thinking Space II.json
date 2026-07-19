@@ -1,0 +1,20 @@
+{
+    "id": 119544028,
+    "name": "Thinking Space II",
+    "author": "CarioX",
+    "creators": ["CairoX"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/CELNmHwln_c",
+    "percentToQualify": 47,
+    "password": "Not Copyable",
+    "description": "The official sequel to Thinking Space, it dethroned Tidal Wave.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/119544028",
+    "records": [
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=hJHiGeuahTI",
+            "percent": 100,
+            "hz": 360            
+        }
+    ]
+}

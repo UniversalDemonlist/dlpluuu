@@ -1,0 +1,30 @@
+{
+    "id": 116732736,
+    "name": "poocubed",
+    "author": "Liisp",
+    "creators": ["Liisp"],
+    "verifier": "Kyasshukodo",
+    "verification": "https://www.youtube.com/watch?v=fzL31vai1ms",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+         {
+            "user": "Zoink",
+            "link": "https://www.youtube.com/watch?v=QuiGxP37zf8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=dbuOPaOhVPo",
+            "percent": 100,
+            "hz": 360
+        },
+       {
+            "user": "skzyl",
+            "link": "https://www.youtube.com/watch?v=Le4QsysR_ss",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

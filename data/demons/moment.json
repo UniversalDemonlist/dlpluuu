@@ -1,0 +1,41 @@
+{
+    "id": 68848817,
+    "name": "Moment",
+    "author": "lexycat",
+    "creators": ["lexycat, icedcave"],
+    "verifier": "icedcave",
+    "verification": "https://www.youtube.com/watch?v=bLfKsN4NCNY",
+    "percentToQualify": 100,
+    "records": [
+                    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/kQm-tHlm1es",
+            "percent": 100,
+            "hz": 165
+        },
+        {
+            "user": "ilyasgamesgd",
+            "link": "https://youtu.be/1wRuWYQH3RQ",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "GhostPepper",
+            "link": "https://youtu.be/-BFA7JejZvk",
+            "percent": 100,
+            "hz": 240
+},
+        {
+            "user": "Whacka",
+            "link": "https://youtu.be/miy6xjrHEgo",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=qX6rox-pmiU&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

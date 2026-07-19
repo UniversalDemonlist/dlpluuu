@@ -1,0 +1,17 @@
+{
+    "id": 73289291,
+    "name": "Delirium Tremens",
+    "author": "Vadi",
+    "creators": ["Vadi, Drewch"],
+    "verifier": "Drewch",
+    "verification": "https://www.youtube.com/watch?v=xMx1EHmmzxc",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=3FFkSgvZr_I",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

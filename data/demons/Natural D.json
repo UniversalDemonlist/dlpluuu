@@ -1,0 +1,18 @@
+{
+    "id": 76483916,
+    "name": "Natural Disaster",
+    "author": "Gamma",
+    "creators": ["Gamma"],
+    "verifier": "Helix",
+    "verification": "https://youtu.be/Soc-JeRJtqM",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "BelgioneArancio",
+            "link": "https://gdbrowser.com/u/BELGIONEARANCIO",
+            "percent": 100,
+            "hz": 60
+        }
+    ]
+}

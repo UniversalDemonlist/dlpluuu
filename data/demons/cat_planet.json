@@ -1,0 +1,23 @@
+{
+    "id": 84766628,
+    "name": "Cat Planet",
+    "author": "icedcave",
+    "creators": [],
+    "verifier": "icedcave",
+    "verification": "https://www.youtube.com/watch?v=Y6tQx5ty_u8",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=61C9ZUZcx58&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+},
+{
+            "user": "Chubby9000",
+            "link": "https://youtu.be/WWIadsJm5NY",
+            "percent": 100,
+            "hz": 330
+}    
+    ]
+}

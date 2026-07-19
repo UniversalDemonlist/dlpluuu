@@ -1,0 +1,48 @@
+{
+    "id": 32688321,
+    "name": "Incipient",
+    "author": "Jenkins GD",
+    "creators": [],
+    "verifier": "Jenkins GD",
+    "verification": "https://www.youtube.com/watch?v=RoMt6_CVfnE",
+    "percentToQualify": 100,
+    "password": "420420",
+    "records": [
+            {
+            "user": "Jeremyiscool",
+            "link": "https://www.youtube.com/watch?v=4chje5bQ1Bg",
+            "percent": 100,
+            "hz": 288
+        },
+        {
+            "user": "Whacka",
+            "link": "https://youtu.be/XalPz7iSla4",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=fcTJbNy6ELA",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/BuT_QdBocV4",
+            "percent": 100,
+            "hz": 288
+},
+{
+            "user": "Chubby9000",
+            "link": "https://youtu.be/Xa-vwkWEdU0",
+            "percent": 100,
+            "hz": 330
+},    
+{
+            "user": "Brachiozaur",
+            "link": "https://youtu.be/mA-PA4Ytaek",
+            "percent": 100,
+            "hz": 300
+}
+]
+}

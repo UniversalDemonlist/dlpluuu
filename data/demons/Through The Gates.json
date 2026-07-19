@@ -1,0 +1,18 @@
+{
+    "id": 49072489,
+    "name": "Through The Gates",
+    "author": "TeamTheDashers",
+    "creators": ["TeamTheDashers"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/4yHA6jux5UI",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=Oaej5DMZj-w",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

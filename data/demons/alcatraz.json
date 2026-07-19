@@ -1,0 +1,29 @@
+{
+    "id": 57208977,
+    "name": "Alcatraz",
+    "author": "Asuith",
+    "creators": ["Yozyo, Texic, Supris, ZWK, ViralDl, Renedi, Anime Animator, Wojnet, janekh, Asuith"],
+    "verifier": "blazer2",
+    "verification": "https://www.youtube.com/watch?v=JL5Yx3u9eMw",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Whacka",
+            "link": "https://youtu.be/kM5ylDXt8ZE",
+            "percent": 100,
+            "hz": 288
+},
+        {
+            "user": "SkeletalVirus",
+            "link": "https://youtu.be/Cl4UQ-ChUOg",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=N1wjIjAABRE",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

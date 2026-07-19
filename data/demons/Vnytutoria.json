@@ -1,0 +1,17 @@
+{
+    "id": 88201288,
+    "name": "Vny Tutorial",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "Squeeg",
+    "verification": "https://youtu.be/k6WLTRCRmGo?si=lkukJZ9lr6AlF5ky",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Vny",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

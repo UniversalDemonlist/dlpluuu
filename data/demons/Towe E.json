@@ -1,0 +1,19 @@
+{
+    "id": 88201288,
+    "name": "Tower E",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "Carter",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "verification": "https://youtu.be/rPaYvdJ-zFc?si=1bhwEaXKwMjb9ETn",
+    "background": "https://thenewrakelist.squeeg-squeeg.workers.dev/assets/levels/Tower%20E%20(Ludwig).png",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "id": 88201288,
+    "name": "Tower C",
+    "author": "squeeg",
+    "creators": ["squeeg"],
+    "verifier": "AllOnRed777",
+    "verification": "https://youtu.be/CsEReegUDBg",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/BotkApcNUxY/hqdefault.jpg",
+    "records": [
+        {
+            "user": "Squeeg",
+            "link": "https://www.youtube.com/watch?v=Daeqq6zPR3Y",
+            "percent": 100,
+            "hz": 360
+        },
+        "G1rcy"
+    ]
+}

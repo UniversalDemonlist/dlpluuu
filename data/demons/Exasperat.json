@@ -1,0 +1,18 @@
+{
+    "id": 31325851,
+    "name": "Exasperation",
+    "author": "Thycket",
+    "creators": ["Thycket"],
+    "verifier": "WatchPiggy",
+    "verification": "https://www.youtube.com/watch?v=EhivIX6XAT0",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Zoink",
+            "link": "https://youtu.be/v9rpMj2iJb4",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

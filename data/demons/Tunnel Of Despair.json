@@ -1,0 +1,30 @@
+{
+    "id": 91351939,
+    "name": "Tunnel Of Despair",
+    "author": "Exen",
+    "creators": ["Exen"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/LpS4JREhW98",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=dj_HNqcwxQ0",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "mindzdraf",
+            "link": "https://www.youtube.com/watch?v=9LBSZrtBJh8",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=-A4841TqLdg",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

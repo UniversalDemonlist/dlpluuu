@@ -1,0 +1,19 @@
+{
+    "id": 88201288,
+    "name": "Ufo Spam Titan",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "Astro",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "verification": "https://youtu.be/GEzMTQaB-AU?si=3vHoNEqKDIXQcf9k",
+    "background": "https://sclgwa.spamchallengelistgwa.workers.dev/assets/levels/UFO%20Spam%20Titan.png",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

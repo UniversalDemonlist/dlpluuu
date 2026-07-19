@@ -1,0 +1,30 @@
+{
+    "id": 110815379,
+    "name": "Spectre",
+    "author": "xander556",
+    "creators": ["xander556"],
+    "verifier": "PersonHuman42",
+    "verification": "https://youtu.be/MzsSLKJrLSI",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=D0tp4U1sUWs",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Netermind",
+            "link": "https://www.youtube.com/watch?v=M2XpQBy081E",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "mindzdraf",
+            "link": "https://www.youtube.com/watch?v=nJFpBYqGWQM",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

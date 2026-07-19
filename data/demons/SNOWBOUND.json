@@ -1,0 +1,18 @@
+{
+    "id": 120289520,
+    "name": "Snowbound",
+    "author": "amplitron",
+    "creators": ["amplitron"],
+    "verifier": "amplitron",
+    "verification": "https://youtu.be/cjHwgbtAkXU",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

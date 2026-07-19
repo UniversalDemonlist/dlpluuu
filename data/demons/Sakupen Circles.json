@@ -1,0 +1,26 @@
+{
+    "id": 10887708,
+    "name": "Sakupen Circles",
+    "author": "Nick42",
+    "creators": ["Nick42"],
+    "verifier": "ad3us",
+    "verification": "https://www.youtube.com/watch?v=AdrmZsy52EY&ab_channel=ad3usgmd",
+    "percentToQualify": 50,
+    "password": "Not Copyable",
+    "description": "Former Top 5, and a legendary level. Once considered impossible, has a spam section in the middle.",
+    "background": "https://levelthumbs.prevter.me/thumbnail/10887708",
+    "records": [
+        {
+            "user": "ROZE",
+            "link": "https://www.youtube.com/watch?v=sxqgZh4sLb8",
+            "percent": 100,
+            "hz": 360            
+        },
+        {
+            "user": "totalgd",
+            "link": "https://www.youtube.com/watch?v=TY3DB4M8tgA",
+            "percent": 100,
+            "hz": 360            
+        }
+    ]
+}

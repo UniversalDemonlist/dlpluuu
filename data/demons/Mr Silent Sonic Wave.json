@@ -1,0 +1,18 @@
+{
+    "id": 129976984,
+    "name": "Mr Silent Sonic Wave",
+    "author": "PowerGreen",
+    "creators": ["PowerGreen"],
+    "verifier": "BelgioneArancio",
+    "verification": "https://www.youtube.com/watch?v=rv7XyXe3g-I",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "PowerGreen",
+            "link": "https://www.youtube.com/watch?v=rv7XyXe3g-I",
+            "percent": 100,
+            "hz": 60
+        }
+    ]
+}

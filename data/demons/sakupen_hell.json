@@ -1,0 +1,24 @@
+{
+    "id": 23262780,
+    "name": "Sakupen Hell",
+    "author": "TrusTa",
+    "creators": ["Noobas"],
+    "verifier": "TrusTa",
+    "verification": "https://www.youtube.com/watch?v=svyOjwLCErg",
+    "percentToQualify": 100,
+    "password": "895562",
+    "records": [
+    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/gvrl8Z_zAU4",
+            "percent": 100,
+            "hz": 330
+        },
+        {
+            "user": "Shrixy",
+            "link": "https://youtu.be/OOs7F5i0Nsw",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

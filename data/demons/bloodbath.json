@@ -1,0 +1,42 @@
+{
+    "id": 10565740,
+    "name": "Bloodbath",
+    "author": "Riot",
+    "creators": ["Riot, Michigun, Etzer, weoweoteo, Vermillion, Evasium, Crack, Asonicmen, Havok, GgB0y, Giron"],
+    "verifier": "Riot",
+    "verification": "https://www.youtube.com/watch?v=twTw4fjT0ik",
+    "percentToQualify": 100,
+    "password": "No Copy",
+    "records": [
+    {
+            "user": "Chubby9000",
+            "link": "https://youtu.be/byCy8gH_3y4",
+            "percent": 100,
+            "hz": 165
+        },
+        {
+            "user": "TurtleER",
+            "link": "https://youtu.be/lq6iXWsrrls",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "GhostPepper",
+            "link": "https://youtu.be/MArweWTTVIE",
+            "percent": 100,
+            "hz": 240
+        },
+        {
+            "user": "SEDTHEPRODIGY",
+            "link": "https://youtu.be/LZNvZQCE8kY",
+            "percent": 100,
+            "hz": 360
+        },
+        {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=byrNmXvAEws&t=9s&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "id": 113959291,
+    "name": "Silentlocked",
+    "author": "skel",
+    "creators": ["skel"],
+    "verifier": "TFIBB",
+    "verification": "https://youtu.be/O-IQeUdEGvI",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "wPopoff",
+            "link": "https://www.youtube.com/watch?v=s3IK5DMKZ3E",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

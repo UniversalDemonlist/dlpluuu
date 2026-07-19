@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Tower C Infinity",
+    "author": "squeeg",
+    "creators": ["squeeg"],
+    "verifier": "astroguy",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "verification": "https://youtu.be/3MDvw_VtyEo?si=ZWg0TJ7C6rUxAsNY",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

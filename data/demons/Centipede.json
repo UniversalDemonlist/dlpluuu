@@ -1,0 +1,24 @@
+{
+    "id": 116732736,
+    "name": "Centipede",
+    "author": "zander12",
+    "creators": ["zander12"],
+    "verifier": "LordVadercraft",
+    "verification": "https://youtu.be/eLGr383CmyM",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {    
+            "user": "Trick",
+            "link": "https://www.youtube.com/watch?v=ZvBf-HN8ssw",
+            "percent": 100,
+            "hz": 360
+        },
+        {    
+            "user": "loliklee",
+            "link": "https://www.youtube.com/watch?v=wVzVV9y9pqg",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

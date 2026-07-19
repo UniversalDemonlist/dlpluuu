@@ -1,0 +1,18 @@
+{
+    "id": 96572223,
+    "name": "Vehemence",
+    "author": "MadisonYuko",
+    "creators": ["MadisonYuko"],
+    "verifier": "wPopoff",
+    "verification": "https://www.youtube.com/watch?v=JZ10Un4EXYo",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "PowerGreen",
+            "link": "https://www.youtube.com/watch?v=UBlw9xwMe2I",
+            "percent": 100,
+            "hz": 60
+        }
+    ]
+}

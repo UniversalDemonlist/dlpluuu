@@ -1,0 +1,23 @@
+{
+    "id": 59535791,
+    "name": "Brimtanic Paradise",
+    "author": "zYuko",
+    "creators": ["zYuko and more"],
+    "verifier": "Colorbolt",
+    "verification": "https://www.youtube.com/watch?v=gPnkjXUDWWc",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Whacka",
+            "link": "https://youtu.be/12GhdrLSvcg",
+            "percent": 100,
+            "hz": 360
+},
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=K52zTvXn4fY",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

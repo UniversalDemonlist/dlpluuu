@@ -1,0 +1,23 @@
+{
+    "id": 48765988,
+    "name": "Polish Alphabet",
+    "author": "Patchimator",
+    "creators": ["Patchimator, blazer2, Ezel142, Ylliee, MichciachGD, Texic, Supris, RicoMeister, ZWK, Lazyer, ViralDl"],
+    "verifier": "BlazeRol",
+    "verification": "https://www.youtube.com/watch?v=NXV3nDr1z2M",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Fruitsalad",
+            "link": "https://www.youtube.com/watch?v=j8bzR1hEHLU",
+            "percent": 100,
+            "hz": 144
+},
+        {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=9nkRiJ6TGMw",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

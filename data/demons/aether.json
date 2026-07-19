@@ -1,0 +1,17 @@
+{
+    "id": 77570274,
+    "name": "aether",
+    "author": "Zeptoz",
+    "creators": [],
+    "verifier": "YakobNugget",
+    "verification": "https://www.youtube.com/watch?v=wnsRuA_fGAs",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Zenta",
+            "link": "https://www.youtube.com/watch?v=G0RzB4An8kA",
+            "percent": 100,
+            "hz": 165
+}
+    ]
+}

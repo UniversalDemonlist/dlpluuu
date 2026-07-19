@@ -1,0 +1,19 @@
+{
+    "id": 28224824,
+    "name": "Old Yatagarasu",
+    "author": "Trusta",
+    "creators": ["Trusta"],
+    "verifier": "Zoink",
+    "verification": "https://youtu.be/qSdyb-Ft1tk",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "thumbnail": "https://i.ytimg.com/vi/KgGKx0pk_wo/maxresdefault.jpg",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

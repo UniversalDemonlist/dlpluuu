@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Global Demonlist+</title>
+  <link rel="icon" href="/ne.png">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button id="theme-toggle">Toggle Theme</button>
+
+<div class="tabs">
+  <img src="ne.png" class="tabs-logo">
+
+  <button class="tab-btn active" data-tab="demonlist">Demonlist</button>
+  <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+  <button class="tab-btn" data-tab="submit">Server</button>
+</div>
+
+<div id="demonlist" class="tab-content active">
+  <h1>Demonlist</h1>
+
+  <div class="panel">
+    <input id="search-bar" placeholder="Search demons by name or position">
+
+    <div class="dropdown-row">
+      <div class="dropdown-group">
+        <label>Main List (1–75)</label>
+        <select id="select-main">
+          <option value="">Select a demon</option>
+        </select>
+      </div>
+      <div class="dropdown-group">
+        <label>Extended List (76–100)</label>
+        <select id="select-extended">
+          <option value="">Select a demon</option>
+        </select>
+      </div>
+      <div class="dropdown-group">
+        <label>Legacy List (101+)</label>
+        <select id="select-legacy">
+          <option value="">Select a demon</option>
+        </select>
+      </div>
+    </div>
+
+
+    <div id="demon-container"></div>
+  </div>
+</div>
+
+<div id="demon-page" class="tab-content">
+  <div id="demon-page-container"></div>
+</div>
+
+<div id="leaderboard" class="tab-content">
+  <h1>Leaderboard</h1>
+  <div class="panel">
+    <div class="leaderboard-controls">
+      <input id="player-search" placeholder="Search players">
+      <select id="leaderboard-filter">
+        <option value="points">Most Points</option>
+        <option value="tier">Highest Tier</option>
+      </select>
+    </div>
+    <div id="leaderboard-container"></div>
+  </div>
+</div>
+
+<div id="submit" class="tab-content">
+  <h1>Server</h1>
+  <div class="panel">
+    <p>Discord Server</p>
+    <a href="https://discord.gg/P7aHCenrAg" target="_blank" class="submit-btn">Join</a>
+  </div>
+</div>
+
+<div id="guidelines" class="tab-content">
+  <h1>Extras</h1>
+  <div class="panel">
+     <a href="https://sites.google.com/view/dlplusstuff/home-page" target="_blank" class="submit-btn">Open Extras</a>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

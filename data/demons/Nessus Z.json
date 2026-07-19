@@ -1,0 +1,19 @@
+{
+    "id": 88201288,
+    "name": "Nessus XYZ",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "Carter",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "verification": "https://youtu.be/Jtw119XIQOA?si=AfQNfTVo9y38a0p9",
+    "background": "https://sclgwa.spamchallengelistgwa.workers.dev/assets/levels/Nessus%20XYZ.png",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

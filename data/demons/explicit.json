@@ -1,0 +1,17 @@
+{
+    "id": 74028410,
+    "name": "Explicit",
+    "author": "Saturn",
+    "creators": ["Renn241"],
+    "verifier": "Saturn",
+    "verification": "https://www.youtube.com/watch?v=azsF8MTeFh0",
+    "percentToQualify": 100,
+    "records": [
+        {
+            "user": "Whacka",
+            "link": "https://youtu.be/OA7b6PFtq44",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

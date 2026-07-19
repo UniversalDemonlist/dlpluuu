@@ -1,0 +1,18 @@
+{
+    "id": 109780665,
+    "name": "MinusDry",
+    "author": "CdMusic",
+    "creators": ["CdMusic"],
+    "verifier": "Varium",
+    "verification": "https://youtu.be/YvA8ehhzz0Q",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}

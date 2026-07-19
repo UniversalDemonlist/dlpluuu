@@ -1,0 +1,17 @@
+{
+    "id": 81549790,
+    "name": "RTX On",
+    "author": "TypicalGMD",
+    "creators": [],
+    "verifier": "TypicalGMD",
+    "verification": "https://www.youtube.com/watch?v=EDh8lrG37hY&t=0s",
+    "percentToQualify": 100,
+    "records": [
+    {
+            "user": "Trees",
+            "link": "https://www.youtube.com/watch?v=8P944sdAZaM&ab_channel=Trees",
+            "percent": 100,
+            "hz": 360
+}
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "id": 128653269,
+    "name": "SilentDynamix",
+    "author": "Dambrearon",
+    "creators": ["Dambrearon"],
+    "verifier": "BelgioneArancio",
+    "verification": "https://www.youtube.com/watch?v=sUSvEoVfLPQ",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "PowerGreen",
+            "link": "https://www.youtube.com/watch?v=0msi0P_yASg",
+            "percent": 100,
+            "hz": 60            
+        }
+    ]
+}

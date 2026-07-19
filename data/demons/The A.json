@@ -1,0 +1,18 @@
+{
+    "id": 1097806,
+    "name": "The Amethyst",
+    "author": "PowerGreen",
+    "creators": ["PowerGreen"],
+    "verifier": "PowerGreen",
+    "verification": "https://www.youtube.com/watch?v=DTUwz2p0KuM",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
