@@ -400,10 +400,7 @@ function openDemonPage(demon) {
       <h1>#${demon.position} — ${demon.name}</h1>
       ${demon.description ? `<p class="fancy-desc">${demon.description}</p>` : ""}
       <div class="fancy-meta-box">
-        <p><strong>Author:</strong> ${demon.author}</p>
-        <p><strong>Creators:</strong> ${creators}</p>
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
-        <p><strong>Tier:</strong> ${getTier(demon.position)}</p>
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
         ${warningHTML}
       </div>
