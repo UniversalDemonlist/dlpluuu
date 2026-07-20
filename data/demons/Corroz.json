@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Corroz B ",
+    "author": "c",
+    "creators": ["c"],
+    "verifier": "Diamond",
+    "verification": "https://www.youtube.com/watch?v=geJpHgm15yU",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
