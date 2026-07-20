@@ -91,46 +91,49 @@ function setupTabs() {
 
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
-const demonFiles = await Promise.all(
-  list.map(entry => {
-    const id = typeof entry === "string" ? entry : entry.id;
-    return fetch(`data/demons/${id}.json`)
-      .then(r => (r.ok ? r.json() : null))
-      .catch(() => null)
-      .then(d => {
-        if (!d) return null;
-        if (typeof entry === "object") d.cosmetic = entry.cosmetic || null;
-        return d;
-      });
-  })
-);
 
+  const demonFiles = await Promise.all(
+    list.map(entry => {
+      const id = typeof entry === "string" ? entry : entry.id;
+      return fetch(`data/demons/${id}.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .catch(() => null)
+        .then(d => {
+          if (!d) return null;
+          if (typeof entry === "object") d.cosmetic = entry.cosmetic || null;
+          return d;
+        });
+    })
+  );
 
-globalDemons = demonFiles
-  .map((d, i) => {
-    if (!d) return null;
+  globalDemons = demonFiles
+    .map((d, i) => {
+      if (!d) return null;
 
-    const entry = list[i];
-    const fileName = typeof entry === "string" ? entry : entry.id;
-    const baseName = fileName.replace(/\.json$/i, "");
+      const entry = list[i];
+      const fileName = typeof entry === "string" ? entry : entry.id;
+      const baseName = fileName.replace(/\.json$/i, "");
 
-    if (methodList.includes(baseName)) d.warning = "method";
-    if (pathList.includes(baseName)) d.warning = "path";
+      if (methodList.includes(baseName)) d.warning = "method";
+      if (pathList.includes(baseName)) d.warning = "path";
 
-return {
-  ...d,
-  position: d.cosmetic ? null : i + 1,
-  cosmetic: d.cosmetic || null
-};
+      return {
+        ...d,
+        position: d.cosmetic ? null : i + 1,
+        cosmetic: d.cosmetic || null
+      };
+    })
+    .filter(Boolean);
 
-  mainList = globalDemons.filter(d => d.position <= 75);
-  extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 100);
-  legacyList = globalDemons.filter(d => d.position > 100);
+  mainList = globalDemons.filter(d => !d.cosmetic && d.position <= 75);
+  extendedList = globalDemons.filter(d => !d.cosmetic && d.position > 75 && d.position <= 100);
+  legacyList = globalDemons.filter(d => !d.cosmetic && d.position > 100);
 
   renderDemonCards();
   populateDropdowns();
   loadLeaderboard();
 }
+
 
 function renderDemonCards(listOverride) {
   stopAllVideos();
