@@ -416,7 +416,7 @@ if (demon.cosmetic) {
   container.innerHTML = `
     <div class="fancy-demon-header" style="background-image:url('${bg}')">
       <h1>${demon.name}</h1>
-      <p>Levels past this zone are harder than ${demon.cosmetic}</p>
+     <p>Levels past this zone are harder than ${demon.name}</p>
     </div>
 
     ${videoBlock}
