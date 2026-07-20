@@ -91,18 +91,19 @@ function setupTabs() {
 
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
-  const demonFiles = await Promise.all(
-list.map(entry => {
-  const id = typeof entry === "string" ? entry : entry.id;
-  return fetch(`data/demons/${id}.json`)
-    .then(r => (r.ok ? r.json() : null))
-    .catch(() => null)
-    .then(d => {
-      if (!d) return null;
-      if (typeof entry === "object") d.cosmetic = entry.cosmetic || null;
-      return d;
-    });
-})
+const demonFiles = await Promise.all(
+  list.map(entry => {
+    const id = typeof entry === "string" ? entry : entry.id;
+    return fetch(`data/demons/${id}.json`)
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then(d => {
+        if (!d) return null;
+        if (typeof entry === "object") d.cosmetic = entry.cosmetic || null;
+        return d;
+      });
+  })
+);
 
 
   globalDemons = demonFiles
