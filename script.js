@@ -404,15 +404,11 @@ function openDemonPage(demon) {
     })
     .join("");
 
+if (demon.cosmetic) {
   container.innerHTML = `
     <div class="fancy-demon-header" style="background-image:url('${bg}')">
-      <h1>#${demon.position} — ${demon.name}</h1>
-      ${demon.description ? `<p class="fancy-desc">${demon.description}</p>` : ""}
-      <div class="fancy-meta-box">
-        <p><strong>Verifier:</strong> ${demon.verifier}</p>
-        <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
-        ${warningHTML}
-      </div>
+      <h1>${demon.name}</h1>
+      <p>Levels past this zone are harder than ${demon.cosmetic}</p>
     </div>
 
     ${videoBlock}
@@ -420,6 +416,20 @@ function openDemonPage(demon) {
     <h2 class="fancy-records-title">Records</h2>
     <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
   `;
+} else {
+  container.innerHTML = `
+    <div class="fancy-demon-header" style="background-image:url('${bg}')">
+      <h1>#${demon.position} — ${demon.name}</h1>
+      <p>Verifier: ${demon.verifier}</p>
+      <p>Score: ${score.toFixed(2)}</p>
+    </div>
+
+    ${videoBlock}
+
+    <h2 class="fancy-records-title">Records</h2>
+    <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
+  `;
+}
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
