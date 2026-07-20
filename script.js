@@ -117,9 +117,11 @@ globalDemons = demonFiles
     if (methodList.includes(baseName)) d.warning = "method";
     if (pathList.includes(baseName)) d.warning = "path";
 
-    return { ...d, position: i + 1, cosmetic: d.cosmetic || null };
-  })
-  .filter(Boolean);
+return {
+  ...d,
+  position: d.cosmetic ? null : i + 1,
+  cosmetic: d.cosmetic || null
+};
 
   mainList = globalDemons.filter(d => d.position <= 75);
   extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 100);
