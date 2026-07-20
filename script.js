@@ -675,12 +675,13 @@ function loadLeaderboard() {
     globalDemons.forEach(demon => {
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
-      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
-        if (!(hideCheated && demon.verifier.toLowerCase().includes("[c]"))) {
-          const key = normalizeName(demon.verifier);
-          if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
-        }
-      }
+if (!demon.cosmetic && demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+  if (!(hideCheated && demon.verifier.toLowerCase().includes("[c]"))) {
+    const key = normalizeName(demon.verifier);
+    if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
+  }
+}
+
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
