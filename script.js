@@ -106,19 +106,20 @@ const demonFiles = await Promise.all(
 );
 
 
-  globalDemons = demonFiles
-    .map((d, i) => {
-      if (!d) return null;
+globalDemons = demonFiles
+  .map((d, i) => {
+    if (!d) return null;
 
-      const fileName = list[i];
-      const baseName = fileName.replace(/\.json$/i, "");
+    const entry = list[i];
+    const fileName = typeof entry === "string" ? entry : entry.id;
+    const baseName = fileName.replace(/\.json$/i, "");
 
-      if (methodList.includes(baseName)) d.warning = "method";
-      if (pathList.includes(baseName)) d.warning = "path";
+    if (methodList.includes(baseName)) d.warning = "method";
+    if (pathList.includes(baseName)) d.warning = "path";
 
-      return { ...d, position: i + 1, cosmetic: d.cosmetic || null };
-    })
-    .filter(Boolean);
+    return { ...d, position: i + 1, cosmetic: d.cosmetic || null };
+  })
+  .filter(Boolean);
 
   mainList = globalDemons.filter(d => d.position <= 75);
   extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 100);
