@@ -106,24 +106,29 @@ async function loadDemonList() {
     })
   );
 
-  globalDemons = demonFiles
-    .map((d, i) => {
-      if (!d) return null;
+let rank = 0;
 
-      const entry = list[i];
-      const fileName = typeof entry === "string" ? entry : entry.id;
-      const baseName = fileName.replace(/\.json$/i, "");
+globalDemons = demonFiles
+  .map((d, i) => {
+    if (!d) return null;
 
-      if (methodList.includes(baseName)) d.warning = "method";
-      if (pathList.includes(baseName)) d.warning = "path";
+    const entry = list[i];
+    const fileName = typeof entry === "string" ? entry : entry.id;
+    const baseName = fileName.replace(/\.json$/i, "");
 
-      return {
-        ...d,
-        position: d.cosmetic ? null : i + 1,
-        cosmetic: d.cosmetic || null
-      };
-    })
-    .filter(Boolean);
+    if (methodList.includes(baseName)) d.warning = "method";
+    if (pathList.includes(baseName)) d.warning = "path";
+
+    if (!d.cosmetic) rank++;
+
+    return {
+      ...d,
+      position: d.cosmetic ? null : rank,
+      cosmetic: d.cosmetic || null
+    };
+  })
+  .filter(Boolean);
+
 
   mainList = globalDemons.filter(d => !d.cosmetic && d.position <= 75);
   extendedList = globalDemons.filter(d => !d.cosmetic && d.position > 75 && d.position <= 100);
