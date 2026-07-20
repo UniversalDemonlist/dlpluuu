@@ -10,7 +10,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: background 0.4s ease, color 0.4s ease;
 }
 
 body.dark {
@@ -26,22 +25,19 @@ body.dark {
   top: 10px;
   right: 12px;
   background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(6px);
   padding: 10px 16px;
   border-radius: 7px;
   font-size: 15px;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid #2d3350;
   color: #f5f5f5;
   cursor: pointer;
   transition: 0.25s ease;
   z-index: 200;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
 }
 
 #theme-toggle:hover {
   background: rgba(43,92,255,0.6);
   border-color: #3f6dff;
-  box-shadow: 0 0 14px rgba(43,92,255,0.8);
 }
 
 .tabs {
@@ -49,39 +45,43 @@ body.dark {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: rgba(11,13,20,0.85);
-  backdrop-filter: blur(8px);
+  background: #0b0d14;
   border-bottom: 1px solid #222633;
   position: fixed;
   top: 0;
   width: 100%;
   height: 60px;
   z-index: 150;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+
+.tabs-logo {
+  height: 36px;
+  width: auto;
 }
 
 .tab-btn {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.15);
   padding: 10px 16px;
   border-radius: 7px;
   font-size: 15px;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid #2d3350;
   color: #f5f5f5;
   cursor: pointer;
   transition: 0.25s ease;
-  backdrop-filter: blur(4px);
+}
+
+body.dark .tab-btn {
+  background: rgba(255,255,255,0.08);
 }
 
 .tab-btn:hover {
   background: rgba(43,92,255,0.6);
   border-color: #3f6dff;
-  box-shadow: 0 0 10px rgba(43,92,255,0.8);
 }
 
 .tab-btn.active {
-  background: rgba(43,92,255,0.7);
+  background: rgba(43,92,255,0.6);
   border-color: #3f6dff;
-  box-shadow: 0 0 12px rgba(43,92,255,1);
 }
 
 .tab-content {
@@ -97,16 +97,14 @@ body.dark {
 }
 
 .panel {
-  background: rgba(255,255,255,0.25) !important;
-  backdrop-filter: blur(10px);
+  background: transparent !important;
   border: none !important;
   padding: 20px !important;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.25);
 }
 
 body.dark .panel {
-  background: rgba(20,20,20,0.45) !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 #search-bar {
@@ -164,30 +162,31 @@ body.dark .dropdown-group select {
 .player-card {
   display: flex;
   gap: 20px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 10px;
   padding: 20px;
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid #ccc;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: 0.2s ease;
   width: 780px;
   height: 170px;
   margin: 0 auto;
   overflow: hidden;
-  box-shadow: 0 0 12px rgba(0,0,0,0.25);
+}
+
+.demon-card {
+  cursor: pointer;
 }
 
 body.dark .demon-card,
 body.dark .player-card {
-  background: rgba(20,20,20,0.45);
-  border-color: rgba(255,255,255,0.15);
+  background: rgba(30,30,30,0.95);
+  border-color: #333;
 }
 
 .demon-card:hover,
 .player-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 18px rgba(43,92,255,0.8);
+  transform: translateY(-3px);
 }
 
 .demon-card img {
@@ -210,10 +209,10 @@ body.dark .player-card {
 .placeholder-player {
   display: flex;
   gap: 20px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.92);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
   width: 780px;
   height: 170px;
   margin: 0 auto;
@@ -222,8 +221,8 @@ body.dark .player-card {
 
 body.dark .placeholder-card,
 body.dark .placeholder-player {
-  background: rgba(20,20,20,0.45);
-  border-color: rgba(255,255,255,0.15);
+  background: rgba(30,30,30,0.95);
+  border-color: #333;
 }
 
 .placeholder-thumb {
@@ -248,9 +247,9 @@ body.dark .placeholder-player {
 }
 
 @keyframes placeholderGlow {
-  0% { opacity: 0.65; }
+  0% { opacity: 0.7; }
   50% { opacity: 1; }
-  100% { opacity: 0.65; }
+  100% { opacity: 0.7; }
 }
 
 @media (max-width: 700px) {
@@ -339,22 +338,26 @@ body.dark .placeholder-player {
   background-position: center;
   background-repeat: no-repeat;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 10px;
   position: relative;
   color: white;
-  box-shadow: 0 0 18px rgba(0,0,0,0.45);
 }
 
 .fancy-demon-header::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.35));
+  background: rgba(0,0,0,0.55);
   z-index: 0;
-  backdrop-filter: blur(4px);
 }
 
 .fancy-demon-header * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.demon-info > * {
   position: relative;
   z-index: 1;
 }
@@ -371,19 +374,11 @@ body.dark .placeholder-player {
   background-image: var(--card-bg);
   background-size: cover;
   background-position: center;
-  opacity: 0.35;
+  opacity: 0.5; /* 50% transparency */
   z-index: 0;
-  filter: blur(2px);
 }
 
 .demon-card > * {
   position: relative;
   z-index: 1;
-}
-
-.tabs-logo {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-  flex-shrink: 0;
 }
