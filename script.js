@@ -295,11 +295,19 @@ function createDemonCard(demon) {
 
   const score = 350 / Math.sqrt(demon.position);
 
-info.innerHTML = `
-  <h2>#${demon.position} — ${demon.name}</h2>
-  <p>Verifier: ${demon.verifier}</p>
-  <p>Score: ${(350 / Math.sqrt(demon.position)).toFixed(2)}</p>
-`;
+if (demon.cosmetic) {
+  info.innerHTML = `
+    <h2>${demon.name}</h2>
+    <p>Levels past this zone are harder than ${demon.cosmetic}</p>
+  `;
+} else {
+  info.innerHTML = `
+    <h2>#${demon.position} — ${demon.name}</h2>
+    <p>Verifier: ${demon.verifier}</p>
+    <p>Score: ${(350 / Math.sqrt(demon.position)).toFixed(2)}</p>
+  `;
+}
+
 
   card.appendChild(img);
   card.appendChild(info);
