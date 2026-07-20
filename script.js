@@ -109,7 +109,7 @@ async function loadDemonList() {
       if (methodList.includes(baseName)) d.warning = "method";
       if (pathList.includes(baseName)) d.warning = "path";
 
-      return { ...d, position: i + 1 };
+      return { ...d, position: i + 1, cosmetic: d.cosmetic || null };
     })
     .filter(Boolean);
 
