@@ -697,7 +697,7 @@ function loadLeaderboard() {
       if (demon.position > 150) return;
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
-      const baseScore = 350 / Math.sqrt(demon.position);
+      const baseScore = demon.cosmetic ? 0 : 350 / Math.sqrt(demon.position);
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
