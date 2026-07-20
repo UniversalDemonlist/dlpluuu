@@ -1,0 +1,17 @@
+{
+    "id": 88201288,
+    "name": "unjustified difficulty",
+    "author": "c",
+    "creators": ["c"],
+    "verifier": "radiant",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
