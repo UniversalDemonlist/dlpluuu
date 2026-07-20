@@ -306,7 +306,7 @@ function createDemonCard(demon) {
 if (demon.cosmetic) {
   info.innerHTML = `
     <h2>${demon.name}</h2>
-    <p>Levels past this zone are harder than ${demon.cosmetic}</p>
+   <p>Levels past this zone are harder than ${demon.name}</p>
   `;
 } else {
   info.innerHTML = `
