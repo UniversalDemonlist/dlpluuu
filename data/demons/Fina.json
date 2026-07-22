@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Final Perfection",
+    "author": "cc",
+    "creators": ["cc"],
+    "verifier": "c",
+    "verification": "https://youtu.be/2BLZJN1yyTE?si=9M9bz8S6LKgKxMYG",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
