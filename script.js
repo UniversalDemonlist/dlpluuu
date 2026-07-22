@@ -539,7 +539,7 @@ function getPlayerStats(playerName) {
     }
   });
 
-  return { main, extended, legacy, completed, created, verified };
+  return { main, extended, legacy, completed, verified };
 }
 
 function createPlaceholderPlayer() {
