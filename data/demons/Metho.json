@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "TA Method",
+    "author": "cc",
+    "creators": ["cc"],
+    "verifier": "c",
+    "verification": "https://youtu.be/qnPbKB-rdj8?si=JyjGPe3mB0do04NY",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
