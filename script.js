@@ -461,7 +461,7 @@ function setupSearchBar() {
   input.addEventListener("input", () => {
     stopAllVideos();
     const q = input.value.toLowerCase();
-    const combined = [...mainList, ...extendedList];
+    const combined = [...mainList, ...extendedList, ...legacyList];
     const filtered = combined.filter(d =>
       d.name.toLowerCase().includes(q) ||
       String(d.position).includes(q)
