@@ -43,16 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function createPlaceholderPlayer() {
   const card = document.createElement("div");
   card.className = "placeholder-card player-placeholder";
-
   const info = document.createElement("div");
   info.className = "placeholder-info";
-
   for (let i = 0; i < 4; i++) {
     const line = document.createElement("div");
     line.className = "placeholder-line";
     info.appendChild(line);
   }
-
   card.appendChild(info);
   return card;
 }
@@ -157,7 +154,6 @@ async function loadDemonList() {
   populateDropdowns();
   loadLeaderboard();
 }
-
 function renderDemonCards(listOverride) {
   stopAllVideos();
   const container = document.getElementById("demon-container");
@@ -216,6 +212,7 @@ function setupDropdownSelects() {
   attach(document.getElementById("select-extended"), extendedList);
   attach(document.getElementById("select-legacy"), legacyList);
 }
+
 function getYoutubeId(url) {
   if (!url) return "";
   const match = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?/]+)/);
@@ -371,118 +368,6 @@ function createPlaceholderCard() {
   card.appendChild(info);
 
   return card;
-}
-
-function openDemonPage(demon) {
-  stopAllVideos();
-  const container = document.getElementById("demon-page-container");
-  if (!container) return;
-
-  const thumb =
-    (demon.thumbnail && demon.thumbnail.trim()) ||
-    getYoutubeThumbnail(demon.verification) ||
-    "https://via.placeholder.com/300x170?text=No+Preview";
-
-  const bg =
-    demon.background ||
-    demon.thumbnail ||
-    getYoutubeThumbnail(demon.verification) ||
-    "";
-
-  const creators = Array.isArray(demon.creators)
-    ? demon.creators.join(", ")
-    : demon.creators || "Unknown";
-
-  const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
-
-  const videoId = getYoutubeId(demon.verification);
-  const iframeSrc = videoId ? `https://www.youtube.com/embed/${videoId}` : "";
-
-  const videoBlock = iframeSrc
-    ? `<div class="fancy-video-wrap"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
-    : `<div class="fancy-video-wrap"><img src="${thumb}"></div>`;
-
-  let warningHTML = "";
-  if (demon.warning === "method") {
-    warningHTML = `
-      <div class="warning-box">
-        THIS LEVEL ACCEPTS RECORDS ONLY USING THE METHOD USED IN THE VERIFICATION
-      </div>
-    `;
-  }
-  if (demon.warning === "path") {
-    warningHTML = `
-      <div class="warning-box">
-        THIS LEVEL ACCEPTS RECORDS ONLY USING THE PATH USED IN THE VERIFICATION
-      </div>
-    `;
-  }
-
-  const validRecords = demon.records
-    .map(r =>
-      typeof r === "string"
-        ? { user: r, percent: 100 }
-        : { user: r.user, percent: r.percent || 100, link: r.link || "" }
-    )
-    .filter(r => {
-      if (!r.user || r.user === "Not beaten yet") return false;
-      if (bannedPlayers.includes(r.user)) return false;
-      if (hideCheated && r.user.toLowerCase().includes("[c]")) return false;
-      return true;
-    })
-    .sort((a, b) => b.percent - a.percent)
-    .map(r => {
-      const vid = r.link ? `<a href="${r.link}" target="_blank">Video</a>` : "No video";
-      return `<p><strong>${r.user}</strong> — ${r.percent}% (${vid})</p>`;
-    })
-    .join("");
-
-  if (demon.cosmetic) {
-    container.innerHTML = `
-      <div class="fancy-demon-header" style="background-image:url('${bg}')">
-        <h1>${demon.name}</h1>
-        <p>Levels past this zone are harder than ${demon.name}</p>
-      </div>
-
-      ${videoBlock}
-
-      <h2 class="fancy-records-title">Records</h2>
-      <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
-    `;
-  } else {
-    container.innerHTML = `
-      <div class="fancy-demon-header" style="background-image:url('${bg}')">
-        <h1>#${demon.position} — ${demon.name}</h1>
-        <p>Verifier: ${demon.verifier}</p>
-        <p>Score: ${score.toFixed(2)}</p>
-      </div>
-
-      ${videoBlock}
-
-      <h2 class="fancy-records-title">Records</h2>
-      <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
-    `;
-  }
-
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-  document.getElementById("demon-page").classList.add("active");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function setupSearchBar() {
-  const input = document.getElementById("search-bar");
-  if (!input) return;
-  input.addEventListener("input", () => {
-    stopAllVideos();
-    const q = input.value.toLowerCase();
-    const combined = [...mainList, ...extendedList, ...legacyList];
-    const filtered = combined.filter(d =>
-      d.name.toLowerCase().includes(q) ||
-      String(d.position).includes(q)
-    );
-    renderDemonCards(filtered);
-  });
 }
 
 function getPlayerHardestDemon(playerName) {
@@ -654,141 +539,4 @@ function loadLeaderboard() {
   if (!container) return;
 
   container.innerHTML = "";
-  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
-
-  setTimeout(() => {
-    const playerMap = new Map();
-
-    playersList.forEach(p => {
-      const key = normalizeName(p);
-      if (!bannedPlayers.includes(p)) {
-        playerMap.set(key, p);
-      }
-    });
-
-    globalDemons.forEach(demon => {
-      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
-
-      demon.records.forEach(r => {
-        const record = typeof r === "string"
-          ? { user: r, percent: 100 }
-          : { user: r.user, percent: r.percent || 100 };
-
-        if (!record.user || record.user === "Not beaten yet") return;
-        if (bannedPlayers.includes(record.user)) return;
-        if (hideCheated && record.user.toLowerCase().includes("[c]")) return;
-
-        const key = normalizeName(record.user);
-        if (!playerMap.has(key)) playerMap.set(key, record.user);
-      });
-    });
-
-    window._playerMap = playerMap;
-
-    const scores = {};
-    playerMap.forEach((display, key) => {
-      scores[key] = 0;
-    });
-
-    globalDemons.forEach(demon => {
-      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
-
-      const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
-
-      demon.records.forEach(r => {
-        const record = typeof r === "string"
-          ? { user: r, percent: 100 }
-          : { user: r.user, percent: r.percent || 100 };
-
-        const p = record.user;
-        if (!p || p === "Not beaten yet") return;
-        if (bannedPlayers.includes(p)) return;
-        if (hideCheated && p.toLowerCase().includes("[c]")) return;
-
-        const key = normalizeName(p);
-        if (scores[key] === undefined) return;
-
-        const earned = record.percent === 100
-          ? baseScore
-          : baseScore * (record.percent / 100);
-
-        scores[key] += earned;
-      });
-
-      const verifier = demon.verifier;
-      if (verifier && !bannedPlayers.includes(verifier)) {
-        if (!(hideCheated && verifier.toLowerCase().includes("[c]"))) {
-          const key = normalizeName(verifier);
-          if (scores[key] !== undefined) {
-            scores[key] += baseScore;
-          }
-        }
-      }
-    });
-
-    manualCompleted.forEach(m => {
-      const key = normalizeName(m.player);
-      if (scores[key] !== undefined) {}
-    });
-
-    window._leaderboardScores = scores;
-
-    const searchQuery = document.getElementById("player-search")?.value.toLowerCase() || "";
-    const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
-
-    let sorted = Object.entries(scores)
-      .map(([key, score]) => {
-        const name = playerMap.get(key);
-        const hardest = getPlayerHardestDemon(name);
-        const t = getPlayerTier(hardest);
-        return {
-          key,
-          name,
-          score,
-          tier: t.tier || 0,
-          segment: t.segment
-        };
-      })
-      .filter(p => p.name.toLowerCase().includes(searchQuery));
-
-    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
-
-    if (filterMode === "points") {
-      sorted.sort((a, b) => b.score - a.score);
-    } else if (filterMode === "tier") {
-      sorted.sort((a, b) =>
-        b.tier - a.tier ||
-        segmentRank[b.segment] - segmentRank[a.segment] ||
-        b.score - a.score
-      );
-    }
-
-    container.innerHTML = "";
-
-    sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, p.score > 0 ? index + 1 : "—"));
-    });
-
-    if (sorted.length === 0) {
-      container.innerHTML = "<p>No players with scores yet.</p>";
-    }
-  }, 500);
-}
-
-function showInitialPlaceholders() {
-  const demonContainer = document.getElementById("demon-container");
-  const leaderboardContainer = document.getElementById("leaderboard-container");
-  if (demonContainer) {
-    demonContainer.innerHTML = "";
-    for (let i = 0; i < 6; i++) demonContainer.appendChild(createPlaceholderCard());
-  }
-  if (leaderboardContainer) {
-    leaderboardContainer.innerHTML = "";
-    for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
-  }
-}
-
-function cleanDisplayName(name) {
-  if (typeof name !== "string") return "";
-  return name.replace("[c]", "").replace("[C]", "").trim();
-}
+  for (let i =
