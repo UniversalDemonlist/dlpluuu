@@ -694,7 +694,6 @@ function loadLeaderboard() {
     }
   }
 });
-});
 
     window._playerMap = playerMap;
 
