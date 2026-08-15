@@ -665,35 +665,18 @@ function loadLeaderboard() {
       if (!playerMap.has(key)) playerMap.set(key, p);
     });
 
-   globalDemons.forEach(demon => {
-  const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
+    globalDemons.forEach(demon => {
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
 
-  demon.records.forEach(r => {
-    const record = typeof r === "string"
-      ? { user: r, percent: 100 }
-      : { user: r.user, percent: r.percent || 100 };
+        if (!record.user || record.user === "Not beaten yet") return;
 
-    const p = record.user;
-    if (!p || p === "Not beaten yet") return;
-
-    const key = normalizeName(p);
-    if (scores[key] === undefined) return;
-
-    const earned = record.percent === 100
-      ? baseScore
-      : baseScore * (record.percent / 100);
-
-    scores[key] += earned;
-  });
-
-  const verifier = demon.verifier;
-  if (verifier) {
-    const key = normalizeName(verifier);
-    if (scores[key] !== undefined) {
-      scores[key] += baseScore;
-    }
-  }
-});
+        const key = normalizeName(record.user);
+        if (!playerMap.has(key)) playerMap.set(key, record.user);
+      });
+    });
 
     window._playerMap = playerMap;
 
@@ -703,10 +686,7 @@ function loadLeaderboard() {
     });
 
     globalDemons.forEach(demon => {
-      if (demon.position > 150) return;
-      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
-
-      const baseScore = 350 / Math.sqrt(demon.position);
+      const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
@@ -715,30 +695,29 @@ function loadLeaderboard() {
 
         const p = record.user;
         if (!p || p === "Not beaten yet") return;
-        if (bannedPlayers.includes(p)) return;
-        if (hideCheated && p.toLowerCase().includes("[c]")) return;
 
-        if (record.percent >= demon.percentToQualify) {
-          const key = normalizeName(p);
-          const earned = record.percent === 100 ? baseScore : baseScore * (record.percent / 100);
-          if (scores[key] !== undefined) scores[key] += earned;
-        }
+        const key = normalizeName(p);
+        if (scores[key] === undefined) return;
+
+        const earned = record.percent === 100
+          ? baseScore
+          : baseScore * (record.percent / 100);
+
+        scores[key] += earned;
       });
 
       const verifier = demon.verifier;
-      if (verifier && !bannedPlayers.includes(verifier)) {
-        if (!(hideCheated && verifier.toLowerCase().includes("[c]"))) {
-          const key = normalizeName(verifier);
-          if (scores[key] !== undefined) scores[key] += baseScore;
+      if (verifier) {
+        const key = normalizeName(verifier);
+        if (scores[key] !== undefined) {
+          scores[key] += baseScore;
         }
       }
     });
 
     manualCompleted.forEach(m => {
       const key = normalizeName(m.player);
-      if (scores[key] !== undefined) {
-        // manual demons give 0 points
-      }
+      if (scores[key] !== undefined) {}
     });
 
     window._leaderboardScores = scores;
