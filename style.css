@@ -382,3 +382,32 @@ body.dark .placeholder-player {
   position: relative;
   z-index: 1;
 }
+
+.completed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.completed-card {
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  height: 140px;
+  position: relative;
+}
+
+.completed-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  padding: 8px;
+  border-radius: 0 0 10px 10px;
+}
+
+.difficulty-face {
+  width: 32px;
+  height: 32px;
+}
+
