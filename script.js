@@ -539,4 +539,147 @@ function loadLeaderboard() {
   if (!container) return;
 
   container.innerHTML = "";
-  for (let i =
+    for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
+
+  setTimeout(() => {
+    const playerMap = new Map();
+
+    playersList.forEach(p => {
+      const key = normalizeName(p);
+      if (!bannedPlayers.includes(p)) {
+        playerMap.set(key, p);
+      }
+    });
+
+    manualCompleted.forEach(m => {
+      const key = normalizeName(m.player);
+      if (!playerMap.has(key)) playerMap.set(key, m.player);
+    });
+
+    globalDemons.forEach(demon => {
+      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        if (!record.user || record.user === "Not beaten yet") return;
+        if (bannedPlayers.includes(record.user)) return;
+        if (hideCheated && record.user.toLowerCase().includes("[c]")) return;
+
+        const key = normalizeName(record.user);
+        if (!playerMap.has(key)) playerMap.set(key, record.user);
+      });
+    });
+
+    window._playerMap = playerMap;
+
+    const scores = {};
+    playerMap.forEach((display, key) => {
+      scores[key] = 0;
+    });
+
+    globalDemons.forEach(demon => {
+      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+
+      const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
+
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        const p = record.user;
+        if (!p || p === "Not beaten yet") return;
+        if (bannedPlayers.includes(p)) return;
+        if (hideCheated && p.toLowerCase().includes("[c]")) return;
+
+        const key = normalizeName(p);
+        if (scores[key] === undefined) return;
+
+        const earned = record.percent === 100
+          ? baseScore
+          : baseScore * (record.percent / 100);
+
+        scores[key] += earned;
+      });
+
+      const verifier = demon.verifier;
+      if (verifier && !bannedPlayers.includes(verifier)) {
+        if (!(hideCheated && verifier.toLowerCase().includes("[c]"))) {
+          const key = normalizeName(verifier);
+          if (scores[key] !== undefined) {
+            scores[key] += baseScore;
+          }
+        }
+      }
+    });
+
+    manualCompleted.forEach(m => {
+      const key = normalizeName(m.player);
+      if (scores[key] !== undefined) {}
+    });
+
+    window._leaderboardScores = scores;
+
+    const searchQuery = document.getElementById("player-search")?.value.toLowerCase() || "";
+    const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
+
+    let sorted = Object.entries(scores)
+      .map(([key, score]) => {
+        const name = playerMap.get(key);
+        const hardest = getPlayerHardestDemon(name);
+        const t = getPlayerTier(hardest);
+        return {
+          key,
+          name,
+          score,
+          tier: t.tier || 0,
+          segment: t.segment
+        };
+      })
+      .filter(p => p.name.toLowerCase().includes(searchQuery));
+
+    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
+
+    if (filterMode === "points") {
+      sorted.sort((a, b) => b.score - a.score);
+    } else if (filterMode === "tier") {
+      sorted.sort((a, b) =>
+        b.tier - a.tier ||
+        segmentRank[b.segment] - segmentRank[a.segment] ||
+        b.score - a.score
+      );
+    }
+
+    container.innerHTML = "";
+
+    sorted.forEach((p, index) => {
+      container.appendChild(createPlayerCard(p.name, p.score, p.score > 0 ? index + 1 : "—"));
+    });
+
+    if (sorted.length === 0) {
+      container.innerHTML = "<p>No players with scores yet.</p>";
+    }
+  }, 500);
+}
+
+function showInitialPlaceholders() {
+  const demonContainer = document.getElementById("demon-container");
+  const leaderboardContainer = document.getElementById("leaderboard-container");
+  if (demonContainer) {
+    demonContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) demonContainer.appendChild(createPlaceholderCard());
+  }
+  if (leaderboardContainer) {
+    leaderboardContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
+  }
+}
+
+function cleanDisplayName(name) {
+  if (typeof name !== "string") return "";
+  return name.replace("[c]", "").replace("[C]", "").trim();
+}
+
