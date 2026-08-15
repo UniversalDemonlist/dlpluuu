@@ -216,7 +216,6 @@ function setupDropdownSelects() {
   attach(document.getElementById("select-extended"), extendedList);
   attach(document.getElementById("select-legacy"), legacyList);
 }
-
 function getYoutubeId(url) {
   if (!url) return "";
   const match = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?/]+)/);
@@ -307,6 +306,7 @@ function getPlayerTitle(segment, tier) {
 
   return titles[tier][segment] || "Unranked";
 }
+
 function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
@@ -593,7 +593,6 @@ function createPlayerCard(name, score, rank) {
 
   return card;
 }
-
 function openPlayerPage(key, scores) {
   stopAllVideos();
 
@@ -662,16 +661,22 @@ function loadLeaderboard() {
 
     playersList.forEach(p => {
       const key = normalizeName(p);
-      if (!playerMap.has(key)) playerMap.set(key, p);
+      if (!bannedPlayers.includes(p)) {
+        playerMap.set(key, p);
+      }
     });
 
     globalDemons.forEach(demon => {
+      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+
       demon.records.forEach(r => {
         const record = typeof r === "string"
           ? { user: r, percent: 100 }
           : { user: r.user, percent: r.percent || 100 };
 
         if (!record.user || record.user === "Not beaten yet") return;
+        if (bannedPlayers.includes(record.user)) return;
+        if (hideCheated && record.user.toLowerCase().includes("[c]")) return;
 
         const key = normalizeName(record.user);
         if (!playerMap.has(key)) playerMap.set(key, record.user);
@@ -686,6 +691,8 @@ function loadLeaderboard() {
     });
 
     globalDemons.forEach(demon => {
+      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+
       const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
 
       demon.records.forEach(r => {
@@ -695,6 +702,8 @@ function loadLeaderboard() {
 
         const p = record.user;
         if (!p || p === "Not beaten yet") return;
+        if (bannedPlayers.includes(p)) return;
+        if (hideCheated && p.toLowerCase().includes("[c]")) return;
 
         const key = normalizeName(p);
         if (scores[key] === undefined) return;
@@ -707,10 +716,12 @@ function loadLeaderboard() {
       });
 
       const verifier = demon.verifier;
-      if (verifier) {
-        const key = normalizeName(verifier);
-        if (scores[key] !== undefined) {
-          scores[key] += baseScore;
+      if (verifier && !bannedPlayers.includes(verifier)) {
+        if (!(hideCheated && verifier.toLowerCase().includes("[c]"))) {
+          const key = normalizeName(verifier);
+          if (scores[key] !== undefined) {
+            scores[key] += baseScore;
+          }
         }
       }
     });
