@@ -1,4 +1,3 @@
-
 document.body.classList.add("dark");
 
 let globalDemons = [];
@@ -10,6 +9,8 @@ let methodList = [];
 let pathList = [];
 let cheatedList = [];
 let hideCheated = false;
+let playersList = [];
+let manualCompleted = [];
 
 window._leaderboardScores = {};
 window._playerMap = new Map();
@@ -50,11 +51,13 @@ function setupThemeToggle() {
 async function loadEverything() {
   showInitialPlaceholders();
   setTimeout(async () => {
+    playersList = await fetch("data/players.json").then(r => r.json()).catch(() => []);
     bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
     methodList = await fetch("data/method.json").then(r => r.json()).catch(() => []);
     pathList = await fetch("data/path.json").then(r => r.json()).catch(() => []);
     cheatedList = await fetch("data/cheated.json").then(r => r.json()).catch(() => []);
-      cheatedList = cheatedList.map(x => x.toLowerCase());
+    cheatedList = cheatedList.map(x => x.toLowerCase());
+    manualCompleted = await fetch("data/manualcompleted.json").then(r => r.json()).catch(() => []);
     await loadDemonList();
   }, 200);
 }
@@ -106,29 +109,28 @@ async function loadDemonList() {
     })
   );
 
-let rank = 0;
+  let rank = 0;
 
-globalDemons = demonFiles
-  .map((d, i) => {
-    if (!d) return null;
+  globalDemons = demonFiles
+    .map((d, i) => {
+      if (!d) return null;
 
-    const entry = list[i];
-    const fileName = typeof entry === "string" ? entry : entry.id;
-    const baseName = fileName.replace(/\.json$/i, "");
+      const entry = list[i];
+      const fileName = typeof entry === "string" ? entry : entry.id;
+      const baseName = fileName.replace(/\.json$/i, "");
 
-    if (methodList.includes(baseName)) d.warning = "method";
-    if (pathList.includes(baseName)) d.warning = "path";
+      if (methodList.includes(baseName)) d.warning = "method";
+      if (pathList.includes(baseName)) d.warning = "path";
 
-    if (!d.cosmetic) rank++;
+      if (!d.cosmetic) rank++;
 
-    return {
-      ...d,
-      position: d.cosmetic ? null : rank,
-      cosmetic: d.cosmetic || null
-    };
-  })
-  .filter(Boolean);
-
+      return {
+        ...d,
+        position: d.cosmetic ? null : rank,
+        cosmetic: d.cosmetic || null
+      };
+    })
+    .filter(Boolean);
 
   mainList = globalDemons.filter(d => !d.cosmetic && d.position <= 75);
   extendedList = globalDemons.filter(d => !d.cosmetic && d.position > 75 && d.position <= 100);
@@ -139,7 +141,6 @@ globalDemons = demonFiles
   loadLeaderboard();
 }
 
-
 function renderDemonCards(listOverride) {
   stopAllVideos();
   const container = document.getElementById("demon-container");
@@ -148,11 +149,11 @@ function renderDemonCards(listOverride) {
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
 
-  let list = listOverride || globalDemons
+  let list = listOverride || globalDemons;
 
-if (hideCheated) {
-  list = list.filter(d => !cheatedList.includes(d.id.toLowerCase()));
-}
+  if (hideCheated) {
+    list = list.filter(d => !cheatedList.includes(d.id.toLowerCase()));
+  }
 
   setTimeout(() => {
     container.innerHTML = "";
@@ -313,19 +314,18 @@ function createDemonCard(demon) {
 
   const score = 350 / Math.sqrt(demon.position);
 
-if (demon.cosmetic) {
-  info.innerHTML = `
-    <h2>${demon.name}</h2>
-   <p>Levels past this zone are harder than ${demon.name}</p>
-  `;
-} else {
-  info.innerHTML = `
-    <h2>#${demon.position} — ${demon.name}</h2>
-    <p>Verifier: ${demon.verifier}</p>
-    <p>Score: ${(350 / Math.sqrt(demon.position)).toFixed(2)}</p>
-  `;
-}
-
+  if (demon.cosmetic) {
+    info.innerHTML = `
+      <h2>${demon.name}</h2>
+      <p>Levels past this zone are harder than ${demon.name}</p>
+    `;
+  } else {
+    info.innerHTML = `
+      <h2>#${demon.position} — ${demon.name}</h2>
+      <p>Verifier: ${demon.verifier}</p>
+      <p>Score: ${(350 / Math.sqrt(demon.position)).toFixed(2)}</p>
+    `;
+  }
 
   card.appendChild(img);
   card.appendChild(info);
@@ -334,7 +334,6 @@ if (demon.cosmetic) {
 
   return card;
 }
-
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
@@ -422,32 +421,32 @@ function openDemonPage(demon) {
     })
     .join("");
 
-if (demon.cosmetic) {
-  container.innerHTML = `
-    <div class="fancy-demon-header" style="background-image:url('${bg}')">
-      <h1>${demon.name}</h1>
-     <p>Levels past this zone are harder than ${demon.name}</p>
-    </div>
+  if (demon.cosmetic) {
+    container.innerHTML = `
+      <div class="fancy-demon-header" style="background-image:url('${bg}')">
+        <h1>${demon.name}</h1>
+        <p>Levels past this zone are harder than ${demon.name}</p>
+      </div>
 
-    ${videoBlock}
+      ${videoBlock}
 
-    <h2 class="fancy-records-title">Records</h2>
-    <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
-  `;
-} else {
-  container.innerHTML = `
-    <div class="fancy-demon-header" style="background-image:url('${bg}')">
-      <h1>#${demon.position} — ${demon.name}</h1>
-      <p>Verifier: ${demon.verifier}</p>
-      <p>Score: ${score.toFixed(2)}</p>
-    </div>
+      <h2 class="fancy-records-title">Records</h2>
+      <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="fancy-demon-header" style="background-image:url('${bg}')">
+        <h1>#${demon.position} — ${demon.name}</h1>
+        <p>Verifier: ${demon.verifier}</p>
+        <p>Score: ${score.toFixed(2)}</p>
+      </div>
 
-    ${videoBlock}
+      ${videoBlock}
 
-    <h2 class="fancy-records-title">Records</h2>
-    <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
-  `;
-}
+      <h2 class="fancy-records-title">Records</h2>
+      <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
+    `;
+  }
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
@@ -495,51 +494,44 @@ function getPlayerHardestDemon(playerName) {
   return hardest;
 }
 
+function getDifficultyFace(diff) {
+  return `data/${diff}.png`;
+}
+
 function getPlayerStats(playerName) {
   const key = normalizeName(playerName);
 
-  let main = 0;
-  let extended = 0;
-  let legacy = 0;
   let completed = [];
-  let created = [];
-  let verified = [];
 
   globalDemons.forEach(demon => {
-    const pos = demon.position;
-    let isCompleted = false;
-
     demon.records.forEach(r => {
       const record = typeof r === "string"
         ? { user: r, percent: 100 }
         : { user: r.user, percent: r.percent || 100 };
 
       if (normalizeName(record.user) === key && record.percent === 100) {
-        isCompleted = true;
+        completed.push({
+          name: demon.name,
+          background: demon.background || demon.thumbnail || "",
+          difficulty: "extreme",
+          list: true
+        });
       }
     });
+  });
 
-    if (normalizeName(demon.verifier) === key) {
-      isCompleted = true;
-      verified.push(demon);
-    }
-
-    if (isCompleted) {
-      completed.push(demon);
-
-      if (pos <= 75) main++;
-      else if (pos <= 150) extended++;
-      else legacy++;
-    }
-
-    if (Array.isArray(demon.creators) && demon.creators.some(c => normalizeName(c) === key)) {
-      created.push(demon);
-    } else if (normalizeName(demon.creators) === key) {
-      created.push(demon);
+  manualCompleted.forEach(m => {
+    if (normalizeName(m.player) === key) {
+      completed.push({
+        name: m.name,
+        background: m.background,
+        difficulty: m.difficulty,
+        list: false
+      });
     }
   });
 
-  return { main, extended, legacy, completed, verified };
+  return { completed };
 }
 
 function createPlaceholderPlayer() {
@@ -550,13 +542,14 @@ function createPlaceholderPlayer() {
   info.className = "placeholder-info";
 
   for (let i = 0; i < 4; i++) {
-  const line = document.createElement("div");
-  line.className = "placeholder-line";
-  info.appendChild(line);
+    const line = document.createElement("div");
+    line.className = "placeholder-line";
+    info.appendChild(line);
+  }
+  card.appendChild(info);
+  return card;
 }
-card.appendChild(info);
-return card;
-}
+
 function createPlayerCard(name, score, rank) {
   const hardest = getPlayerHardestDemon(name);
   const t = getPlayerTier(hardest);
@@ -600,62 +593,30 @@ function openPlayerPage(key, scores) {
   if (!container) return;
 
   const stats = getPlayerStats(playerName);
-  const hardest = getPlayerHardestDemon(playerName);
-  const t = getPlayerTier(hardest);
-  const tierColor = getTierColor(t.tier);
-  const segmentColor = getSegmentColor(t.segment);
-  const title = getPlayerTitle(t.segment, t.tier);
-
-  const tierHtml = t.tier
-    ? `<span style="color:${segmentColor}; font-weight:600;">${t.segment}</span>
-       <span style="color:${tierColor}; font-weight:600;">Tier ${t.tier}</span>`
-    : `<span style="color:#888; font-weight:600;">Unranked</span>`;
-
-  const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
-
-  const completedList = stats.completed
-    .sort((a, b) => a.position - b.position)
-    .map(d => `<li>#${d.position} — ${d.name}</li>`)
-    .join("");
-
-  const createdList = stats.created
-    .sort((a, b) => a.position - b.position)
-    .map(d => `<li>#${d.position} — ${d.name}</li>`)
-    .join("");
-
-  const verifiedList = stats.verified
-    .sort((a, b) => a.position - b.position)
-    .map(d => `<li>#${d.position} — ${d.name}</li>`)
-    .join("");
-
   const score = scores[key] || 0;
+
+  const completedCards = stats.completed
+    .map(d => `
+      <div class="completed-card" style="background-image:url('${d.background}')">
+        <div class="completed-info">
+          <h3>${d.name}</h3>
+          <img src="${getDifficultyFace(d.difficulty)}" class="difficulty-face">
+        </div>
+      </div>
+    `)
+    .join("");
 
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
         <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-        <p><strong>Player Tier:</strong> ${tierHtml}</p>
-        <p><strong>Title:</strong> ${title}</p>
-        <p><strong>Hardest Demon:</strong> ${hardestName}</p>
-        <p><strong>Main List Completed:</strong> ${stats.main}</p>
-        <p><strong>Extended List Completed:</strong> ${stats.extended}</p>
-        <p><strong>Legacy List Completed:</strong> ${stats.legacy}</p>
+        <p><strong>Rank:</strong> ${score > 0 ? "" : "—"}</p>
       </div>
 
       <div class="player-profile-section">
         <h2>Completed Demons</h2>
-        <ul>${completedList || "<li>None</li>"}</ul>
-      </div>
-
-      <div class="player-profile-section">
-        <h2>Verified Demons</h2>
-        <ul>${verifiedList || "<li>None</li>"}</ul>
-      </div>
-
-      <div class="player-profile-section">
-        <h2>Created Demons</h2>
-        <ul>${createdList || "<li>None</li>"}</ul>
+        <div class="completed-grid">${completedCards || "<p>None</p>"}</div>
       </div>
     </div>
   `;
@@ -690,16 +651,13 @@ function loadLeaderboard() {
   setTimeout(() => {
     const playerMap = new Map();
 
+    playersList.forEach(p => {
+      const key = normalizeName(p);
+      if (!playerMap.has(key)) playerMap.set(key, p);
+    });
+
     globalDemons.forEach(demon => {
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
-
-if (!demon.cosmetic && demon.verifier && !bannedPlayers.includes(demon.verifier)) {
-  if (!(hideCheated && demon.verifier.toLowerCase().includes("[c]"))) {
-    const key = normalizeName(demon.verifier);
-    if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
-  }
-}
-
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
@@ -726,7 +684,7 @@ if (!demon.cosmetic && demon.verifier && !bannedPlayers.includes(demon.verifier)
       if (demon.position > 150) return;
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
-      const baseScore = demon.cosmetic ? 0 : 350 / Math.sqrt(demon.position);
+      const baseScore = 350 / Math.sqrt(demon.position);
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
@@ -760,7 +718,6 @@ if (!demon.cosmetic && demon.verifier && !bannedPlayers.includes(demon.verifier)
     const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
 
     let sorted = Object.entries(scores)
-      .filter(([key, score]) => score > 0)
       .map(([key, score]) => {
         const name = playerMap.get(key);
         const hardest = getPlayerHardestDemon(name);
@@ -790,7 +747,7 @@ if (!demon.cosmetic && demon.verifier && !bannedPlayers.includes(demon.verifier)
     container.innerHTML = "";
 
     sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+      container.appendChild(createPlayerCard(p.name, p.score, p.score > 0 ? index + 1 : "—"));
     });
 
     if (sorted.length === 0) {
