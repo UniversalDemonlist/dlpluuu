@@ -290,7 +290,6 @@ function getPlayerTitle(segment, tier) {
 
   return titles[tier][segment] || "Unranked";
 }
-
 function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
@@ -518,6 +517,15 @@ function getPlayerStats(playerName) {
         });
       }
     });
+
+    if (normalizeName(demon.verifier) === key) {
+      completed.push({
+        name: demon.name,
+        background: demon.background || demon.thumbnail || "",
+        difficulty: "extreme",
+        list: true
+      });
+    }
   });
 
   manualCompleted.forEach(m => {
@@ -532,57 +540,6 @@ function getPlayerStats(playerName) {
   });
 
   return { completed };
-}
-
-function createPlaceholderPlayer() {
-  const card = document.createElement("div");
-  card.className = "placeholder-card player-placeholder";
-
-  const info = document.createElement("div");
-  info.className = "placeholder-info";
-
-  for (let i = 0; i < 4; i++) {
-    const line = document.createElement("div");
-    line.className = "placeholder-line";
-    info.appendChild(line);
-  }
-  card.appendChild(info);
-  return card;
-}
-
-function createPlayerCard(name, score, rank) {
-  const hardest = getPlayerHardestDemon(name);
-  const t = getPlayerTier(hardest);
-  const tierColor = getTierColor(t.tier);
-  const segmentColor = getSegmentColor(t.segment);
-  const title = getPlayerTitle(t.segment, t.tier);
-
-  const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
-
-  const card = document.createElement("div");
-  card.className = "player-card no-image";
-
-  const info = document.createElement("div");
-  info.className = "player-info";
-
-  const tierHtml = t.tier
-    ? `<span style="color:${segmentColor}; font-weight:600;">${t.segment}</span>
-       <span style="color:${tierColor}; font-weight:600;">Tier ${t.tier}</span>`
-    : `<span style="color:#888; font-weight:600;">Unranked</span>`;
-
-  info.innerHTML = `
-    <h2>#${rank} — ${cleanDisplayName(name)}</h2>
-    <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-    <p><strong>Player Tier:</strong> ${tierHtml}</p>
-    <p><strong>Title:</strong> ${title}</p>
-    <p><strong>Hardest Demon:</strong> ${hardestName}</p>
-  `;
-
-  card.appendChild(info);
-
-  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
-
-  return card;
 }
 
 function openPlayerPage(key, scores) {
@@ -709,6 +666,13 @@ function loadLeaderboard() {
           const key = normalizeName(verifier);
           if (scores[key] !== undefined) scores[key] += baseScore;
         }
+      }
+    });
+
+    manualCompleted.forEach(m => {
+      const key = normalizeName(m.player);
+      if (scores[key] !== undefined) {
+        // manual demons give 0 points
       }
     });
 
