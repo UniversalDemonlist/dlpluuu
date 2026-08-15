@@ -665,22 +665,36 @@ function loadLeaderboard() {
       if (!playerMap.has(key)) playerMap.set(key, p);
     });
 
-    globalDemons.forEach(demon => {
-      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+   globalDemons.forEach(demon => {
+  const baseScore = demon.position ? (350 / Math.sqrt(demon.position)) : 0;
 
-      demon.records.forEach(r => {
-        const record = typeof r === "string"
-          ? { user: r, percent: 100 }
-          : { user: r.user, percent: r.percent || 100 };
+  demon.records.forEach(r => {
+    const record = typeof r === "string"
+      ? { user: r, percent: 100 }
+      : { user: r.user, percent: r.percent || 100 };
 
-        if (!record.user || record.user === "Not beaten yet") return;
-        if (bannedPlayers.includes(record.user)) return;
-        if (hideCheated && record.user.toLowerCase().includes("[c]")) return;
+    const p = record.user;
+    if (!p || p === "Not beaten yet") return;
 
-        const key = normalizeName(record.user);
-        if (!playerMap.has(key)) playerMap.set(key, record.user);
-      });
-    });
+    const key = normalizeName(p);
+    if (scores[key] === undefined) return;
+
+    const earned = record.percent === 100
+      ? baseScore
+      : baseScore * (record.percent / 100);
+
+    scores[key] += earned;
+  });
+
+  const verifier = demon.verifier;
+  if (verifier) {
+    const key = normalizeName(verifier);
+    if (scores[key] !== undefined) {
+      scores[key] += baseScore;
+    }
+  }
+});
+});
 
     window._playerMap = playerMap;
 
