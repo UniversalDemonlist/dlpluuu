@@ -40,6 +40,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+function createPlaceholderPlayer() {
+  const card = document.createElement("div");
+  card.className = "placeholder-card player-placeholder";
+
+  const info = document.createElement("div");
+  info.className = "placeholder-info";
+
+  for (let i = 0; i < 4; i++) {
+    const line = document.createElement("div");
+    line.className = "placeholder-line";
+    info.appendChild(line);
+  }
+
+  card.appendChild(info);
+  return card;
+}
+
 function setupThemeToggle() {
   const btn = document.getElementById("theme-toggle");
   if (!btn) return;
