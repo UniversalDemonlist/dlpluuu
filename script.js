@@ -541,31 +541,16 @@ function getPlayerStats(playerName) {
 
 
 function createPlayerCard(name, score, rank) {
-  const hardest = getPlayerHardestDemon(name);
-  const t = getPlayerTier(hardest);
-  const tierColor = getTierColor(t.tier);
-  const segmentColor = getSegmentColor(t.segment);
-  const title = getPlayerTitle(t.segment, t.tier);
-
-  const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
-
   const card = document.createElement("div");
   card.className = "player-card no-image";
 
   const info = document.createElement("div");
   info.className = "player-info";
 
-  const tierHtml = t.tier
-    ? `<span style="color:${segmentColor}; font-weight:600;">${t.segment}</span>
-       <span style="color:${tierColor}; font-weight:600;">Tier ${t.tier}</span>`
-    : `<span style="color:#888; font-weight:600;">Unranked</span>`;
-
   info.innerHTML = `
     <h2>#${rank} — ${cleanDisplayName(name)}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-    <p><strong>Player Tier:</strong> ${tierHtml}</p>
-    <p><strong>Title:</strong> ${title}</p>
-    <p><strong>Hardest Demon:</strong> ${hardestName}</p>
+    <p><strong>Rank:</strong> ${getPlayerRank(score)}</p>
   `;
 
   card.appendChild(info);
@@ -574,6 +559,7 @@ function createPlayerCard(name, score, rank) {
 
   return card;
 }
+
 function openPlayerPage(key, scores) {
   stopAllVideos();
 
