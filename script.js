@@ -814,7 +814,7 @@ async function loadLeaderboard() {
 
     window._leaderboardScores = scores;
 
-    const searchQuery = document.getElementById("player-search")?.value.toLowerCase() || "";
+    const searchQuery = (document.getElementById("player-search")?.value || "").toLowerCase();
     const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
 
     let sorted = Object.entries(scores)
@@ -831,7 +831,10 @@ async function loadLeaderboard() {
           rankName: getPlayerRank(score)
         };
       })
-      .filter(p => cleanDisplayName(p.name).toLowerCase().includes(searchQuery));
+      .filter(p => {
+        if (!searchQuery.trim()) return true;
+        return cleanDisplayName(p.name).toLowerCase().includes(searchQuery);
+      });
 
     const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
 
@@ -859,6 +862,7 @@ async function loadLeaderboard() {
     }
   }, 500);
 }
+
 
 
 
