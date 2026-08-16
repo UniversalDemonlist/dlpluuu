@@ -216,6 +216,7 @@ function setupDropdownSelects() {
   attach(document.getElementById("select-extended"), extendedList);
   attach(document.getElementById("select-legacy"), legacyList);
 }
+
 function getYoutubeId(url) {
   if (!url) return "";
   const match = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?/]+)/);
@@ -293,18 +294,15 @@ function getPlayerTier(demon) {
   return { segment, tier };
 }
 
-function getPlayerTitle(segment, tier) {
-  if (!tier) return "Unranked";
-
-  const titles = {
-    39: { High: "ABSOLUTE", Mid: "ABSOLUTE", Low: "ABSOLUTE" },
-    38: { High: "MASTER", Mid: "MASTER", Low: "MASTER" },
-    37: { High: "EXPERT", Mid: "EXPERT", Low: "EXPERT" },
-    36: { High: "ADVANCED", Mid: "ADVANCED", Low: "ADVANCED" },
-    35: { High: "NOVICE", Mid: "NOVICE", Low: "NOVICE" }
-  };
-
-  return titles[tier][segment] || "Unranked";
+function getPlayerRank(score, listPoints) {
+  if (listPoints === 0) return "Unranked";
+  if (score >= 5000) return "Mythic";
+  if (score >= 3500) return "Champion";
+  if (score >= 2000) return "Diamond";
+  if (score >= 1000) return "Platinum";
+  if (score >= 500) return "Gold";
+  if (score >= 200) return "Silver";
+  return "Bronze";
 }
 
 function createDemonCard(demon) {
@@ -372,7 +370,6 @@ function createPlaceholderCard() {
 
   return card;
 }
-
 function openDemonPage(demon) {
   stopAllVideos();
   const container = document.getElementById("demon-page-container");
@@ -533,7 +530,6 @@ function getPlayerStats(playerName) {
   };
 }
 
-
 function createPlayerCard(name, score, rankNumber) {
   const listPoints = getPlayerStats(name).listDemons.length;
 
@@ -548,7 +544,6 @@ function createPlayerCard(name, score, rankNumber) {
   div.onclick = () => openPlayerPage(normalizeName(name), window._leaderboardScores);
   return div;
 }
-
 
 function showInitialPlaceholders() {
   const demonContainer = document.getElementById("demon-container");
