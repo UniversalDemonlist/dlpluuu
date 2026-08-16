@@ -505,6 +505,7 @@ function getDifficultyFace(diff) {
   return `data/${diff}.png`;
 }
 
+
 function getPlayerStats(playerName) {
   const key = normalizeName(playerName);
 
