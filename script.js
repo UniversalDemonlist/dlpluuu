@@ -861,6 +861,7 @@ async function loadLeaderboard() {
 }
 
 
+
 function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim();
