@@ -628,9 +628,7 @@ function loadLeaderboard() {
 
     playersList.forEach(p => {
       const key = normalizeName(p);
-      if (!bannedPlayers.includes(p)) {
-        playerMap.set(key, p);
-      }
+      if (!bannedPlayers.includes(p)) playerMap.set(key, p);
     });
 
     manualCompleted.forEach(m => {
@@ -693,18 +691,25 @@ function loadLeaderboard() {
 
       const verifier = demon.verifier;
       if (verifier && !bannedPlayers.includes(verifier)) {
-        if (!(hideCheated && verifier.toLowerCase().includes("[c]"))) {
-          const key = normalizeName(verifier);
-          if (scores[key] !== undefined) {
-            scores[key] += baseScore;
-          }
-        }
+        const key = normalizeName(verifier);
+        if (scores[key] !== undefined) scores[key] += baseScore;
       }
     });
 
     manualCompleted.forEach(m => {
       const key = normalizeName(m.player);
-      if (scores[key] !== undefined) {}
+      if (scores[key] === undefined) return;
+
+      const diff = m.difficulty.toLowerCase();
+      const mult = {
+        easy: 0.20,
+        medium: 0.40,
+        hard: 0.60,
+        insane: 0.80
+      }[diff] || 0.20;
+
+      const baseScore = 350 * mult;
+      scores[key] += baseScore;
     });
 
     window._leaderboardScores = scores;
@@ -750,6 +755,7 @@ function loadLeaderboard() {
     }
   }, 500);
 }
+
 
 function showInitialPlaceholders() {
   const demonContainer = document.getElementById("demon-container");
