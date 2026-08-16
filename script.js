@@ -86,6 +86,7 @@ function stopAllVideos() {
     f.src = old;
   });
 }
+
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
 
@@ -221,6 +222,7 @@ function setupSearchBar() {
     renderDemonCards(filtered);
   });
 }
+
 function getPlayerRank(score) {
   if (score >= 5000) return "Mythic";
   if (score >= 3500) return "Champion";
@@ -376,6 +378,7 @@ async function loadLeaderboard() {
     }
   }, 500);
 }
+
 function getPlayerStats(playerName) {
   const key = normalizeName(playerName);
 
@@ -487,4 +490,22 @@ function openPlayerPage(key, scores) {
   `;
 
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showInitialPlaceholders() {
+  const demonContainer = document.getElementById("demon-container");
+  const leaderboardContainer = document.getElementById("leaderboard-container");
+  if (demonContainer) {
+    demonContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) demonContainer.appendChild(createPlaceholderCard());
+  }
+  if (leaderboardContainer) {
+    leaderboardContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
+  }
+}
+
+function cleanDisplayName(name) {
+  if (typeof name !== "string") return "";
+  return name.replace("[c]", "").replace("[C]", "").trim();
 }
