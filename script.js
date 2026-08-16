@@ -65,6 +65,7 @@ function getPlayerRank(score) {
 }
 
 
+
 function createPlaceholderPlayer() {
   const card = document.createElement("div");
   card.className = "placeholder-card player-placeholder";
