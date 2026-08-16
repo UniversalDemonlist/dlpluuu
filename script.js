@@ -576,7 +576,6 @@ function createPlayerCard(name, score, rank) {
   const t = getPlayerTier(hardest);
   const tierColor = getTierColor(t.tier);
   const segmentColor = getSegmentColor(t.segment);
-  const title = getPlayerTitle(t.segment, t.tier);
 
   const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
 
@@ -596,7 +595,6 @@ function createPlayerCard(name, score, rank) {
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
     <p><strong>Rank:</strong> ${getPlayerRank(score)}</p>
     <p><strong>Player Tier:</strong> ${tierHtml}</p>
-    <p><strong>Title:</strong> ${title}</p>
     <p><strong>Hardest Demon:</strong> ${hardestName}</p>
   `;
 
@@ -606,6 +604,7 @@ function createPlayerCard(name, score, rank) {
 
   return card;
 }
+
 
 
 
