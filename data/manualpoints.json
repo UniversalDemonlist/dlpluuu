@@ -1,6 +1,14 @@
 [
   {
    "player": "Zoink",
+   "extrapoints": 4000
+  },
+      {
+   "player": "wPopoff",
+   "extrapoints": 2000
+  },
+      {
+   "player": "zLevii",
    "extrapoints": 2000
   }
 ]
