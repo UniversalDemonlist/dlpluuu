@@ -20,6 +20,20 @@ function normalizeName(name) {
   return name.replace("[c]", "").replace("[C]", "").trim().toLowerCase();
 }
 
+function getDemonDifficulty(demon) {
+  const name = demon.name.toLowerCase();
+
+  if (demon.position && demon.position <= 150) return "list";
+  if (name.includes("extreme")) return "extreme";
+  if (name.includes("insane")) return "insane";
+  if (name.includes("hard")) return "hard";
+  if (name.includes("medium")) return "medium";
+  if (name.includes("easy")) return "easy";
+
+  return "unknown";
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupThemeToggle();
