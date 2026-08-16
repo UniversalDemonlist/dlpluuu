@@ -573,6 +573,7 @@ function getPlayerStats(playerName) {
 
 
 
+
 function createPlayerCard(name, score, rank) {
   const hardest = getPlayerHardestDemon(name);
   const t = getPlayerTier(hardest);
