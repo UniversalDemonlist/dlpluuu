@@ -304,72 +304,6 @@ function getPlayerRank(score, listPoints) {
   if (score >= 200) return "Silver";
   return "Bronze";
 }
-
-function createDemonCard(demon) {
-  const card = document.createElement("div");
-  card.className = "demon-card";
-
-  const bg =
-    demon.background ||
-    demon.thumbnail ||
-    getYoutubeThumbnail(demon.verification) ||
-    "";
-
-  card.style.setProperty("--card-bg", `url('${bg}')`);
-
-  const img = document.createElement("img");
-  img.src =
-    (demon.thumbnail && demon.thumbnail.trim()) ||
-    getYoutubeThumbnail(demon.verification) ||
-    "https://via.placeholder.com/300x170?text=No+Preview";
-
-  const info = document.createElement("div");
-  info.className = "demon-info";
-
-  const score = demon.position ? 350 / Math.sqrt(demon.position) : 350 / Math.sqrt(999);
-
-  if (demon.cosmetic) {
-    info.innerHTML = `
-      <h2>${demon.name}</h2>
-      <p>Levels past this zone are harder than ${demon.name}</p>
-    `;
-  } else {
-    info.innerHTML = `
-      <h2>#${demon.position} — ${demon.name}</h2>
-      <p>Verifier: ${demon.verifier}</p>
-      <p>Score: ${score.toFixed(2)}</p>
-    `;
-  }
-
-  card.appendChild(img);
-  card.appendChild(info);
-
-  card.addEventListener("click", () => openDemonPage(demon));
-
-  return card;
-}
-
-function createPlaceholderCard() {
-  const card = document.createElement("div");
-  card.className = "placeholder-card";
-
-  const thumb = document.createElement("div");
-  thumb.className = "placeholder-thumb";
-
-  const info = document.createElement("div");
-  info.className = "placeholder-info";
-
-  for (let i = 0; i < 5; i++) {
-    const line = document.createElement("div");
-    line.className = "placeholder-line";
-    info.appendChild(line);
-  }
-
-  card.appendChild(thumb);
-  card.appendChild(info);
-
-  return card;
-}
 function openDemonPage(demon) {
   stopAllVideos();
   const container = document.getElementById("demon-page-container");
@@ -533,14 +467,27 @@ function getPlayerStats(playerName) {
 function createPlayerCard(name, score, rankNumber) {
   const listPoints = getPlayerStats(name).listDemons.length;
 
+  const hardest = getPlayerHardestDemon(name);
+  const bg =
+    hardest?.background ||
+    hardest?.thumbnail ||
+    getYoutubeThumbnail(hardest?.verification) ||
+    "https://via.placeholder.com/300x170?text=Player";
+
   const div = document.createElement("div");
-  div.className = "player-card";
+  div.className = "demon-card player-card-hybrid";
+  div.style.setProperty("--card-bg", `url('${bg}')`);
+
   div.innerHTML = `
-    <h3>${rankNumber}. ${cleanDisplayName(name)}</h3>
-    <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-    <p><strong>Rank:</strong> ${getPlayerRank(score, listPoints)}</p>
-    <p><strong>Tier:</strong> ${getPlayerTier(getPlayerHardestDemon(name)).tier}</p>
+    <img src="${bg}">
+    <div class="demon-info">
+      <h2>${rankNumber}. ${cleanDisplayName(name)}</h2>
+      <p>Score: ${score.toFixed(2)}</p>
+      <p>Rank: ${getPlayerRank(score, listPoints)}</p>
+      <p>Tier: ${getPlayerTier(hardest).tier || "Unranked"}</p>
+    </div>
   `;
+
   div.onclick = () => openPlayerPage(normalizeName(name), window._leaderboardScores);
   return div;
 }
@@ -644,4 +591,74 @@ function loadLeaderboard() {
     });
   }, 500);
 }
+function openPlayerPage(key, scores) {
+  stopAllVideos();
 
+  const playerName = window._playerMap.get(key) || key;
+  const container = document.getElementById("player-page-container");
+  if (!container) return;
+
+  const stats = getPlayerStats(playerName);
+  const score = scores[key] || 0;
+  const listPoints = stats.listDemons.length;
+
+  const hardest = getPlayerHardestDemon(playerName);
+  const bg =
+    hardest?.background ||
+    hardest?.thumbnail ||
+    getYoutubeThumbnail(hardest?.verification) ||
+    "https://via.placeholder.com/300x170?text=Player";
+
+  function buildSection(title, arr) {
+    return `
+      <div class="player-profile-section">
+        <h2>${title}</h2>
+        <div class="completed-grid">
+          ${arr.map(d => `
+            <div class="completed-card" style="background-image:url('${d.background || ""}')">
+              <div class="completed-info">
+                <h3>${d.name}</h3>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="player-profile-header" style="background-image:url('${bg}')">
+      <h1>${cleanDisplayName(playerName)}</h1>
+      <p><strong>Score:</strong> ${score.toFixed(2)}</p>
+      <p><strong>Rank:</strong> ${getPlayerRank(score, listPoints)}</p>
+      <p><strong>Tier:</strong> ${getPlayerTier(hardest).tier || "Unranked"}</p>
+    </div>
+
+    ${buildSection("List Demons", stats.listDemons)}
+    ${buildSection("Extreme Demons", stats.extremeDemons)}
+    ${buildSection("Insane Demons", stats.insaneDemons)}
+    ${buildSection("Hard Demons", stats.hardDemons)}
+    ${buildSection("Medium Demons", stats.mediumDemons)}
+    ${buildSection("Easy Demons", stats.easyDemons)}
+  `;
+
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.getElementById("player-page").classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function setupPlayerSearch() {
+  const input = document.getElementById("player-search");
+  if (!input) return;
+
+  input.addEventListener("input", () => {
+    const q = normalizeName(input.value);
+    if (!q) return;
+
+    const key = [...window._playerMap.keys()].find(k => k.includes(q));
+    if (!key) return;
+
+    openPlayerPage(key, window._leaderboardScores);
+  });
+}
