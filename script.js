@@ -558,204 +558,44 @@ function openPlayerPage(key, scores) {
 
   const stats = getPlayerStats(playerName);
   const score = scores[key] || 0;
+  const listPoints = stats.listDemons.length;
 
-  const completedCards = stats.completed
-    .map(d => `
-      <div class="completed-card fancy-completed" style="background-image:url('${d.background}')">
-        <div class="completed-overlay"></div>
-        <div class="completed-info">
-          <h3>${d.name}</h3>
-          <img src="${getDifficultyFace(d.difficulty)}" class="difficulty-face">
+  function buildSection(title, arr) {
+    return `
+      <div class="player-profile-section">
+        <h2>${title}</h2>
+        <div class="completed-grid">
+          ${arr.map(d => `
+            <div class="completed-card" style="background-image:url('${d.background}')">
+              <div class="completed-info">
+                <h3>${d.name}</h3>
+              </div>
+            </div>
+          `).join("")}
         </div>
       </div>
-    `)
-    .join("");
+    `;
+  }
 
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
         <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-        <p><strong>Rank:</strong> ${score > 0 ? "" : "—"}</p>
+        <p><strong>Rank:</strong> ${getPlayerRank(score, listPoints)}</p>
+        <p><strong>Tier:</strong> ${getPlayerTier(getPlayerHardestDemon(playerName)).tier}</p>
       </div>
 
-      <div class="player-profile-section">
-        <h2>Completed Demons</h2>
-        <div class="completed-grid">${completedCards || "<p>None</p>"}</div>
-      </div>
+      ${buildSection("List Demons", stats.listDemons)}
+      ${buildSection("Extreme Demons", stats.extremeDemons)}
+      ${buildSection("Insane Demons", stats.insaneDemons)}
+      ${buildSection("Hard Demons", stats.hardDemons)}
+      ${buildSection("Medium Demons", stats.mediumDemons)}
+      ${buildSection("Easy Demons", stats.easyDemons)}
     </div>
   `;
 
   window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function setupPlayerSearch() {
-  const input = document.getElementById("player-search");
-  const select = document.getElementById("leaderboard-filter");
-  if (input) {
-    input.addEventListener("input", () => {
-      loadLeaderboard();
-    });
-  }
-  if (select) {
-    select.addEventListener("change", () => {
-      loadLeaderboard();
-    });
-  }
-}
-
-async function loadLeaderboard() {
-  stopAllVideos();
-
-  const container = document.getElementById("leaderboard-container");
-  if (!container) return;
-
-  container.innerHTML = "";
-  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
-
-  const manualPoints = await fetch("data/manualpoints.json").then(r => r.json()).catch(() => []);
-
-  setTimeout(() => {
-    const playerMap = new Map();
-
-    playersList.forEach(p => {
-      const key = normalizeName(p);
-      if (!bannedPlayers.includes(p)) playerMap.set(key, p);
-    });
-
-    manualCompleted.forEach(m => {
-      const key = normalizeName(m.player);
-      if (!playerMap.has(key)) playerMap.set(key, m.player);
-    });
-
-    manualPoints.forEach(mp => {
-      const key = normalizeName(mp.player);
-      if (!playerMap.has(key)) playerMap.set(key, mp.player);
-    });
-
-    globalDemons.forEach(demon => {
-      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
-        const key = normalizeName(demon.verifier);
-        if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
-      }
-
-      demon.records.forEach(r => {
-        const record = typeof r === "string"
-          ? { user: r, percent: 100 }
-          : { user: r.user, percent: r.percent || 100 };
-
-        if (!record.user || record.user === "Not beaten yet") return;
-        if (bannedPlayers.includes(record.user)) return;
-        if (hideCheated && record.user.toLowerCase().includes("[c]")) return;
-
-        const key = normalizeName(record.user);
-        if (!playerMap.has(key)) playerMap.set(key, record.user);
-      });
-    });
-
-    window._playerMap = playerMap;
-
-    const scores = {};
-    playerMap.forEach((display, key) => {
-      scores[key] = 0;
-    });
-
-    globalDemons.forEach(demon => {
-      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
-
-      const pos = demon.position || 999;
-      const baseScore = 350 / Math.sqrt(pos);
-
-      demon.records.forEach(r => {
-        const record = typeof r === "string"
-          ? { user: r, percent: 100 }
-          : { user: r.user, percent: r.percent || 100 };
-
-        const p = record.user;
-        if (!p || p === "Not beaten yet") return;
-        if (bannedPlayers.includes(p)) return;
-        if (hideCheated && p.toLowerCase().includes("[c]")) return;
-
-        const key = normalizeName(p);
-        if (scores[key] === undefined) return;
-
-        const earned = record.percent === 100
-          ? baseScore
-          : baseScore * (record.percent / 100);
-
-        scores[key] += earned;
-      });
-
-      const verifier = demon.verifier;
-      if (verifier && !bannedPlayers.includes(verifier)) {
-        const key = normalizeName(verifier);
-        if (scores[key] !== undefined) scores[key] += baseScore;
-      }
-    });
-
-    manualCompleted.forEach(m => {
-      const key = normalizeName(m.player);
-      if (scores[key] === undefined) return;
-
-      const diff = m.difficulty.toLowerCase();
-      const mult = {
-        easy: 0.20,
-        medium: 0.40,
-        hard: 0.60,
-        insane: 0.80
-      }[diff] || 0.20;
-
-      const baseScore = 350 * mult;
-      scores[key] += baseScore;
-    });
-
-    manualPoints.forEach(mp => {
-      const key = normalizeName(mp.player);
-      if (scores[key] !== undefined) scores[key] += Number(mp.extrapoints) || 0;
-    });
-
-    window._leaderboardScores = scores;
-
-    const searchQuery = document.getElementById("player-search")?.value.toLowerCase() || "";
-    const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
-
-    let sorted = Object.entries(scores)
-      .map(([key, score]) => {
-        const name = playerMap.get(key);
-        const hardest = getPlayerHardestDemon(name);
-        const t = getPlayerTier(hardest);
-        return {
-          key,
-          name,
-          score,
-          tier: t.tier || 0,
-          segment: t.segment
-        };
-      })
-      .filter(p => cleanDisplayName(p.name).toLowerCase().includes(searchQuery));
-
-    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
-
-    if (filterMode === "points") {
-      sorted.sort((a, b) => b.score - a.score);
-    } else if (filterMode === "tier") {
-      sorted.sort((a, b) =>
-        b.tier - a.tier ||
-        segmentRank[b.segment] - segmentRank[a.segment] ||
-        b.score - a.score
-      );
-    }
-
-    container.innerHTML = "";
-
-    sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, p.score > 0 ? index + 1 : "—"));
-    });
-
-    if (sorted.length === 0) {
-      container.innerHTML = "<p>No players with scores yet.</p>";
-    }
-  }, 500);
 }
 
 
