@@ -562,3 +562,86 @@ function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim();
 }
+function loadLeaderboard() {
+  stopAllVideos();
+  const container = document.getElementById("leaderboard-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
+
+  setTimeout(() => {
+    const playerMap = new Map();
+
+    globalDemons.forEach(demon => {
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+        const key = normalizeName(demon.verifier);
+        if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
+      }
+
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        if (record.user && record.user !== "Not beaten yet" && !bannedPlayers.includes(record.user)) {
+          const key = normalizeName(record.user);
+          if (!playerMap.has(key)) playerMap.set(key, record.user);
+        }
+      });
+    });
+
+    manualCompleted.forEach(m => {
+      const key = normalizeName(m.player);
+      if (!playerMap.has(key)) playerMap.set(key, m.player);
+    });
+
+    window._playerMap = playerMap;
+
+    const scores = {};
+    playerMap.forEach((display, key) => {
+      scores[key] = 0;
+    });
+
+    globalDemons.forEach(demon => {
+      const demonScore = demon.position ? 350 / Math.sqrt(demon.position) : 0;
+
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+        const key = normalizeName(demon.verifier);
+        scores[key] += demonScore;
+      }
+
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        if (record.user && record.user !== "Not beaten yet" && !bannedPlayers.includes(record.user)) {
+          const key = normalizeName(record.user);
+          scores[key] += demonScore * (record.percent / 100);
+        }
+      });
+    });
+
+    manualCompleted.forEach(m => {
+      const key = normalizeName(m.player);
+      scores[key] += Number(m.points) || 0;
+    });
+
+    window._leaderboardScores = scores;
+
+    const sorted = [...playerMap.entries()]
+      .map(([key, display]) => ({
+        key,
+        name: display,
+        score: scores[key]
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    container.innerHTML = "";
+    sorted.forEach((p, index) => {
+      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+    });
+  }, 500);
+}
+
