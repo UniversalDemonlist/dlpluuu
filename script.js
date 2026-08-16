@@ -621,6 +621,7 @@ function createPlayerCard(name, score, rank) {
 
 
 
+
 function openPlayerPage(key, scores) {
   stopAllVideos();
 
