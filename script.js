@@ -503,8 +503,10 @@ function getPlayerHardestDemon(playerName) {
 }
 
 function getDifficultyFace(diff) {
+  if (diff === "list") return "data/extreme.png";
   return `data/${diff}.png`;
 }
+
 
 
 function getPlayerStats(playerName) {
