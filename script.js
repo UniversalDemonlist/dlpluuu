@@ -549,55 +549,6 @@ function createPlayerCard(name, score, rankNumber) {
   return div;
 }
 
-function openPlayerPage(key, scores) {
-  stopAllVideos();
-
-  const playerName = window._playerMap.get(key) || key;
-  const container = document.getElementById("leaderboard-container");
-  if (!container) return;
-
-  const stats = getPlayerStats(playerName);
-  const score = scores[key] || 0;
-  const listPoints = stats.listDemons.length;
-
-  function buildSection(title, arr) {
-    return `
-      <div class="player-profile-section">
-        <h2>${title}</h2>
-        <div class="completed-grid">
-          ${arr.map(d => `
-            <div class="completed-card" style="background-image:url('${d.background}')">
-              <div class="completed-info">
-                <h3>${d.name}</h3>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      </div>
-    `;
-  }
-
-  container.innerHTML = `
-    <div class="player-profile">
-      <div class="player-profile-header">
-        <h1>${cleanDisplayName(playerName)}</h1>
-        <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-        <p><strong>Rank:</strong> ${getPlayerRank(score, listPoints)}</p>
-        <p><strong>Tier:</strong> ${getPlayerTier(getPlayerHardestDemon(playerName)).tier}</p>
-      </div>
-
-      ${buildSection("List Demons", stats.listDemons)}
-      ${buildSection("Extreme Demons", stats.extremeDemons)}
-      ${buildSection("Insane Demons", stats.insaneDemons)}
-      ${buildSection("Hard Demons", stats.hardDemons)}
-      ${buildSection("Medium Demons", stats.mediumDemons)}
-      ${buildSection("Easy Demons", stats.easyDemons)}
-    </div>
-  `;
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
 
 function showInitialPlaceholders() {
   const demonContainer = document.getElementById("demon-container");
