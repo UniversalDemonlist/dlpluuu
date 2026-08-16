@@ -531,21 +531,32 @@ function getPlayerStats(playerName) {
     if (normalizeName(demon.verifier) === key) beaten = true;
 
     if (beaten) {
-      const diff = getDemonDifficulty(demon);
-
       const entry = {
         name: demon.name,
         background: demon.background || demon.thumbnail || "",
-        difficulty: diff
+        difficulty: demon.position <= 150 ? "list" : "extreme"
       };
 
-      if (diff === "list") listDemons.push(entry);
-      if (diff === "extreme") extremeDemons.push(entry);
-      if (diff === "insane") insaneDemons.push(entry);
-      if (diff === "hard") hardDemons.push(entry);
-      if (diff === "medium") mediumDemons.push(entry);
-      if (diff === "easy") easyDemons.push(entry);
+      if (entry.difficulty === "list") listDemons.push(entry);
+      else extremeDemons.push(entry);
     }
+  });
+
+  manualCompleted.forEach(m => {
+    if (normalizeName(m.player) !== key) return;
+
+    const diff = m.difficulty.toLowerCase();
+
+    const entry = {
+      name: m.name,
+      background: m.background || "",
+      difficulty: diff
+    };
+
+    if (diff === "insane") insaneDemons.push(entry);
+    if (diff === "hard") hardDemons.push(entry);
+    if (diff === "medium") mediumDemons.push(entry);
+    if (diff === "easy") easyDemons.push(entry);
   });
 
   return {
@@ -557,6 +568,7 @@ function getPlayerStats(playerName) {
     easyDemons
   };
 }
+
 
 
 function createPlayerCard(name, score, rank) {
