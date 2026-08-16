@@ -531,12 +531,18 @@ function getPlayerStats(playerName) {
     if (beaten) {
       const diff = getDemonDifficulty(demon);
 
-      if (diff === "list") listDemons.push(demon);
-      if (diff === "extreme") extremeDemons.push(demon);
-      if (diff === "insane") insaneDemons.push(demon);
-      if (diff === "hard") hardDemons.push(demon);
-      if (diff === "medium") mediumDemons.push(demon);
-      if (diff === "easy") easyDemons.push(demon);
+      const entry = {
+        name: demon.name,
+        background: demon.background || demon.thumbnail || "",
+        difficulty: diff
+      };
+
+      if (diff === "list") listDemons.push(entry);
+      if (diff === "extreme") extremeDemons.push(entry);
+      if (diff === "insane") insaneDemons.push(entry);
+      if (diff === "hard") hardDemons.push(entry);
+      if (diff === "medium") mediumDemons.push(entry);
+      if (diff === "easy") easyDemons.push(entry);
     }
   });
 
