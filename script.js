@@ -497,47 +497,48 @@ function getDifficultyFace(diff) {
 function getPlayerStats(playerName) {
   const key = normalizeName(playerName);
 
-  let completed = [];
+  let listDemons = [];
+  let extremeDemons = [];
+  let insaneDemons = [];
+  let hardDemons = [];
+  let mediumDemons = [];
+  let easyDemons = [];
 
   globalDemons.forEach(demon => {
+    let beaten = false;
+
     demon.records.forEach(r => {
       const record = typeof r === "string"
         ? { user: r, percent: 100 }
         : { user: r.user, percent: r.percent || 100 };
 
-      if (normalizeName(record.user) === key && record.percent === 100) {
-        completed.push({
-          name: demon.name,
-          background: demon.background || demon.thumbnail || "",
-          difficulty: "extreme",
-          list: true
-        });
-      }
+      if (normalizeName(record.user) === key && record.percent === 100) beaten = true;
     });
 
-    if (normalizeName(demon.verifier) === key) {
-      completed.push({
-        name: demon.name,
-        background: demon.background || demon.thumbnail || "",
-        difficulty: "extreme",
-        list: true
-      });
+    if (normalizeName(demon.verifier) === key) beaten = true;
+
+    if (beaten) {
+      const diff = getDemonDifficulty(demon);
+
+      if (diff === "list") listDemons.push(demon);
+      if (diff === "extreme") extremeDemons.push(demon);
+      if (diff === "insane") insaneDemons.push(demon);
+      if (diff === "hard") hardDemons.push(demon);
+      if (diff === "medium") mediumDemons.push(demon);
+      if (diff === "easy") easyDemons.push(demon);
     }
   });
 
-  manualCompleted.forEach(m => {
-    if (normalizeName(m.player) === key) {
-      completed.push({
-        name: m.name,
-        background: m.background,
-        difficulty: m.difficulty,
-        list: false
-      });
-    }
-  });
-
-  return { completed };
+  return {
+    listDemons,
+    extremeDemons,
+    insaneDemons,
+    hardDemons,
+    mediumDemons,
+    easyDemons
+  };
 }
+
 
 function createPlayerCard(name, score, rank) {
   const hardest = getPlayerHardestDemon(name);
