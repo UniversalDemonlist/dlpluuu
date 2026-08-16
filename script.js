@@ -610,10 +610,11 @@ function openPlayerPage(key, scores) {
         <h2>${title}</h2>
         <div class="completed-grid">
           ${arr.map(d => `
-            <div class="completed-card fancy-completed" style="background-image:url('${d.background || ""}')">
+            <div class="completed-card fancy-completed" style="background-image:url('${d.background}')">
               <div class="completed-overlay"></div>
               <div class="completed-info">
                 <h3>${d.name}</h3>
+                <img src="${getDifficultyFace(d.difficulty)}" class="difficulty-face">
               </div>
             </div>
           `).join("")}
@@ -622,12 +623,17 @@ function openPlayerPage(key, scores) {
     `;
   }
 
+  const hardest = getPlayerHardestDemon(playerName);
+  const t = getPlayerTier(hardest);
+  const title = getPlayerTitle(t.segment, t.tier);
+
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
         <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
         <p><strong>Rank:</strong> ${getPlayerRank(score)}</p>
+        <p><strong>Title:</strong> ${title}</p>
       </div>
 
       ${buildSection("List Demons", stats.listDemons)}
@@ -641,6 +647,7 @@ function openPlayerPage(key, scores) {
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 
 function setupPlayerSearch() {
