@@ -136,6 +136,29 @@ async function loadDemonList() {
   loadLeaderboard();
 }
 
+function setupTabs() {
+  const buttons = document.querySelectorAll(".tab-btn");
+  const contents = document.querySelectorAll(".tab-content");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      stopAllVideos();
+      const tab = btn.getAttribute("data-tab");
+
+      buttons.forEach(b => b.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+
+      btn.classList.add("active");
+      document.getElementById(tab).classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (tab === "leaderboard") loadLeaderboard();
+    });
+  });
+}
+
+
 function getDemonDifficulty(demon) {
   const name = demon.name.toLowerCase();
 
