@@ -614,7 +614,7 @@ function setupPlayerSearch() {
   }
 }
 
-function loadLeaderboard() {
+async function loadLeaderboard() {
   stopAllVideos();
 
   const container = document.getElementById("leaderboard-container");
@@ -622,6 +622,8 @@ function loadLeaderboard() {
 
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
+
+  const manualPoints = await fetch("data/manualpoints.json").then(r => r.json()).catch(() => []);
 
   setTimeout(() => {
     const playerMap = new Map();
@@ -634,6 +636,11 @@ function loadLeaderboard() {
     manualCompleted.forEach(m => {
       const key = normalizeName(m.player);
       if (!playerMap.has(key)) playerMap.set(key, m.player);
+    });
+
+    manualPoints.forEach(mp => {
+      const key = normalizeName(mp.player);
+      if (!playerMap.has(key)) playerMap.set(key, mp.player);
     });
 
     globalDemons.forEach(demon => {
@@ -710,6 +717,11 @@ function loadLeaderboard() {
 
       const baseScore = 350 * mult;
       scores[key] += baseScore;
+    });
+
+    manualPoints.forEach(mp => {
+      const key = normalizeName(mp.player);
+      if (scores[key] !== undefined) scores[key] += Number(mp.extrapoints) || 0;
     });
 
     window._leaderboardScores = scores;
