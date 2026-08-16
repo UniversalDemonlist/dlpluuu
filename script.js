@@ -631,6 +631,18 @@ function openPlayerPage(key, scores) {
   const stats = getPlayerStats(playerName);
   const score = scores[key] || 0;
 
+  const rank = getPlayerRank(score);
+
+  const rankColor = {
+    Mythic: "#a020f0",
+    Champion: "#ff00ff",
+    Diamond: "#00bfff",
+    Platinum: "#e5e4e2",
+    Gold: "#ffd700",
+    Silver: "#c0c0c0",
+    Bronze: "#cd7f32"
+  }[rank];
+
   function buildSection(title, arr) {
     return `
       <div class="player-profile-section">
@@ -650,17 +662,12 @@ function openPlayerPage(key, scores) {
     `;
   }
 
-  const hardest = getPlayerHardestDemon(playerName);
-  const t = getPlayerTier(hardest);
-  const title = getPlayerTitle(t.segment, t.tier);
-
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
         <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-        <p><strong>Rank:</strong> ${getPlayerRank(score)}</p>
-        <p><strong>Title:</strong> ${title}</p>
+        <p><strong>Rank:</strong> <span style="color:${rankColor}; font-weight:600;">${rank}</span></p>
       </div>
 
       ${buildSection("List Demons", stats.listDemons)}
@@ -674,6 +681,7 @@ function openPlayerPage(key, scores) {
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 
 
