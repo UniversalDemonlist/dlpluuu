@@ -41,7 +41,24 @@
     "difficulty": "medium",
     "background": "https://levelthumbs.prevter.me/thumbnail/6939821"
   },
-
+              {
+    "player": "TheSilly",
+    "name": "The Big Black",
+    "difficulty": "hard",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+            {
+    "player": "TheSilly",
+    "name": "Platinum Adventure",
+    "difficulty": "easy",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+            {
+    "player": "TheSilly",
+    "name": "Speed Racer",
+    "difficulty": "easy",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
           {
     "player": "TheSilly",
     "name": "Shitty Pillar",
