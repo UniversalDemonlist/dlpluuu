@@ -449,5 +449,10 @@ body.dark .placeholder-player {
   width: 32px;
   height: 32px;
 }
+.completed-card {
+  background-size: cover;
+  background-position: center;
+}
+
 
 
