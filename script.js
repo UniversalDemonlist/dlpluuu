@@ -829,3 +829,18 @@ function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim();
 }
+function showInitialPlaceholders() {
+  const demonContainer = document.getElementById("demon-container");
+  const leaderboardContainer = document.getElementById("leaderboard-container");
+
+  if (demonContainer) {
+    demonContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) demonContainer.appendChild(createPlaceholderCard());
+  }
+
+  if (leaderboardContainer) {
+    leaderboardContainer.innerHTML = "";
+    for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
+  }
+}
+
