@@ -742,34 +742,26 @@ async function loadLeaderboard() {
     let sorted = Object.entries(scores)
       .map(([key, score]) => {
         const name = playerMap.get(key);
-        const hardest = getPlayerHardestDemon(name);
-        const t = getPlayerTier(hardest);
         return {
           key,
           name,
           score,
-          tier: t.tier || 0,
-          segment: t.segment
+          rankName: getPlayerRank(score)
         };
       })
       .filter(p => cleanDisplayName(p.name).toLowerCase().includes(searchQuery));
 
-    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
-
     if (filterMode === "points") {
       sorted.sort((a, b) => b.score - a.score);
-    } else if (filterMode === "tier") {
-      sorted.sort((a, b) =>
-        b.tier - a.tier ||
-        segmentRank[b.segment] - segmentRank[a.segment] ||
-        b.score - a.score
-      );
+    } else if (filterMode === "rank") {
+      const order = ["Mythic", "Champion", "Diamond", "Platinum", "Gold", "Silver", "Bronze"];
+      sorted.sort((a, b) => order.indexOf(a.rankName) - order.indexOf(b.rankName));
     }
 
     container.innerHTML = "";
 
     sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, p.score > 0 ? index + 1 : "—"));
+      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
     });
 
     if (sorted.length === 0) {
@@ -777,6 +769,7 @@ async function loadLeaderboard() {
     }
   }, 500);
 }
+
 
 
 function showInitialPlaceholders() {
