@@ -829,6 +829,7 @@ function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim();
 }
+
 function showInitialPlaceholders() {
   const demonContainer = document.getElementById("demon-container");
   const leaderboardContainer = document.getElementById("leaderboard-container");
