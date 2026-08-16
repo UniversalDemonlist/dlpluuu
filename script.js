@@ -54,6 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+function getPlayerRank(score) {
+  if (score >= 5000) return "Mythic";
+  if (score >= 3500) return "Champion";
+  if (score >= 2000) return "Diamond";
+  if (score >= 1000) return "Platinum";
+  if (score >= 500) return "Gold";
+  if (score >= 200) return "Silver";
+  return "Bronze";
+}
+
+
 function createPlaceholderPlayer() {
   const card = document.createElement("div");
   card.className = "placeholder-card player-placeholder";
