@@ -570,35 +570,44 @@ function openPlayerPage(key, scores) {
   const stats = getPlayerStats(playerName);
   const score = scores[key] || 0;
 
-  const completedCards = stats.completed
-    .map(d => `
-      <div class="completed-card fancy-completed" style="background-image:url('${d.background}')">
-        <div class="completed-overlay"></div>
-        <div class="completed-info">
-          <h3>${d.name}</h3>
-          <img src="${getDifficultyFace(d.difficulty)}" class="difficulty-face">
+  function buildSection(title, arr) {
+    return `
+      <div class="player-profile-section">
+        <h2>${title}</h2>
+        <div class="completed-grid">
+          ${arr.map(d => `
+            <div class="completed-card fancy-completed" style="background-image:url('${d.background || ""}')">
+              <div class="completed-overlay"></div>
+              <div class="completed-info">
+                <h3>${d.name}</h3>
+              </div>
+            </div>
+          `).join("")}
         </div>
       </div>
-    `)
-    .join("");
+    `;
+  }
 
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
         <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-        <p><strong>Rank:</strong> ${score > 0 ? "" : "—"}</p>
+        <p><strong>Rank:</strong> ${getPlayerRank(score)}</p>
       </div>
 
-      <div class="player-profile-section">
-        <h2>Completed Demons</h2>
-        <div class="completed-grid">${completedCards || "<p>None</p>"}</div>
-      </div>
+      ${buildSection("List Demons", stats.listDemons)}
+      ${buildSection("Extreme Demons", stats.extremeDemons)}
+      ${buildSection("Insane Demons", stats.insaneDemons)}
+      ${buildSection("Hard Demons", stats.hardDemons)}
+      ${buildSection("Medium Demons", stats.mediumDemons)}
+      ${buildSection("Easy Demons", stats.easyDemons)}
     </div>
   `;
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 function setupPlayerSearch() {
   const input = document.getElementById("player-search");
