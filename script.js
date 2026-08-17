@@ -339,15 +339,18 @@ function createDemonCard(demon) {
 
   const bg =
     demon.background ||
-    demon.thumbnail ||
-    getYoutubeThumbnail(demon.verification) ||
-    "";
+    (
+      demon.id !== "112313819" &&
+      demon.id !== "88201288"
+        ? `https://levelthumbs.prevter.me/thumbnail/${demon.id}`
+        : ""
+    );
 
   card.style.setProperty("--card-bg", `url('${bg}')`);
 
   const img = document.createElement("img");
   img.src =
-    (demon.thumbnail && demon.thumbnail.trim()) ||
+    demon.thumbnail ||
     getYoutubeThumbnail(demon.verification) ||
     "https://via.placeholder.com/300x170?text=No+Preview";
 
@@ -376,6 +379,7 @@ function createDemonCard(demon) {
 
   return card;
 }
+
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
