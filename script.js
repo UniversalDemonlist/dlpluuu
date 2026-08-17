@@ -337,11 +337,12 @@ function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
 
+  const notUsable = ["112313819", "88201288", "109780665", "0"];
+
   const bg =
     demon.background ||
     (
-      demon.id !== "112313819" &&
-      demon.id !== "88201288"
+      !notUsable.includes(String(demon.id))
         ? `https://levelthumbs.prevter.me/thumbnail/${demon.id}`
         : ""
     );
@@ -379,6 +380,7 @@ function createDemonCard(demon) {
 
   return card;
 }
+
 
 
 function createPlaceholderCard() {
