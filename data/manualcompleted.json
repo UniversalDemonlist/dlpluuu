@@ -206,7 +206,19 @@
           {
     "player": "BelgioneAranci",
     "name": "Brainrot Challenge",
-    "difficulty": "easy",
+    "difficulty": "medium",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+          {
+    "player": "BelgioneAranci",
+    "name": "Brainrot Challenge",
+    "difficulty": "medium",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+  {
+    "player": "BelgioneAranci",
+    "name": "Mr Silent Sonic Wave",
+    "difficulty": "insane",
     "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
   },
           {
@@ -215,10 +227,4 @@
     "difficulty": "easy",
     "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
   },
-  {
-    "player": "BelgioneAranci",
-    "name": "Mr Silent Sonic Wave",
-    "difficulty": "insane",
-    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
-  }
 ]
