@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "River Cocytus",
+    "author": "qu",
+    "creators": ["q"],
+    "verifier": "squeeg",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "verification": "https://youtu.be/4yPy2BuOdaI?si=xGH3gIZd7d2mgT4I",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
