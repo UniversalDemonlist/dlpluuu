@@ -47,6 +47,18 @@
     "difficulty": "medium",
     "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
   },
+                {
+    "player": "TheSilly",
+    "name": "Clubstep x2",
+    "difficulty": "medium",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+            {
+    "player": "TheSilly",
+    "name": "Hexagon Force x4",
+    "difficulty": "medium",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
                         {
     "player": "TheSilly",
     "name": "Blue Noah (Scroll)",
@@ -56,6 +68,12 @@
                     {
     "player": "TheSilly",
     "name": "Black Hammer (Scroll)",
+    "difficulty": "easy",
+    "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
+  },
+                    {
+    "player": "TheSilly",
+    "name": "Comfort Chain (Scroll)",
     "difficulty": "easy",
     "background": "https://levelthumbs.prevter.me/thumbnail/12732308"
   },
