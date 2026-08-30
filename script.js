@@ -188,6 +188,21 @@ async function loadDemonList() {
   loadLeaderboard();
 }
 
+function renderChallengeCards() {
+  stopAllVideos();
+  const container = document.getElementById("challenge-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
+
+  setTimeout(() => {
+    container.innerHTML = "";
+    challengeList.forEach(d => container.appendChild(createDemonCard(d)));
+  }, 500);
+}
+
+
 function renderDemonCards(listOverride) {
   stopAllVideos();
   const container = document.getElementById("demon-container");
