@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDropdownSelects();
   setupPlayerSearch();
   setupSubTabs();
+  setupLeaderboardSubTabs();
+
 
   const toggleBtn = document.getElementById("toggle-cheated");
   if (toggleBtn) {
@@ -871,6 +873,94 @@ async function loadLeaderboard() {
   }, 500);
 }
 
+function setupSubTabs() {
+  const buttons = document.querySelectorAll(".subtab-btn");
+  const contents = document.querySelectorAll(".subtab-content");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tab = btn.getAttribute("data-subtab");
+
+      buttons.forEach(b => b.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+
+      btn.classList.add("active");
+      document.getElementById(tab).classList.add("active");
+
+      if (tab === "demons") renderDemonCards();
+      if (tab === "challenges") renderChallengeCards();
+    });
+  });
+}
+function renderChallengeCards() {
+  stopAllVideos();
+  const container = document.getElementById("challenge-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
+
+  setTimeout(() => {
+    container.innerHTML = "";
+    challengeList.forEach(d => container.appendChild(createDemonCard(d)));
+  }, 500);
+}
+
+async function loadChallengeLeaderboard() {
+  stopAllVideos();
+
+  const container = document.getElementById("challenge-leaderboard-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
+
+  setTimeout(() => {
+    const scores = {};
+    const playerMap = new Map();
+
+    challengeList.forEach(ch => {
+      ch.records.forEach(r => {
+        const user = typeof r === "string" ? r : r.user;
+        if (!user || user === "Not beaten yet") return;
+
+        const key = normalizeName(user);
+        if (!playerMap.has(key)) playerMap.set(key, user);
+
+        scores[key] = (scores[key] || 0) + 100;
+      });
+    });
+
+    container.innerHTML = "";
+
+    Object.entries(scores)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([key, score], index) => {
+        const name = playerMap.get(key);
+        container.appendChild(createPlayerCard(name, score, index + 1));
+      });
+  }, 500);
+}
+
+function setupLeaderboardSubTabs() {
+  const buttons = document.querySelectorAll(".leaderboard-subtab-btn");
+  const contents = document.querySelectorAll(".leaderboard-subtab-content");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tab = btn.getAttribute("data-lb");
+
+      buttons.forEach(b => b.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+
+      btn.classList.add("active");
+      document.getElementById(tab).classList.add("active");
+
+      if (tab === "main-lb") loadLeaderboard();
+      if (tab === "challenge-lb") loadChallengeLeaderboard();
+    });
+  });
+}
 
 
 
