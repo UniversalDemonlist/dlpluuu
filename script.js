@@ -964,7 +964,7 @@ function setupLeaderboardSubTabs() {
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      const tab = btn.getAttribute("data-lb");
+      const tab = btn.dataset.lb;
 
       buttons.forEach(b => b.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
