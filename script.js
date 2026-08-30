@@ -895,7 +895,7 @@ function setupSubTabs() {
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      const tab = btn.getAttribute("data-subtab");
+      const tab = btn.dataset.subtab;
 
       buttons.forEach(b => b.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
