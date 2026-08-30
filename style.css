@@ -508,6 +508,14 @@ body.dark .placeholder-player {
 .leaderboard-subtab-content.active {
   display: block;
 }
+#demonlist .panel {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding-top: 10px;
+}
+
 
 
 .completed-card {
