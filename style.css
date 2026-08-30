@@ -119,7 +119,7 @@ body.dark #search-bar {
 }
 
 #demonlist .panel {
-  position: sticky;
+  position: static;
   top: 60px;
   z-index: 100;
   backdrop-filter: blur(10px);
