@@ -11,6 +11,7 @@ let cheatedList = [];
 let hideCheated = false;
 let playersList = [];
 let manualCompleted = [];
+let challengeList = [];
 
 window._leaderboardScores = {};
 window._playerMap = new Map();
