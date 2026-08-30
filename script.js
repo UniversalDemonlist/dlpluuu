@@ -946,19 +946,63 @@ async function loadChallengeLeaderboard() {
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
 
   setTimeout(() => {
-    const scores = {};
     const playerMap = new Map();
+    const scores = {};
 
     challengeList.forEach(ch => {
+      if (ch.verifier && !bannedPlayers.includes(ch.verifier)) {
+        const key = normalizeName(ch.verifier);
+        if (!playerMap.has(key)) playerMap.set(key, ch.verifier);
+      }
+
       ch.records.forEach(r => {
-        const user = typeof r === "string" ? r : r.user;
-        if (!user || user === "Not beaten yet") return;
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
 
-        const key = normalizeName(user);
-        if (!playerMap.has(key)) playerMap.set(key, user);
+        const p = record.user;
+        if (!p || p === "Not beaten yet") return;
+        if (bannedPlayers.includes(p)) return;
+        if (hideCheated && p.toLowerCase().includes("[c]")) return;
 
-        scores[key] = (scores[key] || 0) + 100;
+        const key = normalizeName(p);
+        if (!playerMap.has(key)) playerMap.set(key, p);
       });
+    });
+
+    playerMap.forEach((display, key) => {
+      scores[key] = 0;
+    });
+
+    challengeList.forEach(ch => {
+      const pos = ch.position || 999;
+      const baseScore = 350 / Math.sqrt(pos);
+
+      ch.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        const p = record.user;
+        if (!p || p === "Not beaten yet") return;
+        if (bannedPlayers.includes(p)) return;
+        if (hideCheated && p.toLowerCase().includes("[c]")) return;
+
+        const key = normalizeName(p);
+        if (scores[key] === undefined) return;
+
+        const earned = record.percent === 100
+          ? baseScore
+          : baseScore * (record.percent / 100);
+
+        scores[key] += earned;
+      });
+
+      const verifier = ch.verifier;
+      if (verifier && !bannedPlayers.includes(verifier)) {
+        const key = normalizeName(verifier);
+        if (scores[key] !== undefined) scores[key] += baseScore;
+      }
     });
 
     container.innerHTML = "";
@@ -971,6 +1015,7 @@ async function loadChallengeLeaderboard() {
       });
   }, 500);
 }
+
 
 function setupLeaderboardSubTabs() {
   const buttons = document.querySelectorAll(".leaderboard-subtab-btn");
