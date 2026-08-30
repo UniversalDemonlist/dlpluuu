@@ -479,6 +479,36 @@ body.dark .placeholder-player {
 .subtab-content.active {
   display: block;
 }
+.leaderboard-subtabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-subtab-btn {
+  padding: 10px 20px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.leaderboard-subtab-btn.active {
+  background: #444;
+  transform: scale(1.05);
+}
+
+.leaderboard-subtab-content {
+  display: none;
+}
+
+.leaderboard-subtab-content.active {
+  display: block;
+}
+
 
 .completed-card {
   background-size: cover;
