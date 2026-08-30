@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSearchBar();
   setupDropdownSelects();
   setupPlayerSearch();
+  setupSubTabs();
 
   const toggleBtn = document.getElementById("toggle-cheated");
   if (toggleBtn) {
