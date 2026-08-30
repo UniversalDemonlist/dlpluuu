@@ -22,19 +22,18 @@
 <div id="demonlist" class="tab-content active">
   <h1>Demonlist</h1>
 
-    <div class="subtabs">
-  <button class="subtab-btn active" data-subtab="demons">Demons</button>
-  <button class="subtab-btn" data-subtab="challenges">Challenges</button>
-</div>
+  <div class="subtabs">
+    <button class="subtab-btn active" data-subtab="demons">Demons</button>
+    <button class="subtab-btn" data-subtab="challenges">Challenges</button>
+  </div>
 
-<div id="demons" class="subtab-content active">
-  <div id="demon-container"></div>
-</div>
+  <div id="demons" class="subtab-content active">
+    <div id="demon-container"></div>
+  </div>
 
-<div id="challenges" class="subtab-content">
-  <div id="challenge-container"></div>
-</div>
-
+  <div id="challenges" class="subtab-content">
+    <div id="challenge-container"></div>
+  </div>
 
   <div class="panel">
     <input id="search-bar" placeholder="Search demons by name or position">
@@ -59,9 +58,6 @@
         </select>
       </div>
     </div>
-
-
-    <div id="demon-container"></div>
   </div>
 </div>
 
@@ -71,15 +67,30 @@
 
 <div id="leaderboard" class="tab-content">
   <h1>Leaderboard</h1>
-  <div class="panel">
-    <div class="leaderboard-controls">
-      <input id="player-search" placeholder="Search players">
-      <select id="leaderboard-filter">
-        <option value="points">Most Points</option>
-        <option value="tier">Highest Tier</option>
-      </select>
+
+  <div class="leaderboard-subtabs">
+    <button class="leaderboard-subtab-btn active" data-lb="main-lb">Main</button>
+    <button class="leaderboard-subtab-btn" data-lb="challenge-lb">Challenges</button>
+  </div>
+
+  <div id="main-lb" class="leaderboard-subtab-content active">
+    <div class="panel">
+      <div class="leaderboard-controls">
+        <input id="player-search" placeholder="Search players">
+        <select id="leaderboard-filter">
+          <option value="points">Most Points</option>
+          <option value="tier">Highest Tier</option>
+        </select>
+      </div>
+      <div id="leaderboard-container"></div>
     </div>
-    <div id="leaderboard-container"></div>
+  </div>
+
+  <div id="challenge-lb" class="leaderboard-subtab-content">
+    <div class="panel">
+      <h2>Challenge Leaderboard</h2>
+      <div id="challenge-leaderboard-container"></div>
+    </div>
   </div>
 </div>
 
