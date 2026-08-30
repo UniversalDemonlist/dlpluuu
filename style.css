@@ -449,6 +449,37 @@ body.dark .placeholder-player {
   width: 32px;
   height: 32px;
 }
+
+.subtabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.subtab-btn {
+  padding: 10px 20px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.subtab-btn.active {
+  background: #444;
+  transform: scale(1.05);
+}
+
+.subtab-content {
+  display: none;
+}
+
+.subtab-content.active {
+  display: block;
+}
+
 .completed-card {
   background-size: cover;
   background-position: center;
