@@ -188,6 +188,20 @@ async function loadDemonList() {
   populateDropdowns();
   loadLeaderboard();
 }
+async function loadChallengeList() {
+  const list = await fetch("data/challenge_list.json").then(r => r.json());
+
+  const challengeFiles = await Promise.all(
+    list.map(id =>
+      fetch(`data/demons/${id}.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .catch(() => null)
+    )
+  );
+
+  challengeList = challengeFiles.filter(Boolean);
+}
+
 
 function renderChallengeCards() {
   stopAllVideos();
