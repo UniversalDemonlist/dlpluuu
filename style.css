@@ -516,6 +516,12 @@ body.dark .placeholder-player {
   padding-top: 10px;
 }
 
+#demon-container,
+#challenge-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
 
 
 .completed-card {
