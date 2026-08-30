@@ -103,6 +103,7 @@ async function loadEverything() {
     cheatedList = cheatedList.map(x => x.toLowerCase());
     manualCompleted = await fetch("data/manualcompleted.json").then(r => r.json()).catch(() => []);
     await loadDemonList();
+    await loadChallengeList();
   }, 200);
 }
 
