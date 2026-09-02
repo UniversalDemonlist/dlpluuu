@@ -365,3 +365,55 @@ body.dark .placeholder-player {
 .leaderboard-subtab-content.active {
   display: block;
 }
+
+.completed-card {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.12);
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.completed-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 18px rgba(255,255,255,0.25);
+}
+
+.completed-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.completed-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.completed-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.completed-info img {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
+}
+
