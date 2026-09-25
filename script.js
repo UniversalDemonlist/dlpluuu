@@ -426,6 +426,11 @@ function createDemonCard(demon) {
 
   const info = document.createElement("div");
   info.className = "demon-info";
+    const badge = document.createElement("img");
+badge.className = "rank-badge";
+badge.src = getLevelBadge(demon.position);
+
+card.appendChild(badge);
 
   const score = demon.position ? 350 / Math.sqrt(demon.position) : 350 / Math.sqrt(999);
 
