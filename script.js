@@ -84,6 +84,23 @@ function getPlayerRank(score) {
   return "Bronze I";
 }
 
+function getLevelBadge(position) {
+  if (!position) return "data/level1.png";
+
+  if (position <= 10) return "data/challenger.png";
+  if (position <= 25) return "data/level10.png";
+  if (position <= 50) return "data/level9.png";
+  if (position <= 75) return "data/level8.png";
+  if (position <= 100) return "data/level7.png";
+  if (position <= 150) return "data/level6.png";
+  if (position <= 200) return "data/level5.png";
+  if (position <= 275) return "data/level4.png";
+  if (position <= 350) return "data/level3.png";
+  if (position <= 500) return "data/level2.png";
+
+  return "data/level1.png";
+}
+
 
 
 function createPlaceholderPlayer() {
