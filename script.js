@@ -59,8 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getPlayerRank(score) {
-  if (score >= 5000) return "Mythic";
-  if (score >= 3500) return "Champion";
+  if (score >= 100000) return "Legend";
+  if (score >= 50000) return "Absolute";
+  if (score >= 10000) return "Mythic";
+  if (score >= 5000) return "Champion";
   if (score >= 2000) return "Diamond";
   if (score >= 1000) return "Platinum";
   if (score >= 500) return "Gold";
