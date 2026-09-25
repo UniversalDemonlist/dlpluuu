@@ -727,15 +727,29 @@ function openPlayerPage(key, scores) {
   const rank = getPlayerRank(score);
 
   const rankColor = {
-   Legend: "#ff3030",
-   Absolute: "#a020f0",
-   Mythic: "#ff00ff",
-   Champion: "#00bfff",
-   Diamond: "#7df9ff",
-   Platinum: "#e5e4e2",
-   Gold: "#ffd700",
-   Silver: "#c0c0c0",
-   Bronze: "#cd7f32"
+   "Legend": "#ff3030",
+   "Absolute": "#a020f0",
+
+   "Mythic II": "#ff00ff",
+   "Mythic I": "#d400d4",
+
+   "Champion II": "#00bfff",
+   "Champion I": "#0099cc",
+
+   "Diamond II": "#7df9ff",
+   "Diamond I": "#4fd6ff",
+
+   "Platinum II": "#e5e4e2",
+   "Platinum I": "#cfcfcf",
+
+   "Gold II": "#ffd700",
+   "Gold I": "#d4af37",
+
+   "Silver II": "#c0c0c0",
+   "Silver I": "#a8a8a8",
+
+   "Bronze II": "#cd7f32",
+   "Bronze I": "#a97142"
   }[rank];
 
   function buildSection(title, arr) {
