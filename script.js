@@ -405,6 +405,11 @@ function getPlayerTitle(segment, tier) {
 function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
+    const badge = document.createElement("img");
+badge.className = "rank-badge";
+badge.src = getLevelBadge(demon.position);
+
+card.appendChild(badge);
 
   const notUsable = ["112313819", "88201288", "109780665", "0"];
 
@@ -426,9 +431,6 @@ function createDemonCard(demon) {
 
   const info = document.createElement("div");
   info.className = "demon-info";
-    const badge = document.createElement("img");
-badge.className = "rank-badge";
-badge.src = getLevelBadge(demon.position);
 
 card.appendChild(badge);
 
