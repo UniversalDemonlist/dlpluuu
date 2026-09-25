@@ -426,8 +426,14 @@ body.dark .placeholder-player {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 50px;
-  aspect-ratio: 1 / 1;
+
+  width: 48px;
+  height: 48px;
+
   object-fit: contain;
+  object-position: center;
+
+  z-index: 10;
+  pointer-events: none;
 }
 
