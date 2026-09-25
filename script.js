@@ -625,13 +625,15 @@ function createPlayerCard(name, score, rank) {
   const segmentColor = getSegmentColor(t.segment);
 
   const rankColor = {
-    Mythic: "#a020f0",
-    Champion: "#ff00ff",
-    Diamond: "#00bfff",
-    Platinum: "#e5e4e2",
-    Gold: "#ffd700",
-    Silver: "#c0c0c0",
-    Bronze: "#cd7f32"
+   Legend: "#ff3030",
+   Absolute: "#a020f0",
+   Mythic: "#ff00ff",
+   Champion: "#00bfff",
+   Diamond: "#7df9ff",
+   Platinum: "#e5e4e2",
+   Gold: "#ffd700",
+   Silver: "#c0c0c0",
+   Bronze: "#cd7f32"
   }[getPlayerRank(score)];
 
   const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
