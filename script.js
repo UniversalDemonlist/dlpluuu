@@ -61,13 +61,27 @@ document.addEventListener("DOMContentLoaded", () => {
 function getPlayerRank(score) {
   if (score >= 100000) return "Legend";
   if (score >= 50000) return "Absolute";
-  if (score >= 10000) return "Mythic";
-  if (score >= 5000) return "Champion";
-  if (score >= 2000) return "Diamond";
-  if (score >= 1000) return "Platinum";
-  if (score >= 500) return "Gold";
-  if (score >= 200) return "Silver";
-  return "Bronze";
+
+  if (score >= 10000) return "Mythic II";
+  if (score >= 5000) return "Mythic I";
+
+  if (score >= 4250) return "Champion II";
+  if (score >= 3500) return "Champion I";
+
+  if (score >= 2750) return "Diamond II";
+  if (score >= 2000) return "Diamond I";
+
+  if (score >= 1500) return "Platinum II";
+  if (score >= 1000) return "Platinum I";
+
+  if (score >= 750) return "Gold II";
+  if (score >= 500) return "Gold I";
+
+  if (score >= 350) return "Silver II";
+  if (score >= 200) return "Silver I";
+
+  if (score >= 100) return "Bronze II";
+  return "Bronze I";
 }
 
 
