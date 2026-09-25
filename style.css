@@ -432,7 +432,7 @@ body.dark .placeholder-player {
 
   object-fit: contain !important;
 
-  z-index: 2; /* much lower */
+  z-index: 2;
   pointer-events: none;
   border-radius: 0;
 }
