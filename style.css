@@ -424,15 +424,17 @@ body.dark .placeholder-player {
 
 .rank-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
 
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
 
-  object-fit: contain;
+  object-fit: contain !important;
 
-  z-index: 9999;
+  z-index: 1000;
   pointer-events: none;
+
+  border-radius: 0;
 }
 
