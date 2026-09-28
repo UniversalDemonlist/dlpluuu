@@ -692,6 +692,11 @@ function createPlayerCard(name, score, rank) {
 
   const card = document.createElement("div");
   card.className = "player-card no-image";
+  
+    const badge = document.createElement("img");
+badge.className = "rank-badge";
+badge.src = getLevelBadge(hardest?.position);
+card.appendChild(badge);
 
   const info = document.createElement("div");
   info.className = "player-info";
