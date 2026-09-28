@@ -944,8 +944,7 @@ async function loadLeaderboard() {
           key,
           name,
           score,
-          tier: t.tier || 0,
-          segment: t.segment,
+          hardestPosition: hardest?.position || 999999,
           rankName: getPlayerRank(score)
         };
       })
