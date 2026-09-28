@@ -710,7 +710,6 @@ card.appendChild(badge);
     <h2>#${rank} — ${cleanDisplayName(name)}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
     <p><strong>Rank:</strong> <span style="color:${rankColor}; font-weight:600;">${getPlayerRank(score)}</span></p>
-    <p><strong>Player Tier:</strong> ${tierHtml}</p>
     <p><strong>Hardest Demon:</strong> ${hardestName}</p>
   `;
 
