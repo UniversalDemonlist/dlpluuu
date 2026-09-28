@@ -957,12 +957,11 @@ async function loadLeaderboard() {
 
     if (filterMode === "points") {
       sorted.sort((a, b) => b.score - a.score);
-    } else if (filterMode === "tier") {
-      sorted.sort((a, b) =>
-        b.tier - a.tier ||
-        segmentRank[b.segment] - segmentRank[a.segment] ||
-        b.score - a.score
-      );
+    }else if (filterMode === "tier") {
+  sorted.sort((a, b) =>
+    a.hardestPosition - b.hardestPosition ||
+    b.score - a.score
+  );
     } else if (filterMode === "rank") {
       const order = ["Mythic", "Champion", "Diamond", "Platinum", "Gold", "Silver", "Bronze"];
       sorted.sort((a, b) => order.indexOf(a.rankName) - order.indexOf(b.rankName));
