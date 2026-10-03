@@ -771,7 +771,10 @@ card.appendChild(badge);
 
   card.appendChild(info);
 
-  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
+  card.addEventListener("click", () => {
+  location.href =
+    `${location.pathname}?page=player&position=${rank}`;
+});
 
   return card;
 }
