@@ -505,7 +505,10 @@ card.appendChild(badge);
   card.appendChild(img);
   card.appendChild(info);
 
-  card.addEventListener("click", () => openDemonPage(demon));
+  card.addEventListener("click", () => {
+  location.href =
+    `${location.pathname}?page=demon&position=${demon.position}`;
+});
 
   return card;
 }
