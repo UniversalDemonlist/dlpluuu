@@ -39,15 +39,64 @@ function getDemonDifficulty(demon) {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   setupTabs();
   setupThemeToggle();
-  loadEverything();
+
+  await loadEverything();
+
+  if (page === "demon" && positionParam) {
+    const demon = globalDemons.find(
+      d => d.position === positionParam
+    );
+
+    if (demon) {
+      openDemonPage(demon);
+    }
+
+    return;
+  }
+
+  if (page === "player" && positionParam) {
+    loadLeaderboard();
+
+    setTimeout(() => {
+      const player =
+        window._sortedPlayers?.[positionParam - 1];
+
+      if (player) {
+        openPlayerPage(
+          player.key,
+          window._leaderboardScores
+        );
+      }
+    }, 1000);
+
+    return;
+  }
+
   setupSearchBar();
   setupDropdownSelects();
   setupPlayerSearch();
   setupSubTabs();
   setupLeaderboardSubTabs();
+
+  const toggleBtn = document.getElementById("toggle-cheated");
+
+  if (toggleBtn) {
+    toggleBtn.textContent = "Hide Cheated";
+
+    toggleBtn.addEventListener("click", () => {
+      hideCheated = !hideCheated;
+
+      toggleBtn.textContent =
+        hideCheated ? "Show Cheated" : "Hide Cheated";
+
+      loadLeaderboard();
+      renderDemonCards();
+    });
+  }
+});
 
 
   const toggleBtn = document.getElementById("toggle-cheated");
