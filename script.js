@@ -16,10 +16,6 @@ let challengeList = [];
 window._leaderboardScores = {};
 window._playerMap = new Map();
 
-const params = new URLSearchParams(window.location.search);
-const page = params.get("page");
-const positionParam = Number(params.get("position"));
-
 function normalizeName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim().toLowerCase();
@@ -39,64 +35,15 @@ function getDemonDifficulty(demon) {
 }
 
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupThemeToggle();
-
-  await loadEverything();
-
-  if (page === "demon" && positionParam) {
-    const demon = globalDemons.find(
-      d => d.position === positionParam
-    );
-
-    if (demon) {
-      openDemonPage(demon);
-    }
-
-    return;
-  }
-
-  if (page === "player" && positionParam) {
-    loadLeaderboard();
-
-    setTimeout(() => {
-      const player =
-        window._sortedPlayers?.[positionParam - 1];
-
-      if (player) {
-        openPlayerPage(
-          player.key,
-          window._leaderboardScores
-        );
-      }
-    }, 1000);
-
-    return;
-  }
-
+  loadEverything();
   setupSearchBar();
   setupDropdownSelects();
   setupPlayerSearch();
   setupSubTabs();
   setupLeaderboardSubTabs();
-
-  const toggleBtn = document.getElementById("toggle-cheated");
-
-  if (toggleBtn) {
-    toggleBtn.textContent = "Hide Cheated";
-
-    toggleBtn.addEventListener("click", () => {
-      hideCheated = !hideCheated;
-
-      toggleBtn.textContent =
-        hideCheated ? "Show Cheated" : "Hide Cheated";
-
-      loadLeaderboard();
-      renderDemonCards();
-    });
-  }
-});
 
 
   const toggleBtn = document.getElementById("toggle-cheated");
@@ -505,10 +452,7 @@ card.appendChild(badge);
   card.appendChild(img);
   card.appendChild(info);
 
-  card.addEventListener("click", () => {
-  location.href =
-    `${location.pathname}?page=demon&position=${demon.position}`;
-});
+  card.addEventListener("click", () => openDemonPage(demon));
 
   return card;
 }
@@ -771,10 +715,7 @@ card.appendChild(badge);
 
   card.appendChild(info);
 
-  card.addEventListener("click", () => {
-  location.href =
-    `${location.pathname}?page=player&position=${rank}`;
-});
+  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
 
   return card;
 }
@@ -1193,4 +1134,3 @@ function showInitialPlaceholders() {
     for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
   }
 }
-
