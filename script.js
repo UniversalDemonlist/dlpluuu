@@ -16,6 +16,10 @@ let challengeList = [];
 window._leaderboardScores = {};
 window._playerMap = new Map();
 
+const params = new URLSearchParams(window.location.search);
+const page = params.get("page");
+const positionParam = Number(params.get("position"));
+
 function normalizeName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim().toLowerCase();
