@@ -139,17 +139,10 @@ function getDifficultyInfo(position) {
     };
   }
 
-  if (position <= 75) {
+  if (position <= 155) {
     return {
       name: "Insane",
       color: "#0000FF"
-    };
-  }
-
-  if (position <= 150) {
-    return {
-      name: "Remorseless",
-      color: "#C800C8"
     };
   }
 
