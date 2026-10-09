@@ -153,7 +153,7 @@ function getDifficultyInfo(position) {
     };
   }
 
-  if (position <= 200) {
+  if (position <= 900) {
     return {
       name: "Check Difficulty In Discord",
       color: "#A00000"
