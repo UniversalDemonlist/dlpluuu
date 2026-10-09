@@ -101,7 +101,64 @@ function getLevelBadge(position) {
   return "data/level1.png";
 }
 
+function getDifficultyInfo(position) {
+  if (position <= 5) {
+    return {
+      name: "Unreal",
+      color: "#000000",
+      outline: "#5100CB"
+    };
+  }
 
+  if (position <= 10) {
+    return {
+      name: "Horrific",
+      color: "#000000",
+      outline: "#9695FF"
+    };
+  }
+
+  if (position <= 20) {
+    return {
+      name: "Catastrophic",
+      color: "#FFFFFF"
+    };
+  }
+
+  if (position <= 35) {
+    return {
+      name: "Terrifying",
+      color: "#00FFFF"
+    };
+  }
+
+  if (position <= 50) {
+    return {
+      name: "Extreme",
+      color: "#0389FF"
+    };
+  }
+
+  if (position <= 75) {
+    return {
+      name: "Insane",
+      color: "#0000FF"
+    };
+  }
+
+  if (position <= 150) {
+    return {
+      name: "Remorseless",
+      color: "#C800C8"
+    };
+  }
+
+  if (position <= 200) {
+    return {
+      name: "Check Difficulty In Discord",
+      color: "#A00000"
+  };
+}
 
 function createPlaceholderPlayer() {
   const card = document.createElement("div");
