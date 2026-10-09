@@ -157,7 +157,8 @@ function getDifficultyInfo(position) {
     return {
       name: "Check Difficulty In Discord",
       color: "#A00000"
-  };
+    };
+  }
 }
 
 function createPlaceholderPlayer() {
