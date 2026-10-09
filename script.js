@@ -185,7 +185,6 @@ function setupThemeToggle() {
     document.body.classList.toggle("dark");
   });
 }
-}
 
 async function loadEverything() {
   showInitialPlaceholders();
