@@ -462,11 +462,6 @@ function getPlayerTitle(segment, tier) {
 function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
-    const badge = document.createElement("img");
-badge.className = "rank-badge";
-badge.src = getLevelBadge(demon.position);
-
-card.appendChild(badge);
 
   const notUsable = ["112313819", "88201288", "109780665", "0"];
 
@@ -489,9 +484,11 @@ card.appendChild(badge);
   const info = document.createElement("div");
   info.className = "demon-info";
 
-card.appendChild(badge);
+  const score = demon.position
+    ? 350 / Math.sqrt(demon.position)
+    : 350 / Math.sqrt(999);
 
-  const score = demon.position ? 350 / Math.sqrt(demon.position) : 350 / Math.sqrt(999);
+  const difficulty = getDifficultyInfo(demon.position);
 
   if (demon.cosmetic) {
     info.innerHTML = `
@@ -503,6 +500,22 @@ card.appendChild(badge);
       <h2>#${demon.position} — ${demon.name}</h2>
       <p>Verifier: ${demon.verifier}</p>
       <p>Score: ${score.toFixed(2)}</p>
+      <p>
+        <strong>Difficulty:</strong>
+        <span
+          style="
+            color:${difficulty.outline ? "#000000" : difficulty.color};
+            font-weight:700;
+            ${
+              difficulty.outline
+                ? `-webkit-text-stroke: 1px ${difficulty.outline};`
+                : ""
+            }
+          "
+        >
+          ${difficulty.name}
+        </span>
+      </p>
     `;
   }
 
@@ -513,6 +526,7 @@ card.appendChild(badge);
 
   return card;
 }
+
 
 
 
