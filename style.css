@@ -728,3 +728,62 @@ body.dark #leaderboard-filter {
   color: #f5f5f5;
   border-color: #444;
 }
+
+@keyframes legendShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+@keyframes legendPulse {
+  0% {
+    filter:
+      drop-shadow(0 0 5px #ff0000)
+      drop-shadow(0 0 10px #ff0000);
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 10px #ff4040)
+      drop-shadow(0 0 20px #ff4040)
+      drop-shadow(0 0 35px #ff4040);
+  }
+
+  100% {
+    filter:
+      drop-shadow(0 0 5px #ff0000)
+      drop-shadow(0 0 10px #ff0000);
+  }
+}
+
+.rank-legend {
+  font-weight: 900;
+
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ffffff,
+    #ff9900,
+    #ffffff,
+    #ff0000
+  );
+
+  background-size: 300% auto;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  animation:
+    legendShift 2s linear infinite,
+    legendPulse 1.5s ease-in-out infinite;
+
+  letter-spacing: 1px;
+}
+``
