@@ -16,6 +16,10 @@
    "extrapoints": 4000
   },
           {
+   "player": "Test",
+   "extrapoints": 4000000
+  },
+          {
    "player": "Trick",
    "extrapoints": 4000
   },
