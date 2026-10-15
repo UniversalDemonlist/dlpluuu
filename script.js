@@ -774,7 +774,17 @@ card.appendChild(badge);
   info.innerHTML = `
     <h2>#${rank} — ${cleanDisplayName(name)}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
-    <p><strong>Rank:</strong> <span style="color:${rankColor}; font-weight:600;">${getPlayerRank(score)}</span></p>
+    <p><strong>Rank:</strong> <span class="${
+  getPlayerRank(score) === "Legend"
+    ? "rank-legend"
+    : getPlayerRank(score) === "Absolute"
+    ? "rank-absolute"
+    : getPlayerRank(score).includes("Mythic")
+    ? "rank-mythic"
+    : ""
+}" style="color:${rankColor}; font-weight:600;">
+  ${getPlayerRank(score)}
+</span></p>
     <p><strong>Hardest Demon:</strong> ${hardestName}</p>
   `;
 
