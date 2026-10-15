@@ -712,3 +712,19 @@ body.dark .player-card {
     #ff3030
   );
 }
+
+#player-search,
+#leaderboard-filter {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #222633;
+  background: #ffffffee;
+  color: #111;
+}
+
+body.dark #player-search,
+body.dark #leaderboard-filter {
+  background: #1a1a1a;
+  color: #f5f5f5;
+  border-color: #444;
+}
