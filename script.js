@@ -1199,3 +1199,19 @@ function showInitialPlaceholders() {
     for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
   }
 }
+
+#player-search {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.03),
+      rgba(255,255,255,0.03) 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    ),
+    linear-gradient(
+      180deg,
+      #1a2038,
+      #111522
+    );
+}
