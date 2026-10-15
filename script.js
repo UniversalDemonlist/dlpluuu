@@ -1225,3 +1225,62 @@ function showInitialPlaceholders() {
       #111522
     );
 }
+
+@keyframes mythicGlow {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.rank-mythic,
+.rank-absolute,
+.rank-legend {
+  background-size: 200% auto;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  animation: mythicGlow 2s linear infinite;
+
+  font-weight: 700;
+}
+
+.rank-mythic {
+  background-image: linear-gradient(
+    90deg,
+    #ff00ff,
+    #ffffff,
+    #ff00ff,
+    #ffffff,
+    #ff00ff
+  );
+}
+
+.rank-absolute {
+  background-image: linear-gradient(
+    90deg,
+    #a020f0,
+    #ffffff,
+    #a020f0,
+    #ffffff,
+    #a020f0
+  );
+}
+
+.rank-legend {
+  background-image: linear-gradient(
+    90deg,
+    #ff3030,
+    #ffffff,
+    #ff3030,
+    #ffffff,
+    #ff3030
+  );
+}
