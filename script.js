@@ -305,37 +305,7 @@ async function loadDemonList() {
   loadLeaderboard();
 }
 
-  let rank = 0;
 
-  globalDemons = demonFiles
-    .map((d, i) => {
-      if (!d) return null;
-
-      const entry = list[i];
-      const fileName = typeof entry === "string" ? entry : entry.id;
-      const baseName = fileName.replace(/\.json$/i, "");
-
-      if (methodList.includes(baseName)) d.warning = "method";
-      if (pathList.includes(baseName)) d.warning = "path";
-
-      if (!d.cosmetic) rank++;
-
-      return {
-        ...d,
-        position: d.cosmetic ? null : rank,
-        cosmetic: d.cosmetic || null
-      };
-    })
-    .filter(Boolean);
-
-  mainList = globalDemons.filter(d => !d.cosmetic && d.position <= 75);
-  extendedList = globalDemons.filter(d => !d.cosmetic && d.position > 75 && d.position <= 100);
-  legacyList = globalDemons.filter(d => !d.cosmetic && d.position > 100);
-
-  renderDemonCards();
-  populateDropdowns();
-  loadLeaderboard();
-}
 async function loadChallengeList() {
   const list = await fetch("data/challenge_list.json").then(r => r.json());
 
