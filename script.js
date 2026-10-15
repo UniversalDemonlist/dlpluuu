@@ -489,6 +489,13 @@ function createDemonCard(demon) {
       <h2>${demon.name}</h2>
       <p>Levels past this zone are harder than ${demon.name}</p>
     `;
+  } else if (demon.missingJson) {
+    info.innerHTML = `
+      <h2>#${demon.position} — ${demon.name}</h2>
+      <p style="color:#ff3232;font-weight:700;">
+        JSON NOT FOUND!
+      </p>
+    `;
   } else {
     info.innerHTML = `
       <h2>#${demon.position} — ${demon.name}</h2>
@@ -520,9 +527,6 @@ function createDemonCard(demon) {
 
   return card;
 }
-
-
-
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
