@@ -809,3 +809,27 @@ body.dark #leaderboard-filter {
 .legend-letter:nth-child(4){animation-delay:.3s;}
 .legend-letter:nth-child(5){animation-delay:.4s;}
 .legend-letter:nth-child(6){animation-delay:.5s;}
+
+.rank-absolute {
+  background-image: linear-gradient(
+    90deg,
+    #a020f0,
+    #d77cff,
+    #ffffff,
+    #d77cff,
+    #a020f0
+  );
+
+  background-size: 200% auto;
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  animation: mythicGlow 2.5s linear infinite;
+
+  text-shadow:
+    0 0 8px rgba(160,32,240,.3);
+}
