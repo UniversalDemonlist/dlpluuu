@@ -230,16 +230,80 @@ async function loadDemonList() {
   const demonFiles = await Promise.all(
     list.map(entry => {
       const id = typeof entry === "string" ? entry : entry.id;
+
       return fetch(`data/demons/${id}.json`)
-        .then(r => (r.ok ? r.json() : null))
-        .catch(() => null)
+        .then(r => {
+          if (r.ok) return r.json();
+
+          return {
+            id,
+            name:
+              typeof entry === "object"
+                ? (entry.name || id)
+                : id.replace(".json", ""),
+            verifier: "Unknown",
+            records: [],
+            missingJson: true
+          };
+        })
+        .catch(() => ({
+          id,
+          name:
+            typeof entry === "object"
+              ? (entry.name || id)
+              : id.replace(".json", ""),
+          verifier: "Unknown",
+          records: [],
+          missingJson: true
+        }))
         .then(d => {
-          if (!d) return null;
-          if (typeof entry === "object") d.cosmetic = entry.cosmetic || null;
+          if (typeof entry === "object") {
+            d.cosmetic = entry.cosmetic || null;
+          }
           return d;
         });
     })
   );
+
+  let rank = 0;
+
+  globalDemons = demonFiles
+    .map((d, i) => {
+      if (!d) return null;
+
+      const entry = list[i];
+      const fileName = typeof entry === "string" ? entry : entry.id;
+      const baseName = fileName.replace(/\.json$/i, "");
+
+      if (methodList.includes(baseName)) d.warning = "method";
+      if (pathList.includes(baseName)) d.warning = "path";
+
+      if (!d.cosmetic) rank++;
+
+      return {
+        ...d,
+        position: d.cosmetic ? null : rank,
+        cosmetic: d.cosmetic || null
+      };
+    })
+    .filter(Boolean);
+
+  mainList = globalDemons.filter(
+    d => !d.cosmetic && d.position <= 75
+  );
+
+  extendedList = globalDemons.filter(
+    d => !d.cosmetic && d.position > 75 && d.position <= 100
+  );
+
+  legacyList = globalDemons.filter(
+    d => !d.cosmetic && d.position > 100
+  );
+
+  renderDemonCards();
+  populateDropdowns();
+  loadLeaderboard();
+}
 
   let rank = 0;
 
