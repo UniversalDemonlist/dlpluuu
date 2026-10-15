@@ -787,3 +787,25 @@ body.dark #leaderboard-filter {
   letter-spacing: 1px;
 }
 ``
+
+@keyframes legendWave {
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.legend-letter {
+  display: inline-block;
+  animation: legendWave 1s infinite;
+}
+
+.legend-letter:nth-child(1){animation-delay:0s;}
+.legend-letter:nth-child(2){animation-delay:.1s;}
+.legend-letter:nth-child(3){animation-delay:.2s;}
+.legend-letter:nth-child(4){animation-delay:.3s;}
+.legend-letter:nth-child(5){animation-delay:.4s;}
+.legend-letter:nth-child(6){animation-delay:.5s;}
