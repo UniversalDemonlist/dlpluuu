@@ -8,6 +8,12 @@
     "percentToQualify": 100,
     "password": "No Copy",
     "records": [
+        {
+            "user": "doggie",
+            "link": "https://www.youtube.com/watch?v=kpcF1-QAHQc",
+            "percent": 100,
+            "hz": 360
+},
         "Zoink",
         "Cursed",
         "Zeroxy",
