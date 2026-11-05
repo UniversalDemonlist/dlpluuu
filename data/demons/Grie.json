@@ -8,8 +8,23 @@
     "percentToQualify": 100,
     "background": "https://levelthumbs.prevter.me/thumbnail/79539185",
     "records": [
-       "wpopoff",
-      "mrdurpy",
-      "thesilly"
+           {
+            "user": "wpopoff",
+            "link": "https://www.youtube.com/watch?v=5SV7VnDdUTk",
+            "percent": 100,
+            "hz": 360
+        },
+              {
+            "user": "wpopoff",
+            "link": "https://www.youtube.com/watch?v=p7D7M-q2b8A",
+            "percent": 100,
+            "hz": 360
+        },
+               {
+            "user": "thesilly",
+            "link": "https://www.youtube.com/watch?v=0GDMNOnwugA",
+            "percent": 100,
+            "hz": 360
+        },
     ]
 }
