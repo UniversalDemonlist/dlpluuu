@@ -1080,11 +1080,15 @@ async function loadLeaderboard() {
       sorted.sort((a, b) => order.indexOf(a.rankName) - order.indexOf(b.rankName));
     }
 
-    container.innerHTML = "";
+ container.innerHTML = `
+  <div class="leaderboard-warning">
+    WARNING: Rankings might not be accurate due to this list not being very popular. Take your rank with a grain of salt.
+  </div>
+`;
 
-    sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
-    });
+sorted.forEach((p, index) => {
+  container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+});
 
     if (sorted.length === 0) {
       container.innerHTML = "<p>No players with scores yet.</p>";
