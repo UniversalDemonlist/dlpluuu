@@ -1096,3 +1096,7 @@ body.dark #server .panel {
 .subtab-btn[data-subtab="demons"] {
   display: none !important;
 }
+
+.leaderboard-subtab-btn[data-lb="main-lb"] {
+  display: none !important;
+}
