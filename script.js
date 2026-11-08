@@ -1034,7 +1034,7 @@ async function loadLeaderboard() {
         insane: 0.80
       }[diff] || 0.20;
 
-      const baseScore = 350 * mult;
+      const baseScore = 1000 * mult;
       scores[key] += mult;
     });
 
