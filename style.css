@@ -315,16 +315,11 @@ body.dark .placeholder-player {
   overflow: hidden;
 }
 
+
 .demon-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--card-bg);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.5;
-  z-index: 0;
+  display: none;
 }
+
 
 .demon-card > * {
   position: relative;
