@@ -1091,3 +1091,8 @@ body.dark #server .panel {
   background: url("leaderboard.png") center/contain no-repeat;
   flex-shrink: 0;
 }
+
+
+.subtab-btn[data-subtab="demons"] {
+  display: none !important;
+}
