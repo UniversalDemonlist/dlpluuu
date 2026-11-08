@@ -911,3 +911,71 @@ body:not(.dark) .leaderboard-subtab-btn.active {
 body:not(.dark) .leaderboard-warning {
   color: #7a5400;
 }
+
+body:not(.dark) {
+  color: #111 !important;
+}
+
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) li,
+body:not(.dark) a {
+  color: #111 !important;
+}
+
+body:not(.dark) .tab-btn,
+body:not(.dark) .subtab-btn,
+body:not(.dark) .leaderboard-subtab-btn,
+body:not(.dark) #theme-toggle {
+  background: #fff !important;
+  color: #111 !important;
+  border-color: #d0d0d0 !important;
+}
+
+body:not(.dark) .tabs {
+  background: rgba(255,255,255,.95) !important;
+  border-bottom: 1px solid #ddd !important;
+}
+
+body:not(.dark) .player-info,
+body:not(.dark) .demon-info,
+body:not(.dark) .completed-info,
+body:not(.dark) .player-profile-header,
+body:not(.dark) .player-profile-section,
+body:not(.dark) .fancy-records-box,
+body:not(.dark) .fancy-records-title {
+  color: #111 !important;
+}
+
+body:not(.dark) select,
+body:not(.dark) option,
+body:not(.dark) #player-search,
+body:not(.dark) #leaderboard-filter,
+body:not(.dark) #search-bar {
+  background: #fff !important;
+  color: #111 !important;
+  border-color: #d0d0d0 !important;
+}
+
+body:not(.dark) .subtab-btn.active,
+body:not(.dark) .leaderboard-subtab-btn.active {
+  background: #e8e8e8 !important;
+  color: #111 !important;
+}
+
+body:not(.dark) .completed-info {
+  color: #fff !important;
+}
+
+body:not(.dark) .completed-info h3 {
+  color: #fff !important;
+}
+
