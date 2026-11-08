@@ -513,8 +513,8 @@ function createDemonCard(demon) {
   info.className = "demon-info";
 
   const score = demon.position
-    ? 350 / Math.sqrt(demon.position)
-    : 350 / Math.sqrt(999);
+    ? 1000 / Math.sqrt(demon.position)
+    : 1000 / Math.sqrt(999);
 
   const difficulty = getDifficultyInfo(demon.position);
 
