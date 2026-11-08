@@ -993,7 +993,7 @@ async function loadLeaderboard() {
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
       const pos = demon.position || 999;
-      const baseScore = 350 / Math.sqrt(pos);
+      const baseScore = 1000 / Math.sqrt(pos);
 
       demon.records.forEach(r => {
         const record = typeof r === "string"
