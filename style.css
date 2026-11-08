@@ -979,3 +979,42 @@ body:not(.dark) .completed-info h3 {
   color: #fff !important;
 }
 
+body:not(.dark) .tab-btn,
+body:not(.dark) .tab-btn *,
+body:not(.dark) .subtab-btn,
+body:not(.dark) .subtab-btn *,
+body:not(.dark) .leaderboard-subtab-btn,
+body:not(.dark) .leaderboard-subtab-btn * {
+  color: #111 !important;
+}
+
+body:not(.dark) .fancy-records-box,
+body:not(.dark) .fancy-records-box p,
+body:not(.dark) .fancy-records-box strong,
+body:not(.dark) .fancy-records-box a {
+  color: #111 !important;
+}
+
+.fancy-records-box {
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+body.dark .fancy-records-box {
+  background: rgba(25,25,35,0.95);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.fancy-records-box p {
+  margin: 8px 0;
+}
+
+.fancy-records-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
