@@ -1169,7 +1169,7 @@ async function loadChallengeLeaderboard() {
 
     challengeList.forEach(ch => {
       const pos = ch.position || 999;
-      const baseScore = 1000 / Math.sqrt(pos);
+      const baseScore = 5500 / Math.sqrt(pos);
 
       ch.records.forEach(r => {
         const record = typeof r === "string"
