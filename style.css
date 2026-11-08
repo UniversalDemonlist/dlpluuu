@@ -850,3 +850,64 @@ body.dark .leaderboard-warning {
   background: rgba(255, 180, 0, 0.08);
   color: #ffd27a;
 }
+
+
+
+body:not(.dark) .tabs {
+  background: rgba(255,255,255,0.95);
+  border-bottom: 1px solid #dcdcdc;
+}
+
+body:not(.dark) .tab-btn,
+body:not(.dark) .subtab-btn,
+body:not(.dark) .leaderboard-subtab-btn,
+body:not(.dark) #theme-toggle {
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #d0d0d0;
+}
+
+body:not(.dark) .tab-btn:hover,
+body:not(.dark) .subtab-btn:hover,
+body:not(.dark) .leaderboard-subtab-btn:hover {
+  color: white;
+}
+
+body:not(.dark) .panel {
+  color: #111;
+}
+
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) p,
+body:not(.dark) label {
+  color: #111;
+}
+
+body:not(.dark) .dropdown-group select,
+body:not(.dark) #leaderboard-filter,
+body:not(.dark) #player-search,
+body:not(.dark) #search-bar {
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #d0d0d0;
+}
+
+body:not(.dark) .demon-card,
+body:not(.dark) .player-card,
+body:not(.dark) .placeholder-card,
+body:not(.dark) .placeholder-player {
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #d8d8d8;
+}
+
+body:not(.dark) .subtab-btn.active,
+body:not(.dark) .leaderboard-subtab-btn.active {
+  background: #e8e8e8;
+  color: #111;
+}
+
+body:not(.dark) .leaderboard-warning {
+  color: #7a5400;
+}
