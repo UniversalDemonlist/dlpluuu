@@ -600,7 +600,7 @@ function openDemonPage(demon) {
     getYoutubeThumbnail(demon.verification) ||
     "";
 
-  const score = demon.position ? 1000 / Math.sqrt(demon.position) : 5500 / Math.sqrt(999);
+  const score = demon.position ? 5500 / Math.sqrt(demon.position) : 5500 / Math.sqrt(999);
 
   const videoId = getYoutubeId(demon.verification);
   const iframeSrc = videoId ? `https://www.youtube.com/embed/${videoId}` : "";
