@@ -1018,3 +1018,76 @@ body.dark .fancy-records-box {
   margin-top: 20px;
   margin-bottom: 10px;
 }
+
+.fancy-demon-header {
+  background-image: none !important;
+  background: rgba(255,255,255,0.92) !important;
+}
+
+body.dark .fancy-demon-header {
+  background: rgba(25,25,35,0.95) !important;
+}
+
+.fancy-demon-header::before {
+  display: none !important;
+}
+
+body:not(.dark) .fancy-demon-header h1,
+body:not(.dark) .fancy-demon-header p {
+  color: #111 !important;
+}
+
+.player-card .rank-badge {
+  display: none !important;
+}
+
+.demon-info p:last-child {
+  display: none !important;
+}
+
+#demonlist .panel,
+#server .panel {
+  background: rgba(255,255,255,0.92) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+body.dark #demonlist .panel,
+body.dark #server .panel {
+  background: rgba(25,25,35,0.95) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab-btn[data-tab="demonlist"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("extreme.png") center/contain no-repeat;
+  flex-shrink: 0;
+}
+
+.tab-btn[data-tab="server"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("server.png") center/contain no-repeat;
+  flex-shrink: 0;
+}
+
+.tab-btn[data-tab="leaderboard"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("leaderboard.png") center/contain no-repeat;
+  flex-shrink: 0;
+}
