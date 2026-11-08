@@ -1028,13 +1028,13 @@ async function loadLeaderboard() {
 
       const diff = m.difficulty.toLowerCase();
       const mult = {
-        easy: 0.20,
-        medium: 0.40,
-        hard: 0.60,
-        insane: 0.80
+        easy: 20,
+        medium: 40,
+        hard: 60,
+        insane: 80
       }[diff] || 0.20;
 
-      const baseScore = 1000 * mult;
+      const baseScore = 5500 * mult;
       scores[key] += mult;
     });
 
