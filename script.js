@@ -1035,7 +1035,7 @@ async function loadLeaderboard() {
       }[diff] || 0.20;
 
       const baseScore = 350 * mult;
-      scores[key] += baseScore;
+      scores[key] += mult;
     });
 
     manualPoints.forEach(mp => {
