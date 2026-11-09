@@ -29,43 +29,64 @@
 <button class="tab-btn" data-tab="rules">Rules</button>
 </div>
 
-    <div id="home" class="tab-content active">
+<div id="home" class="tab-content active">
 
-  <div class="home-hero">
-    <h1>GLOBAL DEMONLIST+</h1>
-    <p>THE ULTIMATE LIST FOR GEOMETRY DASH</p>
+  <div class="home-center">
+
+    <h1 class="home-title">GLOBAL DEMONLIST+</h1>
+
+    <p class="home-subtitle">
+      THE ULTIMATE LIST FOR GEOMETRY DASH
+    </p>
+
+    <button class="home-list-btn" onclick="
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      document.querySelector('[data-tab=&quot;demonlist&quot;]').classList.add('active');
+      document.getElementById('demonlist').classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    ">
+      GO TO LIST
+    </button>
+
   </div>
 
-  <div class="home-grid">
+  <div class="home-bottom">
 
-    <div class="home-box">
+    <div class="home-panel">
       <h2>Changelog</h2>
 
-      <div class="changelog-scroll">
-          
-        <p><strong>+</strong> - Heliopolis was placed at #1, above Grief.</p>
-        <p><strong>v1.5</strong> - Repurposed changelog for list changes.</p>
+      <div class="home-scroll">
+
+        <p><strong>+</strong> Heliopolis was placed at #1, above Grief.</p>
+        <p><strong>v1.5</strong> Repurposed changelog for list changes.</p>
 
       </div>
     </div>
 
-    <div class="home-box">
+    <div class="home-panel">
       <h2>Why Use Us?</h2>
 
-      <p>
-        <strong>Basically Almost Every Level:</strong><br>
-        We place almost every level with (almost) no rules.
-      </p>
+      <div class="home-scroll">
 
-      <p>
-        <strong>EVERY DEMON:</strong><br>
-        You can submit every demon, difficulty doesn't matter.
-      </p>
+        <p>
+          <strong>Basically Almost Every Level</strong><br>
+          We place almost every level with (almost) no rules.
+        </p>
 
-      <p>
-        <strong>Leaderboard:</strong><br>
-        I mean, what list doesn't have a leaderboard?
-      </p>
+        <p>
+          <strong>EVERY DEMON</strong><br>
+          You can submit every demon, difficulty doesn't matter.
+        </p>
+
+        <p>
+          <strong>Leaderboard</strong><br>
+          I mean, what list doesn't have a leaderboard?
+        </p>
+
+      </div>
     </div>
 
   </div>
