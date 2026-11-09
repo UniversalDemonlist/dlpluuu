@@ -1277,3 +1277,93 @@ body.dark .home-box {
 .changelog-scroll p {
   margin-bottom: 12px;
 }
+
+
+
+.home-center {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.home-title {
+  font-size: 4rem;
+  margin: 0;
+}
+
+.home-subtitle {
+  font-size: 1.3rem;
+  opacity: .85;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.home-list-btn {
+  padding: 12px 24px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #3f6dff,
+    #7850ff
+  );
+
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.home-list-btn:hover {
+  transform: translateY(-2px);
+}
+
+.home-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.home-panel {
+  width: 400px;
+  height: 350px;
+
+  background: rgba(255,255,255,.92);
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 6px 20px rgba(0,0,0,.12);
+}
+
+body.dark .home-panel {
+  background: rgba(25,25,35,.95);
+}
+
+.home-panel h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.home-scroll {
+  height: 280px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.home-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.home-scroll::-webkit-scrollbar-thumb {
+  background: rgba(120,120,120,.4);
+  border-radius: 10px;
+}
