@@ -1156,3 +1156,11 @@ body.dark .staff-card {
     width: 100%;
   }
 }
+
+
+.server-btn {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
