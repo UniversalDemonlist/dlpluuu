@@ -1187,3 +1187,58 @@ body:not(.dark) .list-warning {
   background: rgba(255, 170, 0, 0.12);
   color: #7a5400;
 }
+
+
+
+.home-hero {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.home-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 5px;
+}
+
+.home-hero p {
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.home-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.home-box {
+  width: 380px;
+
+  background: rgba(255,255,255,0.92);
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.12);
+}
+
+body.dark .home-box {
+  background: rgba(25,25,35,0.95);
+}
+
+.home-box h2 {
+  margin-top: 0;
+}
+
+.changelog-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.changelog-scroll p {
+  margin-bottom: 12px;
+}
