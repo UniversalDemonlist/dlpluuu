@@ -1189,6 +1189,41 @@ body:not(.dark) .list-warning {
 }
 
 
+.tab-btn[data-tab="home"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("home.png") center/contain no-repeat;
+}
+
+.tab-btn[data-tab="demonlist"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("extreme.png") center/contain no-repeat;
+}
+
+.tab-btn[data-tab="leaderboard"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("leaderboard.png") center/contain no-repeat;
+}
+
+.tab-btn[data-tab="rules"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("rules.png") center/contain no-repeat;
+}
+
+.tab-btn[data-tab="staff"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("staff.png") center/contain no-repeat;
+}
+
 
 .home-hero {
   text-align: center;
