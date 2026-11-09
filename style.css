@@ -1210,6 +1210,13 @@ body:not(.dark) .list-warning {
   background: url("leaderboard.png") center/contain no-repeat;
 }
 
+.tab-btn[data-tab="server"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("server.png") center/contain no-repeat;
+}
+
 .tab-btn[data-tab="rules"]::before {
   content: "";
   width: 18px;
