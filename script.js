@@ -1252,3 +1252,15 @@ function showInitialPlaceholders() {
     for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
   }
 }
+
+
+function updateSpaceUKButton() {
+  const btn = document.getElementById("spaceuk-toggle");
+
+  if (!btn) return;
+
+  btn.textContent =
+    disableSpaceUK
+      ? "Enable SpaceUK"
+      : "Disable SpaceUK";
+}
