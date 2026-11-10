@@ -225,6 +225,53 @@ function setupTabs() {
   });
 }
 
+function getVisibleDemons() {
+  if (!disableSpaceUK) return globalDemons;
+
+  let newPosition = 1;
+
+  return globalDemons
+    .map(demon => {
+      const records = (demon.records || []).filter(r => {
+        const user =
+          typeof r === "string"
+            ? r
+            : r.user;
+
+        return !user.toLowerCase().includes("[c]");
+      });
+
+      let verifier = demon.verifier;
+
+      if (
+        verifier &&
+        verifier.toLowerCase().includes("[c]")
+      ) {
+        verifier =
+          records.length > 0
+            ? (
+                typeof records[0] === "string"
+                  ? records[0]
+                  : records[0].user
+              )
+            : null;
+      }
+
+      if (!verifier && records.length === 0) {
+        return null;
+      }
+
+      return {
+        ...demon,
+        verifier,
+        records,
+        position: newPosition++
+      };
+    })
+    .filter(Boolean);
+}
+
+
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
 
