@@ -381,6 +381,116 @@ function createDemonCard(demon) {
   return card;
 }
 
+function createPlayerCard(name, score, rank) {
+  const hardest = getPlayerHardestDemon(name);
+  const t = getPlayerTier(hardest);
+  const tierColor = getTierColor(t.tier);
+  const segmentColor = getSegmentColor(t.segment);
+
+  const rankColor = {
+    Legend: "#ff3030",
+    Absolute: "#a020f0",
+    "Mythic II": "#ff00ff",
+    "Mythic I": "#d400d4",
+    "Champion II": "#00bfff",
+    "Champion I": "#0099cc",
+    "Diamond II": "#7df9ff",
+    "Diamond I": "#4fd6ff",
+    "Platinum II": "#e5e4e2",
+    "Platinum I": "#cfcfcf",
+    "Gold II": "#ffd700",
+    "Gold I": "#d4af37",
+    "Silver II": "#c0c0c0",
+    "Silver I": "#a8a8a8",
+    "Bronze II": "#cd7f32",
+    "Bronze I": "#a97142"
+  }[getPlayerRank(score)];
+
+  const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
+
+  const card = document.createElement("div");
+  card.className = "player-card no-image";
+  
+  const badge = document.createElement("img");
+  badge.className = "rank-badge";
+  badge.src = getLevelBadge(hardest?.position);
+  card.appendChild(badge);
+
+  const info = document.createElement("div");
+  info.className = "player-info";
+
+  info.innerHTML = `
+    <h2>#${rank} — ${cleanDisplayName(name)}</h2>
+    <p><strong>Score:</strong> ${score.toFixed(2)}</p>
+    <p><strong>Rank:</strong> <span class="${
+      getPlayerRank(score) === "Legend"
+        ? "rank-legend"
+        : getPlayerRank(score) === "Absolute"
+        ? "rank-absolute"
+        : getPlayerRank(score).includes("Mythic")
+        ? "rank-mythic"
+        : ""
+    }" style="color:${rankColor}; font-weight:600;">
+      ${getPlayerRank(score)}
+    </span></p>
+    <p><strong>Hardest Demon:</strong> ${hardestName}</p>
+  `;
+
+  card.appendChild(info);
+  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
+
+  return card;
+}
+
+function createDemonCard(demon) {
+  const card = document.createElement("div");
+  card.className = "demon-card";
+
+  const notUsable = ["112313819", "88201288", "109780665", "0"];
+  const bg = demon.background || (!notUsable.includes(String(demon.id)) ? `https://prevter.me{demon.id}` : "");
+  card.style.setProperty("--card-bg", `url('${bg}')`);
+
+  const img = document.createElement("img");
+  img.src = demon.thumbnail || getYoutubeThumbnail(demon.verification) || "https://placeholder.com";
+
+  const info = document.createElement("div");
+  info.className = "demon-info";
+
+  const score = demon.position ? 5500 / Math.sqrt(demon.position) : 5500 / Math.sqrt(999);
+  const difficulty = getDifficultyInfo(demon.position);
+  let displayVerifier = cleanDisplayName(demon.verifier);
+
+  if (demon.cosmetic) {
+    info.innerHTML = `
+      <h2>${demon.name}</h2>
+      <p>Levels past this zone are harder than ${demon.name}</p>
+    `;
+  } else if (demon.missingJson) {
+    info.innerHTML = `
+      <h2>#${demon.position} — ${demon.name}</h2>
+      <p style="color:#ff3232;font-weight:700;">JSON NOT FOUND!</p>
+    `;
+  } else {
+    info.innerHTML = `
+      <h2>#${demon.position} — ${demon.name}</h2>
+      <p>Verifier: ${displayVerifier}</p>
+      <p>Score: ${score.toFixed(2)}</p>
+      <p>
+        <strong>Difficulty:</strong>
+        <span style="color:${difficulty.outline ? "#000000" : difficulty.color}; font-weight:700; ${difficulty.outline ? `-webkit-text-stroke: 1px ${difficulty.outline};` : ""}">
+          ${difficulty.name}
+        </span>
+      </p>
+    `;
+  }
+
+  card.appendChild(img);
+  card.appendChild(info);
+  card.addEventListener("click", () => openDemonPage(demon));
+
+  return card;
+}
+
 
 
 async function loadDemonList() {
