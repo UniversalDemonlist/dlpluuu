@@ -1265,3 +1265,151 @@ background: rgba(255,136,0,.2) !important;
   z-index: 5;
 }
 
+@keyframes legendSmoothShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes legendPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 12px rgba(255, 0, 85, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(0, 255, 204, 1)) drop-shadow(0 0 20px rgba(112, 0, 255, 0.6));
+  }
+}
+
+@keyframes holoSweep {
+  0% { left: -150%; }
+  100% { left: 250%; }
+}
+
+@keyframes holoSweepFast {
+  0% { left: -150%; }
+  100% { left: 250%; }
+}
+
+@keyframes cardShadowPulse {
+  0%, 100% {
+    box-shadow: 
+      0 8px 25px rgba(255, 0, 85, 0.25),
+      0 0 30px rgba(112, 0, 255, 0.15);
+  }
+  50% {
+    box-shadow: 
+      0 14px 35px rgba(0, 255, 204, 0.45),
+      0 0 50px rgba(255, 0, 85, 0.3);
+  }
+}
+
+@keyframes legendHoverShakeInsane {
+  0% { 
+    transform: translateY(-8px) scale(1.02) translate(0, 0) rotate(0deg);
+    background: radial-gradient(circle at center, #1b052a 0%, #05020a 100%) !important;
+  }
+  20% { 
+    transform: translateY(-8px) scale(1.02) translate(-2px, 1.5px) rotate(-0.4deg);
+    background: radial-gradient(circle at 48% 52%, #14051f 0%, #0c0214 100%) !important;
+  }
+  40% { 
+    transform: translateY(-8px) scale(1.02) translate(-2.5px, -1.5px) rotate(0.4deg);
+    background: radial-gradient(circle at 52% 48%, #22022d 0%, #05020a 100%) !important;
+  }
+  60% { 
+    transform: translateY(-8px) scale(1.02) translate(2.5px, 1px) rotate(-0.2deg);
+    background: radial-gradient(circle at 50% 50%, #14051f 0%, #05020a 100%) !important;
+  }
+  80% { 
+    transform: translateY(-8px) scale(1.02) translate(1.5px, -2px) rotate(0.3deg);
+    background: radial-gradient(circle at 49% 51%, #1d0332 0%, #08020f 100%) !important;
+  }
+  100% { 
+    transform: translateY(-8px) scale(1.02) translate(0, 0) rotate(0deg);
+    background: radial-gradient(circle at center, #1b052a 0%, #05020a 100%) !important;
+  }
+}
+
+.rank-legend {
+  font-weight: 950 !important;
+  font-family: "Impact", "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  animation: legendPulseGlow 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.player-card:has(.rank-legend) {
+  background: radial-gradient(circle at center, #14051f 0%, #05020a 100%) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: none !important;
+  padding: 20px !important;
+  z-index: 1;
+  transform: translateY(-3px);
+  animation: cardShadowPulse 3s ease-in-out infinite;
+  transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.player-card:has(.rank-legend):hover {
+  animation: 
+    cardShadowPulse 1.5s ease-in-out infinite, 
+    legendHoverShakeInsane 0.12s linear infinite;
+  cursor: pointer;
+}
+
+.player-card:has(.rank-legend)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 2.5px;
+  background: linear-gradient(
+    45deg,
+    #ff0055,
+    #7000ff,
+    #00ffcc,
+    #ffcc00,
+    #ff0055
+  );
+  background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: legendSmoothShift 3s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.player-card:has(.rank-legend)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    rgba(0, 255, 204, 0.12),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: holoSweep 3.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.player-card:has(.rank-legend):hover::after {
+  animation: holoSweepFast 1s linear infinite;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    rgba(0, 255, 204, 0.2),
+    transparent
+  );
+}
+
