@@ -1232,6 +1232,21 @@ function setupLeaderboardSubTabs() {
 }
 
 
+const spaceUKBtn = document.getElementById("spaceuk-toggle");
+
+if (spaceUKBtn) {
+  updateSpaceUKButton();
+
+  spaceUKBtn.addEventListener("click", () => {
+    disableSpaceUK = !disableSpaceUK;
+
+    updateSpaceUKButton();
+
+    renderDemonCards();
+    loadLeaderboard();
+  });
+}
+
 
 function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
