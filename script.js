@@ -1614,10 +1614,9 @@ function applyLegitVerifiersAndVideos() {
 
         if (typeof firstLegitRecord === "object" && firstLegitRecord.link) {
           demon.verification = firstLegitRecord.link;
-          
-          if (demon.thumbnail === undefined || demon.thumbnail === "") {
-            const newThumb = getYoutubeThumbnail(firstLegitRecord.link);
-            if (newThumb) demon.thumbnail = newThumb;
+          const newThumb = getYoutubeThumbnail(firstLegitRecord.link);
+          if (newThumb) {
+            demon.thumbnail = newThumb;
           }
         }
 
