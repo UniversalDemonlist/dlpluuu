@@ -1064,3 +1064,90 @@ background: rgba(255,136,0,.2) !important;
   z-index: 5;
 }
 
+@keyframes legendSmoothShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes legendPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 12px rgba(255, 0, 85, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(0, 255, 204, 1)) drop-shadow(0 0 20px rgba(112, 0, 255, 0.6));
+  }
+}
+
+@keyframes holoSweep {
+  0% { left: -150%; }
+  100% { left: 250%; }
+}
+
+.rank-legend {
+  font-weight: 950 !important;
+  font-family: "Impact", "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  animation: legendPulseGlow 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.player-card:has(.rank-legend) {
+  background: radial-gradient(circle at center, #110418 0%, #08050d 100%) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: none !important;
+  padding: 20px !important;
+  z-index: 1;
+  box-shadow: 
+    0 8px 25px rgba(255, 0, 85, 0.2),
+    0 0 30px rgba(112, 0, 255, 0.15) !important;
+  transform: translateY(-3px);
+  transition: transform 0.3s ease;
+}
+
+.player-card:has(.rank-legend)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 2px;
+  background: linear-gradient(
+    45deg,
+    #ff0055,
+    #7000ff,
+    #00ffcc,
+    #ffcc00,
+    #ff0055
+  );
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: legendSmoothShift 4s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.player-card:has(.rank-legend)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    rgba(0, 255, 204, 0.06),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: holoSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
