@@ -1546,3 +1546,47 @@ function rebuildVisibleLists() {
 
   populateDropdowns();
 }
+
+function startTargetedTagRemover() {
+  const cleanTargetElements = () => {
+    const selectors = [
+      ".demon-info p",
+      "#demon-page-container h1",
+      "#demon-page-container p",
+      ".fancy-records-box p",
+      ".fancy-records-box strong"
+    ];
+
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(element => {
+        if (element.children.length === 0) {
+          if (/\[c\]/i.test(element.textContent)) {
+            element.textContent = element.textContent.replace(/\[c\]/gi, "");
+          }
+        } else {
+          Array.from(element.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE && /\[c\]/i.test(node.nodeValue)) {
+              node.nodeValue = node.nodeValue.replace(/\[c\]/gi, "");
+            }
+          });
+        }
+      });
+    });
+  };
+
+  cleanTargetElements();
+
+  const observer = new MutationObserver(() => {
+    cleanTargetElements();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  startTargetedTagRemover();
+});
