@@ -1043,7 +1043,7 @@ async function loadLeaderboard() {
       scores[key] = 0;
     });
 
-    globalDemons.forEach(demon => {
+      getVisibleDemons().forEach(demon => {demon => {
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
       const pos = demon.position || 999;
