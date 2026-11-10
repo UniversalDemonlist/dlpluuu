@@ -65,12 +65,14 @@ if (spaceUKBtn) {
   updateSpaceUKButton();
 
   spaceUKBtn.addEventListener("click", () => {
-    disableSpaceUK = !disableSpaceUK;
+  disableSpaceUK = !disableSpaceUK;
+
+    rebuildVisibleLists();
 
     updateSpaceUKButton();
 
-    renderDemonCards();
-    loadLeaderboard();
+     renderDemonCards();
+     loadLeaderboard();
   });
 }
 
