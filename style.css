@@ -1573,3 +1573,80 @@ background: rgba(255,136,0,.2) !important;
   width: 300px;
 }
 
+@keyframes mythicCardGlow {
+  0%, 100% { box-shadow: 0 4px 15px rgba(212, 0, 212, 0.15); }
+  50% { box-shadow: 0 4px 25px rgba(255, 0, 255, 0.3); }
+}
+
+.player-card:has(.rank-champion-i),
+.player-card:has(.rank-champion-ii),
+.player-card:has([class*="Champion"]) {
+  background: radial-gradient(circle at center, #0a1128 0%, #030712 100%) !important;
+  border: 2px solid transparent !important;
+  border-image: linear-gradient(135deg, #0099cc, #00bfff) 1 !important;
+  box-shadow: 0 4px 15px rgba(0, 153, 204, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.player-card:has(.rank-champion-i):hover,
+.player-card:has(.rank-champion-ii):hover,
+.player-card:has([class*="Champion"]):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.35);
+}
+
+.player-card:has(.rank-mythic-i),
+.player-card:has(.rank-mythic-ii),
+.player-card:has(.rank-mythic),
+.player-card:has([class*="Mythic"]) {
+  background: radial-gradient(circle at center, #1f002a 0%, #07000a 100%) !important;
+  border: 2px solid transparent !important;
+  border-image: linear-gradient(135deg, #d400d4, #ff00ff) 1 !important;
+  animation: mythicCardGlow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.player-card:has(.rank-mythic-i):hover,
+.player-card:has(.rank-mythic-ii):hover,
+.player-card:has(.rank-mythic):hover,
+.player-card:has([class*="Mythic"]):hover {
+  transform: translateY(-4px);
+  filter: brightness(1.15);
+}
+
+@keyframes absoluteHoloSweep {
+  0% { left: -150%; }
+  100% { left: 250%; }
+}
+
+.player-card:has(.rank-absolute),
+.player-card:has([class*="Absolute"]) {
+  background: radial-gradient(circle at center, #1b0a2a 0%, #07030d 100%) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 2px solid transparent !important;
+  border-image: linear-gradient(135deg, #a020f0, #d77cff, #ff00ff, #a020f0) 1 !important;
+  box-shadow: 0 6px 20px rgba(160, 32, 240, 0.2), 0 0 25px rgba(215, 124, 255, 0.1) !important;
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
+}
+
+.player-card:has(.rank-absolute):hover,
+.player-card:has([class*="Absolute"]):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(160, 32, 240, 0.35), 0 0 35px rgba(255, 0, 255, 0.2) !important;
+}
+
+.player-card:has(.rank-absolute)::after,
+.player-card:has([class*="Absolute"])::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  background: linear-gradient(90deg, transparent, rgba(215, 124, 255, 0.15), rgba(255, 0, 255, 0.05), transparent);
+  transform: skewX(-20deg);
+  animation: absoluteHoloSweep 6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
