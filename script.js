@@ -1181,17 +1181,20 @@ async function loadLeaderboard() {
       }
     });
 
-    manualCompleted.forEach(m => {
+        manualCompleted.forEach(m => {
       const key = normalizeName(m.player);
       if (scores[key] === undefined) return;
 
       const diff = m.difficulty.toLowerCase();
-      const mult = {
+      const points = {
         easy: 20,
         medium: 40,
         hard: 60,
         insane: 80
-      }[diff] || 0.20;
+      }[diff] || 0;
+
+      scores[key] += points;
+    });
 
       const baseScore = 5500 * mult;
       scores[key] += baseScore;
