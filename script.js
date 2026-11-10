@@ -1010,7 +1010,7 @@ async function loadLeaderboard() {
       if (!playerMap.has(key)) playerMap.set(key, mp.player);
     });
 
-    globalDemons.forEach(demon => {
+      getVisibleDemons().forEach((demon => {
       if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
         const key = normalizeName(demon.verifier);
         if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
