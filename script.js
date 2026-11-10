@@ -752,7 +752,7 @@ function getPlayerStats(playerName) {
   let mediumDemons = [];
   let easyDemons = [];
 
-  globalDemons.forEach(demon => {
+  getVisibleDemons().forEach(demon => {
     let beaten = false;
 
     demon.records.forEach(r => {
