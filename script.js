@@ -1018,7 +1018,7 @@ async function loadLeaderboard() {
       if (!playerMap.has(key)) playerMap.set(key, mp.player);
     });
 
-      getVisibleDemons().forEach(demon => {
+    getVisibleDemons().forEach(demon => {
       if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
         const key = normalizeName(demon.verifier);
         if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
@@ -1045,7 +1045,7 @@ async function loadLeaderboard() {
       scores[key] = 0;
     });
 
-      getVisibleDemons().forEach(demon => {demon => {
+    getVisibleDemons().forEach(demon => {
       if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
 
       const pos = demon.position || 999;
@@ -1091,7 +1091,7 @@ async function loadLeaderboard() {
       }[diff] || 0.20;
 
       const baseScore = 5500 * mult;
-      scores[key] += mult;
+      scores[key] += baseScore;
     });
 
     manualPoints.forEach(mp => {
@@ -1122,35 +1122,31 @@ async function loadLeaderboard() {
         return cleanDisplayName(p.name).toLowerCase().includes(searchQuery);
       });
 
-    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
-
     if (filterMode === "points") {
       sorted.sort((a, b) => b.score - a.score);
-    }else if (filterMode === "tier") {
-  sorted.sort((a, b) =>
-    a.hardestPosition - b.hardestPosition ||
-    b.score - a.score
-  );
+    } else if (filterMode === "tier") {
+      sorted.sort((a, b) => a.hardestPosition - b.hardestPosition || b.score - a.score);
     } else if (filterMode === "rank") {
       const order = ["Mythic", "Champion", "Diamond", "Platinum", "Gold", "Silver", "Bronze"];
       sorted.sort((a, b) => order.indexOf(a.rankName) - order.indexOf(b.rankName));
     }
 
- container.innerHTML = `
-  <div class="leaderboard-warning">
-    WARNING: Rankings might not be accurate due to this list not being very popular. Take your rank with a grain of salt.
-  </div>
-`;
+    container.innerHTML = `
+      <div class="leaderboard-warning">
+        WARNING: Rankings might not be accurate due to this list not being very popular. Take your rank with a grain of salt.
+      </div>
+    `;
 
-sorted.forEach((p, index) => {
-  container.appendChild(createPlayerCard(p.name, p.score, index + 1));
-});
+    sorted.forEach((p, index) => {
+      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+    });
 
     if (sorted.length === 0) {
       container.innerHTML = "<p>No players with scores yet.</p>";
     }
   }, 500);
 }
+
 
 function setupSubTabs() {
   const buttons = document.querySelectorAll(".subtab-btn");
