@@ -1374,3 +1374,11 @@ body.dark .home-panel {
   background: rgba(120,120,120,.4);
   border-radius: 10px;
 }
+
+.server-btn:last-child {
+  border-color: #ff8800 !important;
+}
+
+.server-btn:last-child:hover {
+  background: rgba(255,136,0,.2) !important;
+}
