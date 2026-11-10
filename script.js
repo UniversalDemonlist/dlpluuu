@@ -394,7 +394,7 @@ function renderDemonCards(listOverride) {
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
 
-  let list = listOverride || globalDemons;
+  let list = listOverride || getVisibleDemons();
 
   if (hideCheated) {
     list = list.filter(d => !cheatedList.includes(d.id.toLowerCase()));
