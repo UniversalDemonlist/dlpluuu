@@ -1379,6 +1379,62 @@ body.dark .home-panel {
   border-color: #ff8800 !important;
 }
 
+
+@keyframes legendShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes legendPulseExtreme {
+  0%, 100% {
+    filter: 
+      drop-shadow(0 0 8px #ff0055) 
+      drop-shadow(0 0 15px #ffcc00) 
+      drop-shadow(0 0 30px #ff0000);
+    transform: scale(1) skewX(-2deg);
+  }
+  50% {
+    filter: 
+      drop-shadow(0 0 15px #ff0055) 
+      drop-shadow(0 0 35px #ff00ff) 
+      drop-shadow(0 0 60px #ffcc00)
+      drop-shadow(0 0 90px #ff0000);
+    transform: scale(1.05) skewX(2deg);
+  }
+}
+
+@keyframes glitchEffect {
+  0%, 100% { text-shadow: 2px -2px 0 #ff0055, -2px 2px 0 #00ffff; }
+  50% { text-shadow: -3px 3px 0 #ff0055, 3px -3px 0 #00ffff; }
+}
+
+.rank-legend {
+  font-weight: 900 !important;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(
+    90deg,
+    #ff0055,
+    #ff5500,
+    #ffcc00,
+    #00ffcc,
+    #ff00ff,
+    #ff0055
+  );
+  background-size: 400% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation:
+    legendShift 1.5s linear infinite,
+    legendPulseExtreme 1.2s ease-in-out infinite,
+    glitchEffect 0.4s steps(2) infinite;
+  display: inline-block;
+}
+
 .server-btn:last-child:hover {
   background: rgba(255,136,0,.2) !important;
 }
