@@ -1315,3 +1315,24 @@ function updateSpaceUKButton() {
       ? "Enable SpaceUK"
       : "Disable SpaceUK";
 }
+
+function rebuildVisibleLists() {
+  const demons = getVisibleDemons();
+
+  mainList = demons.filter(
+    d => !d.cosmetic && d.position <= 75
+  );
+
+  extendedList = demons.filter(
+    d => !d.cosmetic &&
+    d.position > 75 &&
+    d.position <= 100
+  );
+
+  legacyList = demons.filter(
+    d => !d.cosmetic &&
+    d.position > 100
+  );
+
+  populateDropdowns();
+}
