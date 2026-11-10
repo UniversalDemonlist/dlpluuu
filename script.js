@@ -12,6 +12,7 @@ let hideCheated = false;
 let playersList = [];
 let manualCompleted = [];
 let challengeList = [];
+let disableSpaceUK = false;
 
 window._leaderboardScores = {};
 window._playerMap = new Map();
