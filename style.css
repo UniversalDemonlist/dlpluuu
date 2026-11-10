@@ -1579,3 +1579,123 @@ body.dark .home-panel {
   animation: legendSmoothShift 6s linear infinite;
   pointer-events: none;
 }
+
+@keyframes legendSmoothShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes legendPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 15px rgba(255, 0, 85, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.8)) drop-shadow(0 0 25px rgba(112, 0, 255, 0.6));
+  }
+}
+
+@keyframes cardBorderBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes cosmicDust {
+  0% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-20px) scale(1.2); opacity: 0.6; }
+  100% { transform: translateY(-40px) scale(1); opacity: 0; }
+}
+
+@keyframes holoSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.rank-legend {
+  font-weight: 900 !important;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(
+    90deg,
+    #ffffff,
+    #ff0055,
+    #ffcc00,
+    #00ffcc,
+    #ff00ff,
+    #ffffff
+  );
+  background-size: 300% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation:
+    legendSmoothShift 3s linear infinite,
+    legendPulseGlow 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+.player-card:has(.rank-legend) {
+  background: radial-gradient(circle at center, #14071c 0%, #05020a 100%) !important;
+  padding: 1px;
+  border: none !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 30px rgba(255, 0, 85, 0.25),
+    0 0 40px rgba(112, 0, 255, 0.15),
+    inset 0 0 25px rgba(255, 255, 255, 0.03);
+  transform: translateY(-4px) scale(1.01);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.player-card:has(.rank-legend)::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #ff0055,
+    #7000ff,
+    #00ffcc,
+    #ffcc00,
+    #ff0055
+  );
+  background-size: 400% 400%;
+  z-index: -1;
+  border-radius: inherit;
+  animation: cardBorderBorder 4s ease infinite;
+}
+
+.player-card:has(.rank-legend)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    rgba(0, 255, 204, 0.08),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: holoSweep 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+.player-card:has(.rank-legend) .player-info {
+  position: relative;
+  z-index: 2;
+  background: #07030d;
+  margin: 2px;
+  border-radius: inherit;
+  padding: 15px;
+  height: calc(100% - 4px);
+}
