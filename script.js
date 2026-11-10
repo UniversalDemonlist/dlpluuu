@@ -59,6 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+const spaceUKBtn = document.getElementById("spaceuk-toggle");
+
+if (spaceUKBtn) {
+  updateSpaceUKButton();
+
+  spaceUKBtn.addEventListener("click", () => {
+    disableSpaceUK = !disableSpaceUK;
+
+    updateSpaceUKButton();
+
+    renderDemonCards();
+    loadLeaderboard();
+  });
+}
+
 function getPlayerRank(score) {
   if (score >= 100000) return "Legend";
   if (score >= 50000) return "Absolute";
