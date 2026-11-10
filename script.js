@@ -1590,3 +1590,47 @@ function startTargetedTagRemover() {
 document.addEventListener("DOMContentLoaded", () => {
   startTargetedTagRemover();
 });
+
+
+function applyLegitVerifiersAndVideos() {
+  if (!globalDemons || globalDemons.length === 0) return;
+
+  globalDemons.forEach(demon => {
+    const currentVerifier = demon.verifier || "";
+    
+    if (/\[c\]/i.test(currentVerifier)) {
+      const records = demon.records || [];
+      
+      const firstLegitRecord = records.find(r => {
+        const username = typeof r === "string" ? r : (r.user || "");
+        return username && !/\[c\]/i.test(username);
+      });
+
+      if (firstLegitRecord) {
+        const legitUser = typeof firstLegitRecord === "string" ? firstLegitRecord : firstLegitRecord.user;
+        demon.verifier = legitUser;
+
+        if (typeof firstLegitRecord === "object" && firstLegitRecord.link) {
+          demon.verification = firstLegitRecord.link;
+          
+          if (demon.thumbnail === undefined || demon.thumbnail === "") {
+            const newThumb = getYoutubeThumbnail(firstLegitRecord.link);
+            if (newThumb) demon.thumbnail = newThumb;
+          }
+        }
+      }
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const originalLoadDemonList = window.loadDemonList;
+  if (originalLoadDemonList) {
+    window.loadDemonList = async function(...args) {
+      await originalLoadDemonList.apply(this, args);
+      applyLegitVerifiersAndVideos();
+      rebuildVisibleLists();
+      renderDemonCards();
+    };
+  }
+});
