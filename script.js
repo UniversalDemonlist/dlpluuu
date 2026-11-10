@@ -225,15 +225,21 @@ function setupTabs() {
   const contents = document.querySelectorAll(".tab-content");
 
   buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      stopAllVideos();
+    btn.addEventListener("click", (e) => {
       const tab = btn.getAttribute("data-tab");
+      
+      if (!tab) return;
+      
+      const targetContent = document.getElementById(tab);
+      if (!targetContent) return;
+
+      stopAllVideos();
 
       buttons.forEach(b => b.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
 
       btn.classList.add("active");
-      document.getElementById(tab).classList.add("active");
+      targetContent.classList.add("active");
 
       window.scrollTo({ top: 0, behavior: "smooth" });
 
