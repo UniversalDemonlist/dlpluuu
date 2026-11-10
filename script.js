@@ -248,28 +248,18 @@ function getVisibleDemons() {
   return globalDemons
     .map(demon => {
       const records = (demon.records || []).filter(r => {
-        const user =
-          typeof r === "string"
-            ? r
-            : r.user;
-
-        return !user.toLowerCase().includes("[c]");
+        const user = typeof r === "string" ? r : r.user;
+        return user && !user.toLowerCase().includes("[c]");
       });
 
       let verifier = demon.verifier;
 
-      if (
-        verifier &&
-        verifier.toLowerCase().includes("[c]")
-      ) {
-        verifier =
-          records.length > 0
-            ? (
-                typeof records[0] === "string"
-                  ? records[0]
-                  : records[0].user
-              )
-            : null;
+      if (verifier && verifier.toLowerCase().includes("[c]")) {
+        if (records.length > 0) {
+          verifier = typeof records[0] === "string" ? records[0] : records[0].user;
+        } else {
+          verifier = null;
+        }
       }
 
       if (!verifier && records.length === 0) {
@@ -280,11 +270,12 @@ function getVisibleDemons() {
         ...demon,
         verifier,
         records,
-        position: newPosition++
+        position: demon.cosmetic ? null : newPosition++
       };
     })
     .filter(Boolean);
 }
+
 
 
 async function loadDemonList() {
