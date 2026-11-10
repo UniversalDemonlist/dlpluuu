@@ -1438,3 +1438,66 @@ body.dark .home-panel {
 .server-btn:last-child:hover {
   background: rgba(255,136,0,.2) !important;
 }
+
+@keyframes legendShiftExtreme {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes legendMergeClean {
+  0%, 100% {
+    filter: 
+      drop-shadow(0 0 12px #ffffff)
+      drop-shadow(0 0 25px #ff003c) 
+      drop-shadow(0 0 50px #7000ff);
+    letter-spacing: 3px;
+  }
+  50% {
+    filter: 
+      drop-shadow(0 0 22px #00ffcc) 
+      drop-shadow(0 0 45px #ff0055) 
+      drop-shadow(0 0 85px #ffffff);
+    letter-spacing: 7px;
+  }
+}
+
+@keyframes hyperGlitchMerge {
+  0%, 100% { 
+    text-shadow: 4px -3px 0 #ff0055, -4px 3px 0 #00ffff, 0 0 15px #ffffff;
+  }
+  25% {
+    text-shadow: -4px 3px 0 #ffcc00, 4px -3px 0 #ff00ff;
+  }
+  50% {
+    text-shadow: 5px -2px 0 #00ffcc, -5px 2px 0 #ff003c;
+  }
+  75% {
+    text-shadow: -3px -3px 0 #ffff00, 3px 3px 0 #0000ff;
+  }
+}
+
+.rank-legend {
+  font-weight: 950 !important;
+  font-family: "Impact", "Montserrat", sans-serif;
+  text-transform: uppercase;
+  background: linear-gradient(
+    45deg,
+    #ffffff,
+    #ff003c,
+    #ffff00,
+    #00ffcc,
+    #ff00ff,
+    #ffffff
+  );
+  background-size: 600% 600%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation:
+    legendShiftExtreme 0.8s linear infinite,
+    legendMergeClean 0.6s ease-in-out infinite,
+    hyperGlitchMerge 0.15s steps(1) infinite;
+  display: inline-block;
+}
