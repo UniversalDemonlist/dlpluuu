@@ -714,7 +714,7 @@ function getPlayerHardestDemon(playerName) {
   const key = normalizeName(playerName);
   let hardest = null;
 
-  globalDemons.forEach(demon => {
+  getVisibleDemons().forEach(demon => {
     let beaten = false;
 
     demon.records.forEach(r => {
