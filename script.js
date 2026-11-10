@@ -1593,7 +1593,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function applyLegitVerifiersAndVideos() {
-  if (!globalDemons || globalDemons.length === 0) return;
+  if (!disableSpaceUK || !globalDemons || globalDemons.length === 0) return;
 
   globalDemons.forEach(demon => {
     const currentVerifier = demon.verifier || "";
@@ -1601,13 +1601,15 @@ function applyLegitVerifiersAndVideos() {
     if (/\[c\]/i.test(currentVerifier)) {
       const records = demon.records || [];
       
-      const firstLegitRecord = records.find(r => {
+      const legitRecordIndex = records.findIndex(r => {
         const username = typeof r === "string" ? r : (r.user || "");
         return username && !/\[c\]/i.test(username);
       });
 
-      if (firstLegitRecord) {
+      if (legitRecordIndex !== -1) {
+        const firstLegitRecord = records[legitRecordIndex];
         const legitUser = typeof firstLegitRecord === "string" ? firstLegitRecord : firstLegitRecord.user;
+        
         demon.verifier = legitUser;
 
         if (typeof firstLegitRecord === "object" && firstLegitRecord.link) {
@@ -1618,6 +1620,8 @@ function applyLegitVerifiersAndVideos() {
             if (newThumb) demon.thumbnail = newThumb;
           }
         }
+
+        demon.records.splice(legitRecordIndex, 1);
       }
     }
   });
