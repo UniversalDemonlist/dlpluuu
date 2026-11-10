@@ -1181,7 +1181,7 @@ async function loadLeaderboard() {
       }
     });
 
-        manualCompleted.forEach(m => {
+    manualCompleted.forEach(m => {
       const key = normalizeName(m.player);
       if (scores[key] === undefined) return;
 
@@ -1194,10 +1194,6 @@ async function loadLeaderboard() {
       }[diff] || 0;
 
       scores[key] += points;
-    });
-
-      const baseScore = 5500 * mult;
-      scores[key] += baseScore;
     });
 
     manualPoints.forEach(mp => {
