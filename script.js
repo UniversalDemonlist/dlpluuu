@@ -324,7 +324,8 @@ function openDemonPage(demon) {
     : 5500 / Math.sqrt(999);
 
   const videoId = getYoutubeId(videoUrl);
-  const iframeSrc = videoId ? "https://youtube.com" + videoId : "";
+  const embedBase = ["https://youtube.com", "embed", videoId].join("/");
+  const iframeSrc = videoId ? embedBase : "";
   const videoBlock = iframeSrc
     ? '<div class="dp-video-wrap"><iframe src="' + iframeSrc + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>'
     : '<div class="dp-video-wrap"><img src="' + thumb + '" alt="' + demon.name + '"></div>';
@@ -407,6 +408,7 @@ function openDemonPage(demon) {
   document.getElementById("demon-page").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 
 
