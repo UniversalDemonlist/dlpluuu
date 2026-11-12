@@ -1307,11 +1307,10 @@ async function loadLeaderboard() {
     const searchQuery = (document.getElementById("player-search")?.value || "").toLowerCase();
     const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
 
-    let sorted = Object.entries(scores)
+    let allPlayers = Object.entries(scores)
       .map(([key, score]) => {
         const name = playerMap.get(key);
         const hardest = getPlayerHardestDemon(name);
-        const t = getPlayerTier(hardest);
         return {
           key,
           name,
@@ -1319,11 +1318,14 @@ async function loadLeaderboard() {
           hardestPosition: hardest?.position || 999999,
           rankName: getPlayerRank(score)
         };
-      })
-      .filter(p => {
-        if (!searchQuery.trim()) return true;
-        return cleanDisplayName(p.name).toLowerCase().includes(searchQuery);
       });
+
+    updateHomeStats(allPlayers.length);
+
+    let sorted = allPlayers.filter(p => {
+      if (!searchQuery.trim()) return true;
+      return cleanDisplayName(p.name).toLowerCase().includes(searchQuery);
+    });
 
     if (filterMode === "points") {
       sorted.sort((a, b) => b.score - a.score);
@@ -1341,11 +1343,17 @@ async function loadLeaderboard() {
     `;
 
     sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+      const card = createPlayerCard(p.name, p.score, index + 1);
+      if (index === 0) card.classList.add("selected-player");
+      container.appendChild(card);
     });
 
-    if (sorted.length === 0) {
+    if (sorted.length > 0) {
+      openPlayerPage(sorted.key, scores);
+    } else {
       container.innerHTML = "<p>No players with scores yet.</p>";
+      const profileView = document.getElementById("leaderboard-profile-view");
+      if (profileView) profileView.innerHTML = "<p class='leaderboard-placeholder-text'>No players found.</p>";
     }
   }, 500);
 }
