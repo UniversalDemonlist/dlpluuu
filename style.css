@@ -4353,3 +4353,102 @@ body:not(.dark) .dp-record-user {
 .dp-info-id {
   display: none !important;
 }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-content {
+  flex: 1;
+}
+
+.site-footer {
+  width: 100%;
+  background: #0d121c;
+  border-top: 1px solid #1b2333;
+  padding: 36px 24px 32px 24px;
+  box-sizing: border-box;
+  margin-top: 48px;
+  color: #94a3b8;
+}
+
+body:not(.dark) .site-footer {
+  background: #f1f5f9;
+  border-top: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+.footer-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  margin-bottom: 24px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+body:not(.dark) .footer-brand {
+  color: #0f172a;
+}
+
+.footer-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.footer-tagline {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #7c8ba1;
+}
+
+.footer-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  margin-bottom: 22px;
+}
+
+body:not(.dark) .footer-divider {
+  background: #cbd5e1;
+}
+
+.footer-bottom {
+  text-align: center;
+}
+
+.footer-copy {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.footer-copy strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+body:not(.dark) .footer-copy strong {
+  color: #0f172a;
+}
+
+.footer-disclaimer {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #5b6980;
+}
