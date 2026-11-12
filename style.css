@@ -2003,3 +2003,22 @@ background: rgba(255,136,0,.2) !important;
   background: url("server.png") center/contain no-repeat;
   flex-shrink: 0;
 }
+
+#spaceuk-toggle {
+  background: linear-gradient(
+    135deg,
+    #ff8800,
+    #ff5500
+  ) !important;
+
+  border: 1px solid #ffb347 !important;
+
+  color: white !important;
+
+  font-weight: 700;
+
+  box-shadow:
+    0 0 12px rgba(255,136,0,.35);
+
+  position: relative;
+}
