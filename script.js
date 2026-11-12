@@ -1111,38 +1111,30 @@ function openPlayerPage(key, scores) {
   stopAllVideos();
 
   const playerName = window._playerMap.get(key) || key;
-  const container = document.getElementById("leaderboard-container");
+  const container = document.getElementById("leaderboard-profile-view");
   if (!container) return;
 
   const stats = getPlayerStats(playerName);
   const score = scores[key] || 0;
-
   const rank = getPlayerRank(score);
 
   const rankColor = {
-   "Legend": "#ff3030",
-   "Absolute": "#a020f0",
-
-   "Mythic II": "#ff00ff",
-   "Mythic I": "#d400d4",
-
-   "Champion II": "#00bfff",
-   "Champion I": "#0099cc",
-
-   "Diamond II": "#7df9ff",
-   "Diamond I": "#4fd6ff",
-
-   "Platinum II": "#e5e4e2",
-   "Platinum I": "#cfcfcf",
-
-   "Gold II": "#ffd700",
-   "Gold I": "#d4af37",
-
-   "Silver II": "#c0c0c0",
-   "Silver I": "#a8a8a8",
-
-   "Bronze II": "#cd7f32",
-   "Bronze I": "#a97142"
+    "Legend": "#ff3030",
+    "Absolute": "#a020f0",
+    "Mythic II": "#ff00ff",
+    "Mythic I": "#d400d4",
+    "Champion II": "#00bfff",
+    "Champion I": "#0099cc",
+    "Diamond II": "#7df9ff",
+    "Diamond I": "#4fd6ff",
+    "Platinum II": "#e5e4e2",
+    "Platinum I": "#cfcfcf",
+    "Gold II": "#ffd700",
+    "Gold I": "#d4af37",
+    "Silver II": "#c0c0c0",
+    "Silver I": "#a8a8a8",
+    "Bronze II": "#cd7f32",
+    "Bronze I": "#a97142"
   }[rank];
 
   function buildSection(title, arr) {
@@ -1180,9 +1172,8 @@ function openPlayerPage(key, scores) {
       ${buildSection("Easy Demons", stats.easyDemons)}
     </div>
   `;
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 
 
