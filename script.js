@@ -1017,24 +1017,10 @@ function openDemonPage(demon) {
 
   const displayVerifier = cleanDisplayName(demon.verifier || "Unknown");
 
-  let creatorsText = "";
-  if (Array.isArray(demon.creators) && demon.creators.length > 0) {
-    creatorsText = demon.creators.join(", ");
-  } else if (demon.author) {
-    creatorsText = demon.author;
-  } else if (demon.creator) {
-    creatorsText = demon.creator;
-  }
-
-  const creatorsHtml = creatorsText
-    ? `<p class="dp-creators">created by <strong>${creatorsText}</strong></p>`
-    : "";
-
   const descHtml = demon.description
     ? `<p class="dp-description">${demon.description}</p>`
     : "";
 
-  const levelId = demon.id || "Unknown";
   const levelPassword = demon.password || "Free Copy";
 
   const validRecords = (demon.records || [])
@@ -1073,7 +1059,6 @@ function openDemonPage(demon) {
           ${demon.position ? `<span class="dp-rank-pill">#${demon.position}</span>` : ""}
           <h1 class="dp-title">${demon.name}</h1>
         </div>
-        ${creatorsHtml}
       </div>
 
       <div class="dp-verifier-bar">
@@ -1087,11 +1072,6 @@ function openDemonPage(demon) {
     </div>
 
     <div class="dp-info-grid">
-      <div class="dp-info-box">
-        <div class="dp-info-lbl">ID</div>
-        <div class="dp-info-val">${levelId}</div>
-      </div>
-
       <div class="dp-info-box">
         <div class="dp-info-lbl">PASSWORD</div>
         <div class="dp-info-val">${levelPassword}</div>
