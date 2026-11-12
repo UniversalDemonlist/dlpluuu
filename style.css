@@ -1995,3 +1995,11 @@ background: rgba(255,136,0,.2) !important;
   position: relative;
   font-weight: 600;
 }
+
+.server-btn::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: url("server.png") center/contain no-repeat;
+  flex-shrink: 0;
+}
