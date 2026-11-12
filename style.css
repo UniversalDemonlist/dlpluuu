@@ -4344,3 +4344,12 @@ body:not(.dark) .dp-record-user {
 .dp-creators {
   display: none !important;
 }
+
+.dp-info-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.dp-info-grid .dp-info-box:has(.dp-info-lbl:contains("ID")),
+.dp-info-id {
+  display: none !important;
+}
