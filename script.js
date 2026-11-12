@@ -1219,10 +1219,12 @@ function setupPlayerSearch() {
 
 function animateStatValue(el, target, duration = 1000) {
   if (!el) return;
-  const start = Number(el.dataset.currentVal) || 0;
-  el.dataset.currentVal = target;
-  if (start === target) {
-    el.textContent = target.toLocaleString();
+  const safeTarget = Math.max(1, target);
+  const start = Number(el.dataset.currentVal) || 1;
+  el.dataset.currentVal = safeTarget;
+
+  if (start === safeTarget) {
+    el.textContent = safeTarget.toLocaleString();
     return;
   }
 
@@ -1232,20 +1234,20 @@ function animateStatValue(el, target, duration = 1000) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(start + (target - start) * eased);
+    const current = Math.max(1, Math.round(start + (safeTarget - start) * eased));
     el.textContent = current.toLocaleString();
 
     if (progress < 1) {
       requestAnimationFrame(step);
     } else {
-      el.textContent = target.toLocaleString();
+      el.textContent = safeTarget.toLocaleString();
     }
   }
 
   requestAnimationFrame(step);
 }
 
-function updateHomeStats(leaderboardCount) {
+function updateHomeStats(leaderboardCount = null) {
   const usersEl = document.getElementById("home-stat-users");
   const recordsEl = document.getElementById("home-stat-records");
   const levelsEl = document.getElementById("home-stat-levels");
@@ -1253,25 +1255,39 @@ function updateHomeStats(leaderboardCount) {
   const visibleDemons = getVisibleDemons().filter(d => !d.cosmetic);
 
   let totalRecords = 0;
+  const uniquePlayers = new Set();
+
+  (typeof playersList !== "undefined" ? playersList : []).forEach(p => {
+    if (p && !bannedPlayers.includes(p)) uniquePlayers.add(normalizeName(p));
+  });
+
   visibleDemons.forEach(d => {
     if (d.verifier && d.verifier !== "Unknown" && !bannedPlayers.includes(d.verifier)) {
       totalRecords++;
+      uniquePlayers.add(normalizeName(d.verifier));
     }
     (d.records || []).forEach(r => {
       const u = typeof r === "string" ? r : r.user;
       if (u && u !== "Not beaten yet" && !bannedPlayers.includes(u)) {
         totalRecords++;
+        uniquePlayers.add(normalizeName(u));
       }
     });
   });
 
-  totalRecords += manualCompleted.length;
+  (typeof manualCompleted !== "undefined" ? manualCompleted : []).forEach(m => {
+    totalRecords++;
+    if (m.player && !bannedPlayers.includes(m.player)) {
+      uniquePlayers.add(normalizeName(m.player));
+    }
+  });
 
-  const userCount = Math.max(0, leaderboardCount - 1);
+  const rawUsers = leaderboardCount !== null ? leaderboardCount : uniquePlayers.size;
+  const userCount = Math.max(1, rawUsers - 1);
 
   animateStatValue(usersEl, userCount);
-  animateStatValue(recordsEl, totalRecords);
-  animateStatValue(levelsEl, visibleDemons.length);
+  animateStatValue(recordsEl, Math.max(1, totalRecords));
+  animateStatValue(levelsEl, Math.max(1, visibleDemons.length));
 }
 
 async function loadLeaderboard() {
