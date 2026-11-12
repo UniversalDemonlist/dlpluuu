@@ -777,6 +777,7 @@ function getYoutubeId(url) {
 }
 
 
+
 function getYoutubeThumbnail(url) {
   const id = getYoutubeId(url);
   return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "";
