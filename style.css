@@ -4092,3 +4092,7 @@ body:not(.dark) .demon-info h2 {
   color: #60a5fa !important;
   font-weight: 600 !important;
 }
+
+.demon-info p:last-child {
+  display: flex !important;
+}
