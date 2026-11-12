@@ -1628,3 +1628,32 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 });
+
+function updateHomeStats(leaderboardCount) {
+  const usersEl = document.getElementById("home-stat-users");
+  const recordsEl = document.getElementById("home-stat-records");
+  const levelsEl = document.getElementById("home-stat-levels");
+
+  const visibleDemons = getVisibleDemons().filter(d => !d.cosmetic);
+
+  let totalRecords = 0;
+  visibleDemons.forEach(d => {
+    if (d.verifier && d.verifier !== "Unknown" && !bannedPlayers.includes(d.verifier)) {
+      totalRecords++;
+    }
+    (d.records || []).forEach(r => {
+      const u = typeof r === "string" ? r : r.user;
+      if (u && u !== "Not beaten yet" && !bannedPlayers.includes(u)) {
+        totalRecords++;
+      }
+    });
+  });
+
+  totalRecords += manualCompleted.length;
+
+  const userCount = Math.max(0, leaderboardCount - 1);
+
+  if (usersEl) usersEl.textContent = userCount.toLocaleString();
+  if (recordsEl) recordsEl.textContent = totalRecords.toLocaleString();
+  if (levelsEl) levelsEl.textContent = visibleDemons.length.toLocaleString();
+}
