@@ -773,8 +773,9 @@ function setupDropdownSelects() {
 function getYoutubeId(url) {
   if (!url || typeof url !== "string") return "";
   const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  return match ? match[1] : "";
+  return match ? match.at(1) : "";
 }
+
 
 
 
