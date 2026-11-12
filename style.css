@@ -2022,3 +2022,20 @@ background: rgba(255,136,0,.2) !important;
 
   position: relative;
 }
+
+#spaceuk-toggle {
+  background: #ff8a00 !important;
+  border: none !important;
+
+  color: white !important;
+  font-weight: 700;
+
+  border-radius: 999px !important;
+
+  padding: 10px 18px;
+
+  box-shadow:
+    0 4px 12px rgba(255,138,0,.35);
+
+  transition: all .2s ease;
+}
