@@ -802,21 +802,33 @@ function createDemonCard(demon) {
 
   const notUsable = ["112313819", "88201288", "109780665", "0"];
 
-  const bg =
-    demon.background ||
-    (
-      !notUsable.includes(String(demon.id))
-        ? `https://levelthumbs.prevter.me/thumbnail/${demon.id}`
-        : ""
-    );
+  const levelThumb =
+    !notUsable.includes(String(demon.id))
+      ? `https://levelthumbs.prevter.me/thumbnail/${demon.id}`
+      : "";
 
+  const bg = demon.background || levelThumb;
   card.style.setProperty("--card-bg", `url('${bg}')`);
+
+  const fallbackSvg = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='300' height='170'><rect width='100%25' height='100%25' fill='%23111622'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2364748b' font-family='sans-serif' font-size='16' font-weight='bold'>No Preview</text></svg>";
 
   const img = document.createElement("img");
   img.src =
-    demon.thumbnail ||
+    (demon.thumbnail && demon.thumbnail.trim()) ||
     getYoutubeThumbnail(demon.verification) ||
-    "https://via.placeholder.com/300x170?text=No+Preview";
+    bg ||
+    fallbackSvg;
+
+  img.onerror = () => {
+    const ytThumb = getYoutubeThumbnail(demon.verification);
+    if (ytThumb && img.src !== ytThumb) {
+      img.src = ytThumb;
+    } else if (levelThumb && img.src !== levelThumb) {
+      img.src = levelThumb;
+    } else if (img.src !== fallbackSvg) {
+      img.src = fallbackSvg;
+    }
+  };
 
   const info = document.createElement("div");
   info.className = "demon-info";
@@ -825,40 +837,31 @@ function createDemonCard(demon) {
     ? 5500 / Math.sqrt(demon.position)
     : 5500 / Math.sqrt(999);
 
-  const difficulty = getDifficultyInfo(demon.position);
+  const listPercent = demon.percentToQualify || 100;
+  const minScore = score * (listPercent / 100);
 
   if (demon.cosmetic) {
     info.innerHTML = `
       <h2>${demon.name}</h2>
-      <p>Levels past this zone are harder than ${demon.name}</p>
+      <p class="demon-meta-line">Levels past this zone are harder than ${demon.name}</p>
     `;
   } else if (demon.missingJson) {
     info.innerHTML = `
-      <h2>#${demon.position} — ${demon.name}</h2>
-      <p style="color:#ff3232;font-weight:700;">
-        JSON NOT FOUND!
-      </p>
+      <h2><span class="demon-rank">#${demon.position}</span> ${demon.name}</h2>
+      <p style="color:#ff3232;font-weight:700;margin:0;">JSON NOT FOUND!</p>
     `;
   } else {
+    const creatorHtml = demon.author
+      ? `<span class="demon-creator">${demon.author}</span>`
+      : "";
+
     info.innerHTML = `
-      <h2>#${demon.position} — ${demon.name}</h2>
-      <p>Verifier: ${demon.verifier}</p>
-      <p>Score: ${score.toFixed(2)}</p>
-      <p>
-        <strong>Difficulty:</strong>
-        <span
-          style="
-            color:${difficulty.outline ? "#000000" : difficulty.color};
-            font-weight:700;
-            ${
-              difficulty.outline
-                ? `-webkit-text-stroke: 1px ${difficulty.outline};`
-                : ""
-            }
-          "
-        >
-          ${difficulty.name}
-        </span>
+      <h2><span class="demon-rank">#${demon.position}</span> ${demon.name}</h2>
+      <p class="demon-meta-line">
+        ${creatorHtml}
+        <span class="demon-verifier">${cleanDisplayName(demon.verifier)}</span>
+        <span class="demon-dot">•</span>
+        <span>${minScore.toFixed(2)} — <span class="demon-score">${score.toFixed(2)}</span> points</span>
       </p>
     `;
   }
@@ -866,10 +869,27 @@ function createDemonCard(demon) {
   card.appendChild(img);
   card.appendChild(info);
 
+  const userProgress = typeof getPlayerProgressOnDemon === "function"
+    ? getPlayerProgressOnDemon(demon, loggedInUserKey)
+    : null;
+
+  if (userProgress !== null) {
+    const badge = document.createElement("div");
+    badge.className = userProgress === 100
+      ? "demon-completion-badge"
+      : "demon-completion-badge partial";
+    badge.textContent = `${userProgress}%`;
+    card.appendChild(badge);
+    if (userProgress === 100) {
+      card.classList.add("demon-completed");
+    }
+  }
+
   card.addEventListener("click", () => openDemonPage(demon));
 
   return card;
 }
+
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
