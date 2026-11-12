@@ -782,10 +782,11 @@ function setupDropdownSelects() {
   attach(document.getElementById("select-legacy"), legacyList);
 }
 function getYoutubeId(url) {
-  if (!url) return "";
-  const match = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?/]+)/);
+  if (!url || typeof url !== "string") return "";
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   return match ? match[1] : "";
 }
+
 
 function getYoutubeThumbnail(url) {
   const id = getYoutubeId(url);
