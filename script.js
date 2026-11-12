@@ -306,16 +306,54 @@ function openDemonPage(demon) {
   const container = document.getElementById("demon-page-container");
   if (!container) return;
 
-  const thumb = (demon.thumbnail && demon.thumbnail.trim()) || getYoutubeThumbnail(demon.verification) || "https://placeholder.com";
-  const bg = demon.background || demon.thumbnail || getYoutubeThumbnail(demon.verification) || "";
-  const score = demon.position ? 5500 / Math.sqrt(demon.position) : 5500 / Math.sqrt(999);
+  const notUsable = ["112313819", "88201288", "109780665", "0"];
+  const levelThumb = !notUsable.includes(String(demon.id))
+    ? `https://prevter.me{demon.id}`
+    : "";
+
+  const thumb =
+    (demon.thumbnail && demon.thumbnail.trim()) ||
+    getYoutubeThumbnail(demon.verification) ||
+    levelThumb ||
+    "";
+
+  const score = demon.position
+    ? 5500 / Math.sqrt(demon.position)
+    : 5500 / Math.sqrt(999);
+
   const videoId = getYoutubeId(demon.verification);
   const iframeSrc = videoId ? `https://youtube.com{videoId}` : "";
-  const videoBlock = iframeSrc ? `<div class="fancy-video-wrap"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>` : `<div class="fancy-video-wrap"><img src="${thumb}"></div>`;
+  const videoBlock = iframeSrc
+    ? `<div class="dp-video-wrap"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
+    : `<div class="dp-video-wrap"><img src="${thumb}" alt="${demon.name}"></div>`;
 
-  let displayVerifier = cleanDisplayName(demon.verifier);
+  const displayVerifier = cleanDisplayName(demon.verifier || "Unknown");
 
-  const validRecords = demon.records
+  let creatorsText = "";
+  if (Array.isArray(demon.creators) && demon.creators.length > 0) {
+    creatorsText = demon.creators.join(", ");
+  } else if (demon.author) {
+    creatorsText = demon.author;
+  } else if (demon.creator) {
+    creatorsText = demon.creator;
+  }
+
+  const creatorsHtml = creatorsText
+    ? `<p class="dp-creators">created by <strong>${creatorsText}</strong></p>`
+    : "";
+
+  const descHtml = demon.description
+    ? `<p class="dp-description">${demon.description}</p>`
+    : "";
+
+  const levelPassword = demon.password || "Free Copy";
+
+  const validRecords = (demon.records || [])
+    .map(r =>
+      typeof r === "string"
+        ? { user: r, percent: 100, link: "" }
+        : { user: r.user, percent: r.percent || 100, link: r.link || "" }
+    )
     .filter(r => {
       if (!r.user || r.user === "Not beaten yet") return false;
       if (bannedPlayers.includes(r.user)) return false;
@@ -324,22 +362,59 @@ function openDemonPage(demon) {
     })
     .sort((a, b) => b.percent - a.percent)
     .map(r => {
-      const vid = r.link ? `<a href="${r.link}" target="_blank">Video</a>` : "No video";
-      return `<p><strong>${cleanDisplayName(r.user)}</strong> — ${r.percent}% (${vid})</p>`;
+      const vid = r.link
+        ? `<a href="${r.link}" target="_blank" rel="noopener noreferrer" class="dp-record-link">Video ▶</a>`
+        : `<span style="opacity:0.5;">No video</span>`;
+      return `
+        <div class="dp-record-row">
+          <span class="dp-record-user">${cleanDisplayName(r.user)}</span>
+          <div class="dp-record-right">
+            <span class="dp-record-pct">${r.percent}%</span>
+            ${vid}
+          </div>
+        </div>
+      `;
     })
     .join("");
 
   container.innerHTML = `
-    <div class="fancy-demon-header" style="background-image:url('${bg}')">
-      <h1>${demon.position ? "#" + demon.position + " — " : ""}${demon.name}</h1>
-      <p>Verifier: ${displayVerifier}</p>
-      <p>Score: ${score.toFixed(2)}</p>
+    <div class="dp-main-card">
+      <div class="dp-header">
+        <div class="dp-title-row">
+          ${demon.position ? `<span class="dp-rank-pill">#${demon.position}</span>` : ""}
+          <h1 class="dp-title">${demon.name}</h1>
+        </div>
+        ${creatorsHtml}
+      </div>
+
+      <div class="dp-verifier-bar">
+        <span class="dp-verifier-check">✓</span>
+        <span>Verified by <span class="dp-verifier-name">${displayVerifier}</span></span>
+      </div>
+
+      ${descHtml}
+
+      ${videoBlock}
     </div>
 
-    ${videoBlock}
+    <div class="dp-info-grid">
+      <div class="dp-info-box">
+        <div class="dp-info-lbl">PASSWORD</div>
+        <div class="dp-info-val">${levelPassword}</div>
+      </div>
 
-    <h2 class="fancy-records-title">Records</h2>
-    <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
+      <div class="dp-info-box">
+        <div class="dp-info-lbl">SCORE</div>
+        <div class="dp-info-val">${score.toFixed(2)}</div>
+      </div>
+    </div>
+
+    <div class="dp-records-card">
+      <h2>Records</h2>
+      <div class="dp-record-list">
+        ${validRecords || `<p style="opacity:0.6;margin:0;">No records yet.</p>`}
+      </div>
+    </div>
   `;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -347,6 +422,7 @@ function openDemonPage(demon) {
   document.getElementById("demon-page").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 function createDemonCard(demon) {
   const card = document.createElement("div");
