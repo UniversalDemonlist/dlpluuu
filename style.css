@@ -1986,3 +1986,12 @@ background: rgba(255,136,0,.2) !important;
   width: 300px;
 }
 
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #d8d8d8;
+  padding: 8px 10px;
+  position: relative;
+  font-weight: 600;
+}
