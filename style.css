@@ -3724,3 +3724,264 @@ body:not(.dark) .demon-info h2 {
   margin: 2px 0 0 0 !important;
   opacity: 0.85;
 }
+
+.modern-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: #f8fafc;
+}
+
+.modern-profile-banner {
+  background: #141925;
+  border: 1px solid #222a3f;
+  border-radius: 14px;
+  padding: 26px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.modern-avatar {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  margin: 0 auto 12px auto;
+  background: radial-gradient(circle at 30% 30%, #38bdf8, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  border: 2px solid #2c3857;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+.modern-profile-name {
+  margin: 0 0 8px 0 !important;
+  font-size: 1.55rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.modern-rank-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.modern-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.modern-row-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 750px) {
+  .modern-row-2,
+  .modern-row-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.modern-stat-card {
+  background: #141925;
+  border: 1px solid #222a3f;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modern-stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.icon-gold {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+
+.icon-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.modern-stat-main {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.modern-stat-sub {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.modern-mini-card {
+  background: #141925;
+  border: 1px solid #222a3f;
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.modern-mini-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.val-blue { color: #60a5fa; }
+.val-green { color: #34d399; }
+.val-amber { color: #fbbf24; }
+.val-orange { color: #fb923c; }
+
+.modern-records-box {
+  background: #141925;
+  border: 1px solid #222a3f;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.modern-records-box h3 {
+  margin: 0 0 12px 0 !important;
+  font-size: 0.95rem !important;
+  font-weight: 700;
+  color: #e2e8f0 !important;
+}
+
+.modern-record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modern-record-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #192030;
+  border: 1px solid #252f47;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.modern-record-row:hover {
+  border-color: #38bdf8;
+  background: #1e273b;
+}
+
+.modern-record-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modern-rec-pos {
+  color: #60a5fa;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.modern-rec-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f8fafc;
+}
+
+.modern-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tag-verifier {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.tag-victor {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.tag-extra {
+  background: rgba(168, 85, 247, 0.16);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.modern-record-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.84rem;
+}
+
+.modern-rec-pct {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.modern-rec-pts {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.modern-rec-link {
+  color: #60a5fa !important;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+body:not(.dark) .modern-profile-banner,
+body:not(.dark) .modern-stat-card,
+body:not(.dark) .modern-mini-card,
+body:not(.dark) .modern-records-box {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+body:not(.dark) .modern-record-row {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+body:not(.dark) .modern-profile-name,
+body:not(.dark) .modern-stat-main,
+body:not(.dark) .modern-rec-name {
+  color: #0f172a !important;
+}
