@@ -2087,3 +2087,15 @@ background: rgba(255,136,0,.2) !important;
     border-color .15s ease,
     color .15s ease;
 }
+
+.tab-btn:hover {
+  background: #161c2b;
+
+  border-color: #28314a;
+
+  color: white;
+
+  transform: none;
+
+  box-shadow: none;
+}
