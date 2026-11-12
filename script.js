@@ -336,38 +336,61 @@ function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
 
-  const notUsable = ["112313819", "88201288", "109780665", "0"];
-  const bg = demon.background || (!notUsable.includes(String(demon.id)) ? `https://prevter.me{demon.id}` : "");
-  card.style.setProperty("--card-bg", `url('${bg}')`);
-
   const img = document.createElement("img");
-  img.src = demon.thumbnail || getYoutubeThumbnail(demon.verification) || "https://placeholder.com";
+  img.src =
+    demon.thumbnail ||
+    getYoutubeThumbnail(demon.verification) ||
+    "https://placeholder.com";
 
   const info = document.createElement("div");
   info.className = "demon-info";
 
-  const score = demon.position ? 5500 / Math.sqrt(demon.position) : 5500 / Math.sqrt(999);
+  const score = demon.position
+    ? 5500 / Math.sqrt(demon.position)
+    : 5500 / Math.sqrt(999);
+
+  const listPercent = demon.percentToQualify || 100;
+  const minScore = score * (listPercent / 100);
   const difficulty = getDifficultyInfo(demon.position);
-  let displayVerifier = cleanDisplayName(demon.verifier);
 
   if (demon.cosmetic) {
     info.innerHTML = `
       <h2>${demon.name}</h2>
-      <p>Levels past this zone are harder than ${demon.name}</p>
+      <p class="demon-meta-line">Levels past this zone are harder than ${demon.name}</p>
     `;
   } else if (demon.missingJson) {
     info.innerHTML = `
-      <h2>#${demon.position} — ${demon.name}</h2>
-      <p style="color:#ff3232;font-weight:700;">JSON NOT FOUND!</p>
+      <h2><span class="demon-rank">#${demon.position}</span> ${demon.name}</h2>
+      <p style="color:#ff3232;font-weight:700;margin:0;">
+        JSON NOT FOUND!
+      </p>
     `;
   } else {
+    const creatorHtml = demon.author
+      ? `<span class="demon-creator">${demon.author}</span>`
+      : "";
+
     info.innerHTML = `
-      <h2>#${demon.position} — ${demon.name}</h2>
-      <p>Verifier: ${displayVerifier}</p>
-      <p>Score: ${score.toFixed(2)}</p>
-      <p>
+      <h2><span class="demon-rank">#${demon.position}</span> ${demon.name}</h2>
+      <p class="demon-meta-line">
+        ${creatorHtml}
+        <span class="demon-verifier">${demon.verifier}</span>
+        <span class="demon-dot">•</span>
+        <span>${minScore.toFixed(2)} — <span class="demon-score">${score.toFixed(2)}</span> points</span>
+      </p>
+      <p class="demon-diff-line">
         <strong>Difficulty:</strong>
-        <span style="color:${difficulty.outline ? "#000000" : difficulty.color}; font-weight:700; ${difficulty.outline ? `-webkit-text-stroke: 1px ${difficulty.outline};` : ""}">
+        <span
+          style="
+            color:${difficulty.outline ? "#000000" : difficulty.color};
+            font-weight:700;
+            ${
+              difficulty.outline
+                ? `-webkit-text-stroke: 1px ${difficulty.outline};`
+                : ""
+            }
+          "
+        >
           ${difficulty.name}
         </span>
       </p>
@@ -376,6 +399,7 @@ function createDemonCard(demon) {
 
   card.appendChild(img);
   card.appendChild(info);
+
   card.addEventListener("click", () => openDemonPage(demon));
 
   return card;
