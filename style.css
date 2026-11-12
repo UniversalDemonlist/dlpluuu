@@ -4339,3 +4339,8 @@ body:not(.dark) .dp-record-user {
 .dp-record-link:hover {
   text-decoration: underline;
 }
+
+.demon-creator,
+.dp-creators {
+  display: none !important;
+}
