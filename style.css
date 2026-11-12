@@ -3985,3 +3985,110 @@ body:not(.dark) .modern-stat-main,
 body:not(.dark) .modern-rec-name {
   color: #0f172a !important;
 }
+
+.demon-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  height: auto !important;
+  min-height: 156px !important;
+  padding: 14px 22px !important;
+  gap: 24px !important;
+  align-items: center !important;
+  background: #1c2432 !important;
+  border: 1px solid #273245 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28) !important;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease !important;
+}
+
+.demon-card::before,
+.demon-card::after {
+  display: none !important;
+}
+
+.demon-card:hover {
+  transform: translateY(-2px) !important;
+  background: #212b3b !important;
+  border-color: #3b82f6 !important;
+}
+
+body:not(.dark) .demon-card {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.demon-card img:not(.rank-badge) {
+  width: 246px !important;
+  height: 138px !important;
+  object-fit: cover !important;
+  border-radius: 10px !important;
+  flex-shrink: 0;
+  display: block;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+@media (max-width: 700px) {
+  .demon-card img:not(.rank-badge) {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.demon-info {
+  margin: 0 !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.demon-info h2 {
+  margin: 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body:not(.dark) .demon-info h2 {
+  color: #0f172a !important;
+}
+
+.demon-rank {
+  color: #4da3ff !important;
+  font-weight: 800 !important;
+}
+
+.demon-meta-line {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 0.9rem !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+}
+
+.demon-creator {
+  color: #94a3b8 !important;
+  font-weight: 500;
+}
+
+.demon-verifier {
+  color: #34d399 !important;
+  font-weight: 600 !important;
+}
+
+.demon-dot {
+  opacity: 0.5;
+}
+
+.demon-score {
+  color: #60a5fa !important;
+  font-weight: 600 !important;
+}
