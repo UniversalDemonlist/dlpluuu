@@ -1193,6 +1193,34 @@ function setupPlayerSearch() {
   }
 }
 
+function animateStatValue(el, target, duration = 1000) {
+  if (!el) return;
+  const start = Number(el.dataset.currentVal) || 0;
+  el.dataset.currentVal = target;
+  if (start === target) {
+    el.textContent = target.toLocaleString();
+    return;
+  }
+
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    el.textContent = current.toLocaleString();
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = target.toLocaleString();
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
 function updateHomeStats(leaderboardCount) {
   const usersEl = document.getElementById("home-stat-users");
   const recordsEl = document.getElementById("home-stat-records");
@@ -1217,9 +1245,9 @@ function updateHomeStats(leaderboardCount) {
 
   const userCount = Math.max(0, leaderboardCount - 1);
 
-  if (usersEl) usersEl.textContent = userCount.toLocaleString();
-  if (recordsEl) recordsEl.textContent = totalRecords.toLocaleString();
-  if (levelsEl) levelsEl.textContent = visibleDemons.length.toLocaleString();
+  animateStatValue(usersEl, userCount);
+  animateStatValue(recordsEl, totalRecords);
+  animateStatValue(levelsEl, visibleDemons.length);
 }
 
 async function loadLeaderboard() {
