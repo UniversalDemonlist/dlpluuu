@@ -2819,3 +2819,253 @@ body:not(.dark) .player-profile-header p {
   width: 14px;
   height: 14px;
 }
+
+#rules {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 10px 0 0 0 !important;
+}
+
+.rules-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  background: #101726;
+}
+
+body:not(.dark) .rules-layout {
+  background: #f8fafc;
+}
+
+@media (max-width: 850px) {
+  .rules-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rules-sidebar {
+  background: #0b111e;
+  border-right: 1px solid #1b2436;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  box-sizing: border-box;
+}
+
+body:not(.dark) .rules-sidebar {
+  background: #f1f5f9;
+  border-right-color: #cbd5e1;
+}
+
+@media (max-width: 850px) {
+  .rules-sidebar {
+    position: static;
+    height: auto;
+  }
+}
+
+.rules-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 4px 10px 16px 10px;
+  border-bottom: 1px solid #1b2436;
+  color: #f8fafc;
+}
+
+body:not(.dark) .rules-sidebar-header {
+  color: #0f172a;
+  border-bottom-color: #cbd5e1;
+}
+
+.rules-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rules-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #cbd5e1 !important;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+body:not(.dark) .rules-nav-item {
+  color: #334155 !important;
+}
+
+.rules-nav-item:hover {
+  background: rgba(56, 189, 248, 0.08);
+  color: #ffffff !important;
+}
+
+.rules-nav-item.active {
+  background: #132238;
+  color: #60a5fa !important;
+  font-weight: 600;
+}
+
+body:not(.dark) .rules-nav-item.active {
+  background: #e0f2fe;
+  color: #0284c7 !important;
+}
+
+.rules-svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.rules-chevron {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.rules-main {
+  padding: 44px 56px;
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+@media (max-width: 750px) {
+  .rules-main {
+    padding: 26px 20px;
+  }
+}
+
+.rules-page-title {
+  margin: 0 0 10px 0 !important;
+  font-size: 2rem !important;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.rules-section {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-margin-top: 85px;
+}
+
+.rules-section h2 {
+  margin: 0 !important;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.rules-callout {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 10px;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.callout-body {
+  flex: 1;
+}
+
+.callout-body p {
+  margin: 0 0 10px 0;
+}
+
+.callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+.callout-body ul {
+  margin: 6px 0 0 0;
+  padding-left: 20px;
+}
+
+.callout-body li {
+  margin-bottom: 4px;
+}
+
+.callout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.callout-icon .rules-svg {
+  width: 14px;
+  height: 14px;
+}
+
+.callout-blue {
+  background: #1c2237;
+  border: 1px solid #2b3554;
+  border-left: 4px solid #7c6df2;
+}
+
+body:not(.dark) .callout-blue {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  border-left: 4px solid #4f46e5;
+}
+
+.callout-amber {
+  background: #27201e;
+  border: 1px solid #45352d;
+  border-left: 4px solid #f59e0b;
+}
+
+.callout-amber .callout-icon {
+  background: #f59e0b;
+  color: #111111 !important;
+}
+
+body:not(.dark) .callout-amber {
+  background: #fffbeb;
+  border-color: #fde68a;
+  border-left: 4px solid #d97706;
+}
+
+.callout-teal {
+  background: #14282b;
+  border: 1px solid #214247;
+  border-left: 4px solid #10b981;
+}
+
+.callout-teal .callout-icon {
+  background: #10b981;
+  color: #0b1618 !important;
+  border-radius: 6px;
+}
+
+body:not(.dark) .callout-teal {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  border-left: 4px solid #059669;
+}
