@@ -4096,3 +4096,246 @@ body:not(.dark) .demon-info h2 {
 .demon-info p:last-child {
   display: flex !important;
 }
+
+#demon-page {
+  max-width: 860px !important;
+}
+
+.dp-main-card {
+  background: #171e2b;
+  border: 1px solid #242f44;
+  border-radius: 16px;
+  padding: 28px 26px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  margin-bottom: 16px;
+}
+
+body:not(.dark) .dp-main-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.dp-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.dp-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dp-rank-pill {
+  background: #1e2d4a;
+  color: #4da3ff;
+  border: 1px solid rgba(77, 163, 255, 0.35);
+  border-radius: 8px;
+  padding: 4px 11px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.dp-title {
+  margin: 0 !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+body:not(.dark) .dp-title {
+  color: #0f172a !important;
+}
+
+.dp-creators {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.dp-creators strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+body:not(.dark) .dp-creators strong {
+  color: #1e293b !important;
+}
+
+.dp-verifier-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
+  padding: 9px 18px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.dp-verifier-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #34d399;
+  color: #0b1618;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.dp-verifier-name {
+  color: #34d399 !important;
+  font-weight: 700;
+}
+
+.dp-description {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 12px 0 20px 0;
+  line-height: 1.5;
+}
+
+.dp-video-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #090c12;
+  border: 1px solid #242f44;
+}
+
+.dp-video-wrap iframe,
+.dp-video-wrap img {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  object-fit: cover;
+}
+
+.dp-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 650px) {
+  .dp-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dp-info-box {
+  background: #171e2b;
+  border: 1px solid #242f44;
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: center;
+}
+
+body:not(.dark) .dp-info-box {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.dp-info-lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.dp-info-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+body:not(.dark) .dp-info-val {
+  color: #0f172a;
+}
+
+.dp-records-card {
+  background: #171e2b;
+  border: 1px solid #242f44;
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+body:not(.dark) .dp-records-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.dp-records-card h2 {
+  margin: 0 0 14px 0 !important;
+  font-size: 1.05rem !important;
+  font-weight: 700;
+}
+
+.dp-record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dp-record-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #1c2434;
+  border: 1px solid #28334a;
+  border-radius: 10px;
+  padding: 11px 16px;
+}
+
+body:not(.dark) .dp-record-row {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.dp-record-user {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #f8fafc;
+}
+
+body:not(.dark) .dp-record-user {
+  color: #0f172a;
+}
+
+.dp-record-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+}
+
+.dp-record-pct {
+  font-weight: 700;
+  color: #34d399;
+}
+
+.dp-record-link {
+  color: #60a5fa !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.dp-record-link:hover {
+  text-decoration: underline;
+}
