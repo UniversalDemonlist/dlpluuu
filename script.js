@@ -308,7 +308,7 @@ function openDemonPage(demon) {
 
   const notUsable = ["112313819", "88201288", "109780665", "0"];
   const levelThumb = !notUsable.includes(String(demon.id))
-    ? `https://prevter.me{demon.id}`
+    ? "https://prevter.me" + demon.id
     : "";
 
   const videoUrl = demon.verification || demon.video || demon.showcase || "";
@@ -324,15 +324,15 @@ function openDemonPage(demon) {
     : 5500 / Math.sqrt(999);
 
   const videoId = getYoutubeId(videoUrl);
-  const iframeSrc = videoId ? `https://youtube.com{videoId}?rel=0` : "";
+  const iframeSrc = videoId ? "https://youtube.com" + videoId : "";
   const videoBlock = iframeSrc
-    ? `<div class="dp-video-wrap"><iframe src="${iframeSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`
-    : `<div class="dp-video-wrap"><img src="${thumb}" alt="${demon.name}"></div>`;
+    ? '<div class="dp-video-wrap"><iframe src="' + iframeSrc + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>'
+    : '<div class="dp-video-wrap"><img src="' + thumb + '" alt="' + demon.name + '"></div>';
 
   const displayVerifier = cleanDisplayName(demon.verifier || "Unknown");
 
   const descHtml = demon.description
-    ? `<p class="dp-description">${demon.description}</p>`
+    ? '<p class="dp-description">' + demon.description + '</p>'
     : "";
 
   const levelPassword = demon.password || "Free Copy";
@@ -352,58 +352,55 @@ function openDemonPage(demon) {
     .sort((a, b) => b.percent - a.percent)
     .map(r => {
       const vid = r.link
-        ? `<a href="${r.link}" target="_blank" rel="noopener noreferrer" class="dp-record-link">Video ▶</a>`
-        : `<span style="opacity:0.5;">No video</span>`;
-      return `
-        <div class="dp-record-row">
-          <span class="dp-record-user">${cleanDisplayName(r.user)}</span>
-          <div class="dp-record-right">
-            <span class="dp-record-pct">${r.percent}%</span>
-            ${vid}
-          </div>
-        </div>
-      `;
+        ? '<a href="' + r.link + '" target="_blank" rel="noopener noreferrer" class="dp-record-link">Video ▶</a>'
+        : '<span style="opacity:0.5;">No video</span>';
+      return (
+        '<div class="dp-record-row">' +
+          '<span class="dp-record-user">' + cleanDisplayName(r.user) + '</span>' +
+          '<div class="dp-record-right">' +
+            '<span class="dp-record-pct">' + r.percent + '%</span>' +
+            vid +
+          '</div>' +
+        '</div>'
+      );
     })
     .join("");
 
-  container.innerHTML = `
-    <div class="dp-main-card">
-      <div class="dp-header">
-        <div class="dp-title-row">
-          ${demon.position ? `<span class="dp-rank-pill">#${demon.position}</span>` : ""}
-          <h1 class="dp-title">${demon.name}</h1>
-        </div>
-      </div>
+  const rankBadge = demon.position
+    ? '<span class="dp-rank-pill">#' + demon.position + '</span>'
+    : "";
 
-      <div class="dp-verifier-bar">
-        <span class="dp-verifier-check">✓</span>
-        <span>Verified by <span class="dp-verifier-name">${displayVerifier}</span></span>
-      </div>
-
-      ${descHtml}
-
-      ${videoBlock}
-    </div>
-
-    <div class="dp-info-grid">
-      <div class="dp-info-box">
-        <div class="dp-info-lbl">PASSWORD</div>
-        <div class="dp-info-val">${levelPassword}</div>
-      </div>
-
-      <div class="dp-info-box">
-        <div class="dp-info-lbl">SCORE</div>
-        <div class="dp-info-val">${score.toFixed(2)}</div>
-      </div>
-    </div>
-
-    <div class="dp-records-card">
-      <h2>Records</h2>
-      <div class="dp-record-list">
-        ${validRecords || `<p style="opacity:0.6;margin:0;">No records yet.</p>`}
-      </div>
-    </div>
-  `;
+  container.innerHTML =
+    '<div class="dp-main-card">' +
+      '<div class="dp-header">' +
+        '<div class="dp-title-row">' +
+          rankBadge +
+          '<h1 class="dp-title">' + demon.name + '</h1>' +
+        '</div>' +
+      '</div>' +
+      '<div class="dp-verifier-bar">' +
+        '<span class="dp-verifier-check">✓</span>' +
+        '<span>Verified by <span class="dp-verifier-name">' + displayVerifier + '</span></span>' +
+      '</div>' +
+      descHtml +
+      videoBlock +
+    '</div>' +
+    '<div class="dp-info-grid">' +
+      '<div class="dp-info-box">' +
+        '<div class="dp-info-lbl">PASSWORD</div>' +
+        '<div class="dp-info-val">' + levelPassword + '</div>' +
+      '</div>' +
+      '<div class="dp-info-box">' +
+        '<div class="dp-info-lbl">SCORE</div>' +
+        '<div class="dp-info-val">' + score.toFixed(2) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="dp-records-card">' +
+      '<h2>Records</h2>' +
+      '<div class="dp-record-list">' +
+        (validRecords || '<p style="opacity:0.6;margin:0;">No records yet.</p>') +
+      '</div>' +
+    '</div>';
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
