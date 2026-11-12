@@ -2808,3 +2808,14 @@ body:not(.dark) .player-profile-header p {
   width: 26px !important;
   height: 26px !important;
 }
+
+.rules-svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.callout-icon .rules-svg {
+  width: 14px;
+  height: 14px;
+}
