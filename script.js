@@ -199,18 +199,34 @@ function setupThemeToggle() {
 
 async function loadEverything() {
   showInitialPlaceholders();
-  setTimeout(async () => {
-    playersList = await fetch("data/players.json").then(r => r.json()).catch(() => []);
-    bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
-    methodList = await fetch("data/method.json").then(r => r.json()).catch(() => []);
-    pathList = await fetch("data/path.json").then(r => r.json()).catch(() => []);
-    cheatedList = await fetch("data/cheated.json").then(r => r.json()).catch(() => []);
-    cheatedList = cheatedList.map(x => x.toLowerCase());
-    manualCompleted = await fetch("data/manualcompleted.json").then(r => r.json()).catch(() => []);
-    await loadDemonList();
-    await loadChallengeList();
-  }, 200);
+  const [players, banned, method, path, cheated, manual] = await Promise.all([
+    fetch("data/players.json").then(r => r.json()).catch(() => []),
+    fetch("data/banned.json").then(r => r.json()).catch(() => []),
+    fetch("data/method.json").then(r => r.json()).catch(() => []),
+    fetch("data/path.json").then(r => r.json()).catch(() => []),
+    fetch("data/cheated.json").then(r => r.json()).catch(() => []),
+    fetch("data/manualcompleted.json").then(r => r.json()).catch(() => [])
+  ]);
+
+  playersList = players;
+  bannedPlayers = banned;
+  methodList = method;
+  pathList = path;
+  cheatedList = cheated.map(x => x.toLowerCase());
+  manualCompleted = manual;
+
+  updateHomeStats();
+  await loadDemonList();
+  await loadChallengeList();
 }
+
+function animateStatValue(el, target) {
+  if (!el) return;
+  const safeTarget = Math.max(1, target);
+  el.dataset.currentVal = safeTarget;
+  el.textContent = safeTarget.toLocaleString();
+}
+
 
 function stopAllVideos() {
   document.querySelectorAll("iframe").forEach(f => {
