@@ -311,9 +311,11 @@ function openDemonPage(demon) {
     ? `https://prevter.me{demon.id}`
     : "";
 
+  const videoUrl = demon.verification || demon.video || demon.showcase || "";
+
   const thumb =
     (demon.thumbnail && demon.thumbnail.trim()) ||
-    getYoutubeThumbnail(demon.verification) ||
+    getYoutubeThumbnail(videoUrl) ||
     levelThumb ||
     "";
 
@@ -321,7 +323,7 @@ function openDemonPage(demon) {
     ? 5500 / Math.sqrt(demon.position)
     : 5500 / Math.sqrt(999);
 
-  const videoId = getYoutubeId(demon.verification);
+  const videoId = getYoutubeId(videoUrl);
   const iframeSrc = videoId ? `https://youtube.com{videoId}?rel=0` : "";
   const videoBlock = iframeSrc
     ? `<div class="dp-video-wrap"><iframe src="${iframeSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`
