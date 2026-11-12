@@ -322,25 +322,12 @@ function openDemonPage(demon) {
     : 5500 / Math.sqrt(999);
 
   const videoId = getYoutubeId(demon.verification);
-  const iframeSrc = videoId ? `https://youtube.com{videoId}` : "";
+  const iframeSrc = videoId ? `https://youtube.com{videoId}?rel=0` : "";
   const videoBlock = iframeSrc
-    ? `<div class="dp-video-wrap"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
+    ? `<div class="dp-video-wrap"><iframe src="${iframeSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`
     : `<div class="dp-video-wrap"><img src="${thumb}" alt="${demon.name}"></div>`;
 
   const displayVerifier = cleanDisplayName(demon.verifier || "Unknown");
-
-  let creatorsText = "";
-  if (Array.isArray(demon.creators) && demon.creators.length > 0) {
-    creatorsText = demon.creators.join(", ");
-  } else if (demon.author) {
-    creatorsText = demon.author;
-  } else if (demon.creator) {
-    creatorsText = demon.creator;
-  }
-
-  const creatorsHtml = creatorsText
-    ? `<p class="dp-creators">created by <strong>${creatorsText}</strong></p>`
-    : "";
 
   const descHtml = demon.description
     ? `<p class="dp-description">${demon.description}</p>`
@@ -384,7 +371,6 @@ function openDemonPage(demon) {
           ${demon.position ? `<span class="dp-rank-pill">#${demon.position}</span>` : ""}
           <h1 class="dp-title">${demon.name}</h1>
         </div>
-        ${creatorsHtml}
       </div>
 
       <div class="dp-verifier-bar">
@@ -422,6 +408,7 @@ function openDemonPage(demon) {
   document.getElementById("demon-page").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 
 function createDemonCard(demon) {
