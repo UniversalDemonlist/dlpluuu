@@ -4550,3 +4550,11 @@ body:not(.dark) .sidebar-staff-list {
   border-radius: 8px;
   margin-top: 4px;
 }
+
+#rules {
+  margin-top: 0 !important;
+}
+
+body:has(#rules.active) .site-footer {
+  margin-top: 0 !important;
+}
