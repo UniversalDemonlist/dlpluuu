@@ -137,40 +137,82 @@
 
     
 <div id="demonlist" class="tab-content">
-  <h1>Demonlist</h1>
- <div class="list-warning">
-   WARNING: THIS LIST HAS A REALLY SMALL TEAM. IF SOME LEVELS ARE MISSING, PLEASE SEND THEM IN THE DISCORD SERVER.
- </div>
-
-<div class="list-warning">
-   WARNING: THE SPACEUK METHOD IS ALLOWED ON THIS LIST. DO NOT REPORT PLAYERS FOR USING IT.
- </div>
-
-  <div class="panel">
-    <input id="search-bar" placeholder="Search demons by name or position">
-
-    <div class="dropdown-row">
-      <div class="dropdown-group">
-        <label>Main List (1–75)</label>
-        <select id="select-main"></select>
+  <div class="demonlist-layout">
+    
+    <div class="demonlist-main">
+      <h1>Demonlist</h1>
+      <div class="list-warning">
+        WARNING: THIS LIST HAS A REALLY SMALL TEAM. IF SOME LEVELS ARE MISSING, PLEASE SEND THEM IN THE DISCORD SERVER.
       </div>
-      <div class="dropdown-group">
-        <label>Extended List (76–100)</label>
-        <select id="select-extended"></select>
+      <div class="list-warning">
+        WARNING: THE SPACEUK METHOD IS ALLOWED ON THIS LIST. DO NOT REPORT PLAYERS FOR USING IT.
       </div>
-      <div class="dropdown-group">
-        <label>Legacy List (101+)</label>
-        <select id="select-legacy"></select>
+
+      <div class="panel">
+        <input id="search-bar" placeholder="Search demons by name or position">
+        <div class="dropdown-row">
+          <div class="dropdown-group">
+            <label>Main List (1–75)</label>
+            <select id="select-main"></select>
+          </div>
+          <div class="dropdown-group">
+            <label>Extended List (76–100)</label>
+            <select id="select-extended"></select>
+          </div>
+          <div class="dropdown-group">
+            <label>Legacy List (101+)</label>
+            <select id="select-legacy"></select>
+          </div>
+        </div>
+      </div>
+
+      <div id="demons" class="subtab-content active">
+        <div id="demon-container"></div>
       </div>
     </div>
-  </div>
 
-  <div class="subtabs">
-    <button class="subtab-btn active" data-subtab="demons">Demons</button>
-  </div>
+    <aside class="demonlist-sidebar">
+      
+      <div class="sidebar-box">
+        <h3>List Staff</h3>
+        <p>Contact any of these people if you have problems with the list or want to see a specific thing changed.</p>
+        <div class="sidebar-staff-list">
+          <span><strong>TheSilly</strong> (Owner)</span>
+        </div>
+      </div>
 
-  <div id="demons" class="subtab-content active">
-    <div id="demon-container"></div>
+      <div class="sidebar-box">
+        <h3>Guidelines</h3>
+        <p>Be sure to check them before submitting a record.</p>
+        <button class="sidebar-action-btn" onclick="document.querySelector('[data-tab=\'rules\']').click()">
+          Read the guidelines!
+        </button>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>Submit Records</h3>
+        <p>Note: Please do not submit nonsense, it only makes it harder for us all and will get you banned. Submit your records in our Discord server.</p>
+        <a href="https://discord.gg/qeTcKqMrYF" target="_blank" rel="noopener noreferrer" class="sidebar-action-btn">
+          Submit a record!
+        </a>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>Leaderboard</h3>
+        <p>Get a detailed overview of who completed the most or beat the hardest demons! Compare yourself to the very best! Or worst?</p>
+        <button class="sidebar-action-btn" onclick="document.querySelector('[data-tab=\'leaderboard\']').click()">
+          Open the leaderboard
+        </button>
+      </div>
+
+      <div class="sidebar-box discord-widget-box">
+        <h3>Discord</h3>
+        <p>Join the official GDL+ Discord server, where you can get in touch with the team and community!</p>
+        <iframe src="https://discord.gg/qeTcKqMrYF" width="100%" height="350" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+      </div>
+
+    </aside>
+
   </div>
 </div>
 
