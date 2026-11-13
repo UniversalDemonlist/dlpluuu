@@ -1481,21 +1481,26 @@ async function loadLeaderboard() {
       </div>
     `;
 
-    sorted.forEach((p, index) => {
-      const card = createPlayerCard(p.name, p.score, index + 1);
-      if (index === 0) card.classList.add("selected-player");
-      container.appendChild(card);
-    });
+    const profileView = document.getElementById("leaderboard-profile-view");
 
     if (sorted.length > 0) {
-      openPlayerPage(sorted.key, scores);
+      sorted.forEach((p, index) => {
+        const card = createPlayerCard(p.name, p.score, index + 1);
+        container.appendChild(card);
+      });
+
+      if (profileView) {
+        profileView.innerHTML = "<p class='leaderboard-placeholder-text'>Select a player to view their profile.</p>";
+      }
     } else {
       container.innerHTML = "<p>No players with scores yet.</p>";
-      const profileView = document.getElementById("leaderboard-profile-view");
-      if (profileView) profileView.innerHTML = "<p class='leaderboard-placeholder-text'>No players found.</p>";
+      if (profileView) {
+        profileView.innerHTML = "<p class='leaderboard-placeholder-text'>No players found.</p>";
+      }
     }
   }, 500);
 }
+
 
 
 function setupSubTabs() {
