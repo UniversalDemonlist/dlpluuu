@@ -1100,73 +1100,66 @@ function createPlayerCard(name, score, rank) {
   const tierColor = getTierColor(t.tier);
   const segmentColor = getSegmentColor(t.segment);
 
- const rankColor = {
-  Legend: "#ff3030",
-  Absolute: "#a020f0",
-
-  "Mythic II": "#ff00ff",
-  "Mythic I": "#d400d4",
-
-  "Champion II": "#00bfff",
-  "Champion I": "#0099cc",
-
-  "Diamond II": "#7df9ff",
-  "Diamond I": "#4fd6ff",
-
-  "Platinum II": "#e5e4e2",
-  "Platinum I": "#cfcfcf",
-
-  "Gold II": "#ffd700",
-  "Gold I": "#d4af37",
-
-  "Silver II": "#c0c0c0",
-  "Silver I": "#a8a8a8",
-
-  "Bronze II": "#cd7f32",
-  "Bronze I": "#a97142"
-}[getPlayerRank(score)];
+  const rankColor = {
+    Legend: "#ff3030",
+    Absolute: "#a020f0",
+    "Mythic II": "#ff00ff",
+    "Mythic I": "#d400d4",
+    "Champion II": "#00bfff",
+    "Champion I": "#0099cc",
+    "Diamond II": "#7df9ff",
+    "Diamond I": "#4fd6ff",
+    "Platinum II": "#e5e4e2",
+    "Platinum I": "#cfcfcf",
+    "Gold II": "#ffd700",
+    "Gold I": "#d4af37",
+    "Silver II": "#c0c0c0",
+    "Silver I": "#a8a8a8",
+    "Bronze II": "#cd7f32",
+    "Bronze I": "#a97142"
+  }[getPlayerRank(score)];
 
   const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
 
   const card = document.createElement("div");
   card.className = "player-card no-image";
-  
-    const badge = document.createElement("img");
-badge.className = "rank-badge";
-badge.src = getLevelBadge(hardest?.position);
-card.appendChild(badge);
+
+  const badge = document.createElement("img");
+  badge.className = "rank-badge";
+  badge.src = getLevelBadge(hardest?.position);
+  card.appendChild(badge);
 
   const info = document.createElement("div");
   info.className = "player-info";
-
-  const tierHtml = t.tier
-    ? `<span style="color:${segmentColor}; font-weight:600;">${t.segment}</span>
-       <span style="color:${tierColor}; font-weight:600;">Tier ${t.tier}</span>`
-    : `<span style="color:#888; font-weight:600;">Unranked</span>`;
 
   info.innerHTML = `
     <h2>#${rank} — ${cleanDisplayName(name)}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
     <p><strong>Rank:</strong> <span class="${
-  getPlayerRank(score) === "Legend"
-    ? "rank-legend"
-    : getPlayerRank(score) === "Absolute"
-    ? "rank-absolute"
-    : getPlayerRank(score).includes("Mythic")
-    ? "rank-mythic"
-    : ""
-}" style="color:${rankColor}; font-weight:600;">
-  ${getPlayerRank(score)}
-</span></p>
+      getPlayerRank(score) === "Legend"
+        ? "rank-legend"
+        : getPlayerRank(score) === "Absolute"
+        ? "rank-absolute"
+        : getPlayerRank(score).includes("Mythic")
+        ? "rank-mythic"
+        : ""
+    }" style="color:${rankColor}; font-weight:600;">
+      ${getPlayerRank(score)}
+    </span></p>
     <p><strong>Hardest Demon:</strong> ${hardestName}</p>
   `;
 
   card.appendChild(info);
 
-  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
+  card.addEventListener("click", () => {
+    document.querySelectorAll(".player-card").forEach(c => c.classList.remove("selected-player"));
+    card.classList.add("selected-player");
+    openPlayerPage(normalizeName(name), window._leaderboardScores);
+  });
 
   return card;
 }
+
 
 
 
