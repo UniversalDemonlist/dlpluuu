@@ -4452,3 +4452,101 @@ body:not(.dark) .footer-copy strong {
   font-size: 0.76rem;
   color: #5b6980;
 }
+
+#demonlist {
+  max-width: 1220px !important;
+}
+
+.demonlist-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .demonlist-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demonlist-main {
+  min-width: 0;
+}
+
+.demonlist-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-box {
+  background: #171f2c;
+  border: 1px solid #242f42;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+body:not(.dark) .sidebar-box {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.sidebar-box h3 {
+  margin: 0 0 10px 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+body:not(.dark) .sidebar-box h3 {
+  color: #0f172a !important;
+}
+
+.sidebar-box p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.sidebar-staff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+}
+
+body:not(.dark) .sidebar-staff-list {
+  color: #334155;
+}
+
+.sidebar-action-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 16px;
+  background: #2b7de9;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.sidebar-action-btn:hover {
+  background: #1d68cc;
+  transform: translateY(-2px);
+}
+
+.discord-widget-box iframe {
+  border-radius: 8px;
+  margin-top: 4px;
+}
