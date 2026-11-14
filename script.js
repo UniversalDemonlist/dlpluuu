@@ -5904,3 +5904,147 @@ window.exitCustomList = function () {
 
   window._parseYoutubeVideoId = parseYoutubeVideoId;
 })();
+
+(function initRouletteWheelSpin() {
+  const SLICE_COUNT = 10;
+  const SLICE_COLORS = [
+    "#1e293b",
+    "#0f172a",
+    "#1d4ed8",
+    "#1e293b",
+    "#b91c1c",
+    "#0f172a",
+    "#1d4ed8",
+    "#1e293b",
+    "#047857",
+    "#0f172a"
+  ];
+
+  function drawLevelWheel(canvas, sliceLabels) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const size = canvas.width;
+    const center = size / 2;
+    const radius = center - 4;
+    const arc = (Math.PI * 2) / sliceLabels.length;
+
+    ctx.clearRect(0, 0, size, size);
+
+    sliceLabels.forEach(function (label, i) {
+      const startAngle = i * arc - Math.PI / 2;
+      const endAngle = startAngle + arc;
+
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = SLICE_COLORS.at(i % SLICE_COLORS.length);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#334155";
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(startAngle + arc / 2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "bold 12px sans-serif";
+      const shortName = label.length > 16 ? label.slice(0, 15) + "…" : label;
+      ctx.fillText(shortName, radius - 14, 4);
+      ctx.restore();
+    });
+
+    ctx.beginPath();
+    ctx.arc(center, center, 22, 0, Math.PI * 2);
+    ctx.fillStyle = "#090b11";
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#ef4444";
+    ctx.stroke();
+  }
+
+  function spinWheelForCard(card) {
+    if (!card || card.dataset.wheelSpun) return;
+    card.dataset.wheelSpun = "1";
+
+    const activeArea = document.getElementById("rl-active-area");
+    if (!activeArea) return;
+
+    const h2Text = card.querySelector("h2")?.textContent || "Chosen Level";
+    const winnerName = h2Text.replace(/^#\d+\s*[—-]\s*/, "").trim();
+
+    const list = typeof getVisibleDemons === "function" ? getVisibleDemons() : (typeof globalDemons !== "undefined" ? globalDemons : []);
+    const pool = (list || []).filter(function (d) { return !d.cosmetic; });
+
+    const slices = [winnerName];
+    for (let i = 1; i < SLICE_COUNT; i++) {
+      if (pool.length > 0) {
+        const rnd = pool.at(Math.floor(Math.random() * pool.length));
+        slices.push(rnd.name);
+      } else {
+        slices.push("Level #" + (i + 1));
+      }
+    }
+
+    card.style.display = "none";
+
+    const stage = document.createElement("div");
+    stage.className = "rl-wheel-stage";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "rl-wheel-wrapper";
+
+    const pointer = document.createElement("div");
+    pointer.className = "rl-wheel-pointer";
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "rl-wheel-canvas";
+    canvas.width = 290;
+    canvas.height = 290;
+
+    const caption = document.createElement("p");
+    caption.className = "rl-wheel-caption";
+    caption.textContent = "Spinning Wheel…";
+
+    wrapper.append(pointer, canvas);
+    stage.append(wrapper, caption);
+    activeArea.insertBefore(stage, card);
+
+    drawLevelWheel(canvas, slices);
+
+    const sliceAngle = 360 / SLICE_COUNT;
+    const targetRotation = 360 * 5 - sliceAngle / 2;
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        canvas.style.transform = "rotate(" + targetRotation + "deg)";
+      });
+    });
+
+    setTimeout(function () {
+      caption.textContent = "Landed on: " + winnerName;
+      caption.style.color = "var(--accent-green)";
+    }, 2200);
+
+    setTimeout(function () {
+      stage.remove();
+      card.style.display = "flex";
+    }, 2750);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const activeArea = document.getElementById("rl-active-area");
+    if (!activeArea) return;
+
+    const obs = new MutationObserver(function () {
+      const card = activeArea.querySelector(".rl-current-card");
+      if (card && !card.dataset.wheelSpun) {
+        spinWheelForCard(card);
+      }
+    });
+
+    obs.observe(activeArea, { childList: true });
+  });
+})();
