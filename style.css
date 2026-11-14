@@ -4795,3 +4795,24 @@ body:not(.dark) .dp-back-btn {
   margin-bottom: 14px !important;
   z-index: 1 !important;
 }
+
+body:has(#leaderboard.active) {
+  background-color: #090710 !important;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 48, 48, 0.22) 0%, transparent 42%),
+    radial-gradient(circle at 52% 0%, rgba(160, 32, 240, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 85% 15%, rgba(255, 0, 255, 0.20) 0%, transparent 45%),
+    linear-gradient(rgba(160, 32, 240, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 255, 0.04) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px !important;
+  background-attachment: fixed !important;
+}
+
+body:not(.dark):has(#leaderboard.active) {
+  background-color: #f6f3ff !important;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255, 48, 48, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 55% 0%, rgba(160, 32, 240, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 85% 12%, rgba(255, 0, 255, 0.10) 0%, transparent 45%) !important;
+  background-size: 100% 100% !important;
+}
