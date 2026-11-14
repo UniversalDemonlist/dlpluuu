@@ -1234,3 +1234,10 @@ body:has(#leaderboard.active) #leaderboard {
   position: relative;
   z-index: 1;
 }
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+body:has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #0a0414 !important;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 48px 48px, 48px 48px !important;
+  animation: demonlistThemeSync 25s ease-in-out infinite !important;
+}
