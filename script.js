@@ -2805,3 +2805,112 @@ if (document.readyState === "loading") {
   };
 })();
 
+(function initTopThreeSpotlights() {
+  const medals = [
+    { cls: "podium-gold", label: "#1" },
+    { cls: "podium-silver", label: "#2" },
+    { cls: "podium-bronze", label: "#3" }
+  ];
+
+  function renderTopDemons() {
+    const grid = document.getElementById("home-top-demons-grid");
+    if (!grid) return;
+
+    const visible = (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons)
+      .filter(d => !d.cosmetic && d.position)
+      .slice(0, 3);
+
+    grid.innerHTML = "";
+
+    visible.forEach((demon, i) => {
+      const medal = medals[i];
+      const thumb =
+        (demon.thumbnail && demon.thumbnail.trim()) ||
+        getYoutubeThumbnail(demon.verification) ||
+        `https://prevter.me{demon.id}`;
+
+      const score = demon.position ? (5500 / Math.sqrt(demon.position)).toFixed(2) : "0.00";
+
+      const card = document.createElement("div");
+      card.className = `podium-card ${medal.cls}`;
+      card.innerHTML = `
+        <img class="podium-thumb" src="${thumb}" alt="${demon.name}">
+        <div class="podium-body">
+          <span class="podium-rank-tag">${medal.label}</span>
+          <h3 class="podium-title">${demon.name}</h3>
+          <p class="podium-sub">Verified by ${cleanDisplayName(demon.verifier)} • ${score} pts</p>
+        </div>
+      `;
+      card.addEventListener("click", () => openDemonPage(demon));
+      grid.appendChild(card);
+    });
+  }
+
+  function renderTopPlayers() {
+    const grid = document.getElementById("home-top-players-grid");
+    if (!grid) return;
+
+    const scores = window._leaderboardScores || {};
+    const playerMap = window._playerMap || new Map();
+
+    const topPlayers = Object.entries(scores)
+      .map(([key, score]) => ({
+        key,
+        name: playerMap.get(key) || key,
+        score
+      }))
+      .filter(p => typeof window.isPlayerBanned !== "function" || !window.isPlayerBanned(p.name))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    grid.innerHTML = "";
+
+    topPlayers.forEach((player, i) => {
+      const medal = medals[i];
+      const rankTitle = typeof getPlayerRank === "function" ? getPlayerRank(player.score) : "";
+
+      const card = document.createElement("div");
+      card.className = `podium-card ${medal.cls}`;
+      card.innerHTML = `
+        <div class="podium-body">
+          <span class="podium-rank-tag">${medal.label}</span>
+          <h3 class="podium-title">${cleanDisplayName(player.name)}</h3>
+          <p class="podium-sub">${player.score.toFixed(2)} pts • ${rankTitle}</p>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        if (typeof window.jumpToPlayerProfile === "function") {
+          window.jumpToPlayerProfile(player.name);
+        }
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function renderAllTopThree() {
+    renderTopDemons();
+    renderTopPlayers();
+  }
+
+  window.renderAllTopThree = renderAllTopThree;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("spaceuk-toggle")?.addEventListener("click", () => {
+      renderTopDemons();
+      setTimeout(renderAllTopThree, 560);
+    });
+
+    const pollReady = setInterval(() => {
+      if (
+        globalDemons &&
+        globalDemons.length > 0 &&
+        window._leaderboardScores &&
+        Object.keys(window._leaderboardScores).length > 0
+      ) {
+        clearInterval(pollReady);
+        renderAllTopThree();
+      }
+    }, 150);
+    setTimeout(() => clearInterval(pollReady), 8000);
+  });
+})();
