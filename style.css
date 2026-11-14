@@ -5612,3 +5612,13 @@ body::-webkit-scrollbar,
   width: 0 !important;
   height: 0 !important;
 }
+
+.demon-card,
+.demon-card *,
+.player-card,
+.player-card * {
+  content-visibility: visible !important;
+  contain: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
