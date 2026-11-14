@@ -5847,3 +5847,60 @@ window.exitCustomList = function () {
     setTimeout(init, 80);
   }
 })();
+
+(function fixCustomThumbnailsAndEmbeds() {
+  function parseYoutubeVideoId(url) {
+    if (!url || typeof url !== "string") return "";
+    try {
+      const u = new URL(url.trim());
+      if (u.hostname.includes("youtu.be")) {
+        return u.pathname.replace("/", "").split("/").at(0) || "";
+      }
+      if (u.hostname.includes("youtube.com")) {
+        if (u.searchParams.get("v")) return u.searchParams.get("v");
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts.at(0) === "shorts" || parts.at(0) === "embed" || parts.at(0) === "live" || parts.at(0) === "v") {
+          return parts.at(1) || "";
+        }
+      }
+    } catch {}
+    const m = String(url).match(/([a-zA-Z0-9_-]{11})/);
+    return m ? m.at(1) : "";
+  }
+
+  function applyImageFallbacks() {
+    document.querySelectorAll("#cl-levels-container .demon-card img").forEach(function (img) {
+      if (img.dataset.fbBound) return;
+      img.dataset.fbBound = "1";
+
+      const src = img.getAttribute("src") || "";
+      if (!src || src === "undefined" || src === "null") {
+        img.src = "extreme.png";
+      }
+
+      img.addEventListener("error", function () {
+        if (!img.dataset.triedMax) {
+          img.dataset.triedMax = "1";
+          if (img.src.includes("hqdefault.jpg")) {
+            img.src = img.src.replace("hqdefault.jpg", "mqdefault.jpg");
+            return;
+          }
+        }
+        if (img.src !== "extreme.png" && !img.src.endsWith("extreme.png")) {
+          img.src = "extreme.png";
+        }
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const target = document.getElementById("custom-lists");
+    if (target) {
+      const obs = new MutationObserver(applyImageFallbacks);
+      obs.observe(target, { childList: true, subtree: true });
+    }
+    setInterval(applyImageFallbacks, 500);
+  });
+
+  window._parseYoutubeVideoId = parseYoutubeVideoId;
+})();
