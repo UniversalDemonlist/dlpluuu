@@ -1776,6 +1776,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initHashRouting() {
   let internalNav = false;
+  const validTabs = ["home", "demonlist", "leaderboard", "staff", "rules", "guidelines"];
 
   const setHash = (hash) => {
     if (internalNav) return;
@@ -1820,7 +1821,7 @@ function initHashRouting() {
     try {
       const demonMatch = raw.match(/^(?:demon\/)?(\d+)$/i);
       if (demonMatch) {
-        const pos = Number(demonMatch[1]);
+        const pos = Number(demonMatch);
         const waitForDemons = setInterval(() => {
           const demons = typeof getVisibleDemons === "function" ? getVisibleDemons() : [];
           if (demons.length > 0) {
@@ -1839,22 +1840,32 @@ function initHashRouting() {
 
       const playerMatch = raw.match(/^player\/(.+)$/i);
       if (playerMatch) {
-        const key = decodeURIComponent(playerMatch[1]).toLowerCase();
+        let decoded = "";
+        try {
+          decoded = decodeURIComponent(playerMatch).toLowerCase();
+        } catch {
+          return;
+        }
         document.querySelector('.tab-btn[data-tab="leaderboard"]')?.click();
         const waitForScores = setInterval(() => {
           if (window._leaderboardScores && Object.keys(window._leaderboardScores).length > 0) {
             clearInterval(waitForScores);
-            internalNav = true;
-            window.openPlayerPage?.(key, window._leaderboardScores);
-            internalNav = false;
+            if (window._playerMap && window._playerMap.has(decoded)) {
+              internalNav = true;
+              window.openPlayerPage?.(decoded, window._leaderboardScores);
+              internalNav = false;
+            }
           }
         }, 100);
         setTimeout(() => clearInterval(waitForScores), 8000);
         return;
       }
 
-      const tabBtn = document.querySelector(`.tab-btn[data-tab="${raw.toLowerCase()}"]`);
-      if (tabBtn) tabBtn.click();
+      const tabName = raw.toLowerCase();
+      if (validTabs.includes(tabName)) {
+        const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+        if (tabBtn) tabBtn.click();
+      }
     } finally {
       internalNav = false;
     }
@@ -1865,4 +1876,5 @@ function initHashRouting() {
 }
 
 document.addEventListener("DOMContentLoaded", initHashRouting);
+
 
