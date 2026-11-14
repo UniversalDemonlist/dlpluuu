@@ -4964,3 +4964,29 @@ body:has(#leaderboard.active) {
   background-size: 160% 160%, 160% 160%, 160% 160%, 100% 100%, 44px 44px, 44px 44px !important;
   background-attachment: fixed !important;
 }
+
+#demonlist .panel {
+  position: relative !important;
+  top: 0 !important;
+  z-index: 500 !important;
+  overflow: visible !important;
+  margin-bottom: 24px !important;
+}
+
+#demonlist #demons,
+#demonlist #demon-container {
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  top: 0 !important;
+}
+
+.megamenu-wrapper {
+  position: relative !important;
+  z-index: 9998 !important;
+}
+
+.megamenu-panel {
+  z-index: 9999 !important;
+}
