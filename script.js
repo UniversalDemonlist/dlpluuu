@@ -3073,7 +3073,13 @@ img.src = thumb;
 img.alt = lvl.name;
 const body = document.createElement("div");
 body.className = "cl-level-body";
-body.innerHTML = <h3><span class="demon-rank">#${pos}</span> — ${escapeHtml(lvl.name)}</h3> <p class="demon-meta-line">Verified by <span class="demon-verifier">${escapeHtml(lvl.verifier)}</span> • <strong>${pts} pts</strong></p> <div> <a href="${escapeHtml(lvl.verification)}" target="_blank" rel="noopener noreferrer nofollow" class="dp-back-btn" style="display:inline-flex;margin:4px 0 0 0;padding:6px 12px;font-size:0.8rem;">Watch Verification ↗</a> </div>;
+body.innerHTML = `
+  <h3><span class="demon-rank">#${pos}</span> — ${escapeHtml(lvl.name)}</h3>
+  <p class="demon-meta-line">Verified by <span class="demon-verifier">${escapeHtml(lvl.verifier)}</span> • <strong>${pts} pts</strong></p>
+  <div>
+    <a href="${escapeHtml(lvl.verification)}" target="_blank" rel="noopener noreferrer nofollow" class="dp-back-btn" style="display:inline-flex;margin:4px 0 0 0;padding:6px 12px;font-size:0.8rem;">Watch Verification ↗</a>
+  </div>
+`;
 if (lvl.records && lvl.records.length > 0) {
 const pillsWrap = document.createElement("div");
 pillsWrap.className = "cl-records-pills";
