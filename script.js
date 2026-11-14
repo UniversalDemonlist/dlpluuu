@@ -4358,3 +4358,254 @@ window.exitCustomList = function () {
         document.body.appendChild(section);
       }
     }
+
+                                 const dropdown = document.getElementById("extras-dropdown");
+    const toggleBtn = document.getElementById("extras-dropdown-toggle");
+    if (dropdown && toggleBtn) {
+      toggleBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("open");
+      });
+
+      dropdown.querySelectorAll(".extras-menu-item").forEach(function (item) {
+        item.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const tabId = item.getAttribute("data-tab");
+          document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+          document.querySelectorAll(".tab-content").forEach(function (c) { c.classList.remove("active"); });
+          item.classList.add("active");
+          toggleBtn.classList.add("active");
+          const target = document.getElementById(tabId);
+          if (target) {
+            target.classList.add("active");
+            window.location.hash = tabId;
+          }
+          dropdown.classList.remove("open");
+          if (tabId === "custom-lists") refreshAllCustomUI();
+        });
+      });
+
+      document.querySelectorAll(".tabs > .tab-btn:not(.extras-dropdown-btn)").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          dropdown.classList.remove("open");
+          toggleBtn.classList.remove("active");
+        });
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!dropdown.contains(e.target)) dropdown.classList.remove("open");
+      });
+    }
+
+    document.querySelectorAll(".cl-view-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".cl-view-btn").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        const view = btn.dataset.clview;
+        document.getElementById("cl-pane-list").style.display = view === "list" ? "block" : "none";
+        document.getElementById("cl-pane-leaderboard").style.display = view === "leaderboard" ? "block" : "none";
+        document.getElementById("cl-pane-maker").style.display = view === "maker" ? "block" : "none";
+        refreshAllCustomUI();
+      });
+    });
+
+    document.getElementById("cl-player-search")?.addEventListener("input", renderCustomLeaderboard);
+
+    document.getElementById("cl-list-name-input")?.addEventListener("input", function (e) {
+      customList.title = cleanText(e.target.value, 60) || "Untitled Custom List";
+      renderMakerOrder();
+    });
+
+    document.getElementById("cl-import-add-btn")?.addEventListener("click", function () {
+      if (customList.levels.length >= MAX_LEVELS) return setStatus("Maximum of " + MAX_LEVELS + " levels reached.", true);
+      const id = document.getElementById("cl-import-select")?.value;
+      const visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+      const found = (visible || []).find(function (d) { return String(d.id) === String(id); });
+      if (!found) return;
+      const converted = sanitizeLevel({
+        id: found.id,
+        name: typeof cleanDisplayName === "function" ? cleanDisplayName(found.name) : found.name,
+        verifier: typeof cleanDisplayName === "function" ? cleanDisplayName(found.verifier) : found.verifier,
+        creator: found.creator || found.verifier,
+        password: found.password || "Free Copy",
+        verification: found.verification || "https://youtube.com",
+        thumbnail: found.thumbnail || "",
+        records: (found.records || []).map(function (r) {
+          return typeof r === "string"
+            ? { user: typeof cleanDisplayName === "function" ? cleanDisplayName(r) : r, percent: 100, link: "" }
+            : { user: typeof cleanDisplayName === "function" ? cleanDisplayName(r.user || "") : (r.user || ""), percent: r.percent || 100, link: r.link || "" };
+        })
+      });
+      if (converted) {
+        customList.levels.push(converted);
+        refreshAllCustomUI();
+        setStatus('Added "' + converted.name + '".');
+      }
+    });
+
+    document.getElementById("cl-import-all-btn")?.addEventListener("click", function () {
+      const visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+      customList.levels = (visible || [])
+        .filter(function (d) { return !d.cosmetic; })
+        .slice(0, MAX_LEVELS)
+        .map(function (found) {
+          return sanitizeLevel({
+            id: found.id,
+            name: typeof cleanDisplayName === "function" ? cleanDisplayName(found.name) : found.name,
+            verifier: typeof cleanDisplayName === "function" ? cleanDisplayName(found.verifier) : found.verifier,
+            creator: found.creator || found.verifier,
+            password: found.password || "Free Copy",
+            verification: found.verification || "https://youtube.com",
+            thumbnail: found.thumbnail || "",
+            records: (found.records || []).map(function (r) {
+              return typeof r === "string"
+                ? { user: typeof cleanDisplayName === "function" ? cleanDisplayName(r) : r, percent: 100, link: "" }
+                : { user: typeof cleanDisplayName === "function" ? cleanDisplayName(r.user || "") : (r.user || ""), percent: r.percent || 100, link: r.link || "" };
+            })
+          });
+        })
+        .filter(Boolean);
+      refreshAllCustomUI();
+      setStatus("Imported " + customList.levels.length + " levels.");
+    });
+
+    document.getElementById("cl-shuffle-btn")?.addEventListener("click", function () {
+      if (customList.levels.length < 2) return setStatus("Add at least 2 levels to shuffle.", true);
+      for (let i = customList.levels.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const a = customList.levels.at(i);
+        const b = customList.levels.at(j);
+        customList.levels.splice(i, 1, b);
+        customList.levels.splice(j, 1, a);
+      }
+      refreshAllCustomUI();
+      setStatus("Shuffled list order!");
+    });
+
+
+    document.getElementById("cl-add-custom-btn")?.addEventListener("click", function () {
+      if (customList.levels.length >= MAX_LEVELS) return setStatus("Maximum of " + MAX_LEVELS + " levels reached.", true);
+      const nameEl = document.getElementById("cl-new-name");
+      const verEl = document.getElementById("cl-new-verifier");
+      const urlEl = document.getElementById("cl-new-verification");
+      const thumbEl = document.getElementById("cl-new-thumb");
+      const recEl = document.getElementById("cl-new-records");
+
+      const records = (recEl?.value || "")
+        .split("\n")
+        .map(function (line) { return line.trim(); })
+        .filter(Boolean)
+        .slice(0, MAX_RECORDS_PER_LEVEL)
+        .map(function (line) {
+          const parts = line.split(",").map(function (p) { return p.trim(); });
+          return sanitizeRecord({
+            user: parts.at(0) || "",
+            percent: parts.at(1) !== undefined ? parts.at(1) : 100,
+            link: parts.at(2) || ""
+          });
+        })
+        .filter(Boolean);
+
+      const lvl = sanitizeLevel({
+        name: nameEl?.value || "",
+        verifier: verEl?.value || "",
+        verification: urlEl?.value || "",
+        thumbnail: thumbEl?.value || "",
+        records: records
+      });
+
+      if (!lvl) return setStatus("Enter a valid Level Name, Verifier, and http(s) Video URL.", true);
+
+      customList.levels.push(lvl);
+      nameEl.value = "";
+      verEl.value = "";
+      urlEl.value = "";
+      thumbEl.value = "";
+      recEl.value = "";
+      refreshAllCustomUI();
+      setStatus('Created "' + lvl.name + '"!');
+    });
+
+    document.getElementById("cl-copy-code-btn")?.addEventListener("click", function () {
+      if (customList.levels.length === 0) return setStatus("Add at least 1 level before saving.", true);
+      const payload = {
+        t: customList.title,
+        l: customList.levels.map(function (lvl) {
+          return {
+            n: lvl.name,
+            v: lvl.verifier,
+            u: lvl.verification,
+            m: lvl.thumbnail || "",
+            i: lvl.id || "",
+            r: (lvl.records || []).map(function (r) { return [r.user, r.percent, r.link || ""]; })
+          };
+        })
+      };
+      const code = "GDCL1-" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(function () {
+          setStatus("Save code copied!");
+        }).catch(function () {
+          prompt("Copy save code:", code);
+        });
+      } else {
+        prompt("Copy save code:", code);
+      }
+    });
+
+    document.getElementById("cl-toggle-load-btn")?.addEventListener("click", function () {
+      const drawer = document.getElementById("cl-load-drawer");
+      if (drawer) drawer.style.display = drawer.style.display === "none" ? "flex" : "none";
+    });
+
+    document.getElementById("cl-confirm-load-btn")?.addEventListener("click", function () {
+      const input = document.getElementById("cl-load-input");
+      const raw = (input?.value || "").trim();
+      if (!raw.startsWith("GDCL1-") || raw.length > MAX_CODE_CHARS) return setStatus("Invalid save code.", true);
+      try {
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));
+        if (!parsed || !Array.isArray(parsed.l)) return setStatus("Invalid save code.", true);
+        customList = {
+          title: cleanText(parsed.t, 60) || "Untitled Custom List",
+          levels: parsed.l.slice(0, MAX_LEVELS).map(function (item) {
+            return sanitizeLevel({
+              id: item.i || "",
+              name: item.n,
+              verifier: item.v,
+              verification: item.u,
+              thumbnail: item.m,
+              records: Array.isArray(item.r) ? item.r.map(function (arr) {
+                return Array.isArray(arr) ? { user: arr.at(0), percent: arr.at(1), link: arr.at(2) } : null;
+              }) : []
+            });
+          }).filter(Boolean)
+        };
+        const titleInput = document.getElementById("cl-list-name-input");
+        if (titleInput) titleInput.value = customList.title;
+        input.value = "";
+        document.getElementById("cl-load-drawer").style.display = "none";
+        refreshAllCustomUI();
+        setStatus('Loaded "' + customList.title + '".');
+      } catch {
+        setStatus("Failed to decode save code.", true);
+      }
+    });
+
+    document.getElementById("cl-reset-btn")?.addEventListener("click", function () {
+      customList = { title: "Untitled Custom List", levels: [] };
+      const titleInput = document.getElementById("cl-list-name-input");
+      if (titleInput) titleInput.value = "";
+      refreshAllCustomUI();
+      setStatus("Custom list cleared.");
+    });
+
+    const poll = setInterval(function () {
+      if (Array.isArray(globalDemons) && globalDemons.length > 0) {
+        clearInterval(poll);
+        fillImportSelect();
+        refreshAllCustomUI();
+      }
+    }, 150);
+    setTimeout(function () { clearInterval(poll); }, 8000);
+  });
+})();
