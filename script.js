@@ -674,7 +674,7 @@ async function loadDemonList() {
   );
 
   renderDemonCards();
-  populateDropdowns();
+  renderMegaMenuGrid();
   loadLeaderboard();
 }
 
