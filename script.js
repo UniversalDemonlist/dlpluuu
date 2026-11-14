@@ -2388,3 +2388,226 @@ if (document.readyState === "loading") {
   forceMegaMenuVerifierOnly();
 }
 
+function eliminateAllLag() {
+  const perfStyle = document.createElement("style");
+  perfStyle.id = "lag-fix-overrides";
+  perfStyle.textContent = `
+    html {
+      scrollbar-width: thin !important;
+    }
+    body::before,
+    body::after {
+      will-change: transform, opacity !important;
+      contain: strict !important;
+    }
+    .demon-card,
+    .player-card {
+      content-visibility: auto !important;
+      contain-intrinsic-size: 110px !important;
+      will-change: transform !important;
+    }
+    .megamenu-panel,
+    .player-card,
+    .player-profile {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body:has(#leaderboard.active),
+    body:has(#demonlist.active) {
+      animation: none !important;
+    }
+  `;
+  if (!document.getElementById("lag-fix-overrides")) {
+    document.head.appendChild(perfStyle);
+  }
+
+  let cachedManualPts = null;
+
+  window.stopAllVideos = function () {
+    document.querySelectorAll("iframe").forEach(f => {
+      if (f.contentWindow) {
+        f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*");
+      }
+    });
+  };
+
+  window.renderDemonCards = function (listOverride) {
+    const container = document.getElementById("demon-container");
+    if (!container) return;
+
+    let list = listOverride || getVisibleDemons();
+    if (typeof hideCheated !== "undefined" && hideCheated && Array.isArray(cheatedList)) {
+      list = list.filter(d => !cheatedList.includes(String(d.id).toLowerCase()));
+    }
+
+    const frag = document.createDocumentFragment();
+    list.forEach(d => {
+      const card = createDemonCard(d);
+      const img = card.querySelector("img");
+      if (img) {
+        img.loading = "lazy";
+        img.decoding = "async";
+      }
+      frag.appendChild(card);
+    });
+
+    container.innerHTML = "";
+    container.appendChild(frag);
+  };
+
+  window.renderChallengeCards = function () {
+    const container = document.getElementById("challenge-container");
+    if (!container) return;
+
+    const frag = document.createDocumentFragment();
+    (challengeList || []).forEach(d => {
+      const card = createDemonCard(d);
+      const img = card.querySelector("img");
+      if (img) {
+        img.loading = "lazy";
+        img.decoding = "async";
+      }
+      frag.appendChild(card);
+    });
+
+    container.innerHTML = "";
+    container.appendChild(frag);
+  };
+
+  window.loadLeaderboard = async function () {
+    const container = document.getElementById("leaderboard-container");
+    if (!container) return;
+
+    if (!cachedManualPts) {
+      cachedManualPts = await fetch("data/manualpoints.json").then(r => r.json()).catch(() => []);
+    }
+
+    const visibleDemons = getVisibleDemons();
+    const playerMap = new Map();
+    const hardestMap = new Map();
+    const scores = {};
+
+    playersList.forEach(p => {
+      if (!bannedPlayers.includes(p)) playerMap.set(normalizeName(p), p);
+    });
+    manualCompleted.forEach(m => {
+      const k = normalizeName(m.player);
+      if (!playerMap.has(k)) playerMap.set(k, m.player);
+    });
+    cachedManualPts.forEach(mp => {
+      const k = normalizeName(mp.player);
+      if (!playerMap.has(k)) playerMap.set(k, mp.player);
+    });
+
+    visibleDemons.forEach(demon => {
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+        const k = normalizeName(demon.verifier);
+        if (!playerMap.has(k)) playerMap.set(k, demon.verifier);
+      }
+      demon.records.forEach(r => {
+        const u = typeof r === "string" ? r : r.user;
+        if (!u || u === "Not beaten yet" || bannedPlayers.includes(u)) return;
+        if (hideCheated && u.toLowerCase().includes("[c]")) return;
+        const k = normalizeName(u);
+        if (!playerMap.has(k)) playerMap.set(k, u);
+      });
+    });
+
+    window._playerMap = playerMap;
+    playerMap.forEach((_, k) => { scores[k] = 0; });
+
+    visibleDemons.forEach(demon => {
+      if (hideCheated && cheatedList.includes(demon.name.toLowerCase())) return;
+      const pos = demon.position || 999;
+      const baseScore = 5500 / Math.sqrt(pos);
+
+      const addPts = (key, pct) => {
+        if (scores[key] === undefined) return;
+        scores[key] += pct === 100 ? baseScore : baseScore * (pct / 100);
+        if (pct === 100 && demon.position) {
+          const prev = hardestMap.get(key);
+          if (!prev || demon.position < prev.position) hardestMap.set(key, demon);
+        }
+      };
+
+      demon.records.forEach(r => {
+        const u = typeof r === "string" ? r : r.user;
+        const pct = typeof r === "string" ? 100 : (r.percent || 100);
+        if (!u || u === "Not beaten yet" || bannedPlayers.includes(u)) return;
+        if (hideCheated && u.toLowerCase().includes("[c]")) return;
+        addPts(normalizeName(u), pct);
+      });
+
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+        addPts(normalizeName(demon.verifier), 100);
+      }
+    });
+
+    const diffPts = { easy: 20, medium: 40, hard: 60, insane: 80 };
+    manualCompleted.forEach(m => {
+      const k = normalizeName(m.player);
+      if (scores[k] !== undefined) scores[k] += diffPts[m.difficulty.toLowerCase()] || 0;
+    });
+
+    cachedManualPts.forEach(mp => {
+      const k = normalizeName(mp.player);
+      if (scores[k] !== undefined) scores[k] += Number(mp.extrapoints) || 0;
+    });
+
+    window._leaderboardScores = scores;
+
+    const searchQuery = (document.getElementById("player-search")?.value || "").toLowerCase();
+    const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
+
+    const allPlayers = Object.entries(scores).map(([key, score]) => {
+      const name = playerMap.get(key);
+      const hardest = hardestMap.get(key) || null;
+      return {
+        key,
+        name,
+        score,
+        hardest,
+        hardestPosition: hardest?.position || 999999,
+        rankName: getPlayerRank(score)
+      };
+    });
+
+    updateHomeStats(allPlayers.length);
+
+    let sorted = searchQuery.trim()
+      ? allPlayers.filter(p => cleanDisplayName(p.name).toLowerCase().includes(searchQuery))
+      : allPlayers;
+
+    if (filterMode === "points") {
+      sorted.sort((a, b) => b.score - a.score);
+    } else if (filterMode === "tier") {
+      sorted.sort((a, b) => a.hardestPosition - b.hardestPosition || b.score - a.score);
+    }
+
+    const frag = document.createDocumentFragment();
+    const warn = document.createElement("div");
+    warn.className = "leaderboard-warning";
+    warn.textContent = "WARNING: Rankings might not be accurate due to this list not being very popular. Take your rank with a grain of salt.";
+    frag.appendChild(warn);
+
+    sorted.forEach((p, index) => {
+      const card = createPlayerCard(p.name, p.score, index + 1);
+      if (index === 0) card.classList.add("selected-player");
+      frag.appendChild(card);
+    });
+
+    container.innerHTML = "";
+    container.appendChild(frag);
+
+    if (sorted.length > 0) {
+      openPlayerPage(sorted[0].key, scores);
+    }
+  };
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", eliminateAllLag);
+} else {
+  eliminateAllLag();
+}
+
