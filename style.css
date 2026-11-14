@@ -5622,3 +5622,23 @@ body::-webkit-scrollbar,
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+body::before,
+body::after,
+body:has(#demonlist.active)::before,
+body:has(#demonlist.active)::after,
+body:has(#leaderboard.active)::before,
+body:has(#leaderboard.active)::after {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+body,
+body:has(#demonlist.active),
+body:has(#leaderboard.active) {
+  animation: none !important;
+  background-attachment: scroll !important;
+}
