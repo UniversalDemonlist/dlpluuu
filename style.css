@@ -1241,3 +1241,57 @@ body:has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
   background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 48px 48px, 48px 48px !important;
   animation: demonlistThemeSync 25s ease-in-out infinite !important;
 }
+
+@keyframes leaderboardLasersSweep {
+  0% {
+    background-position: -150% -150%, 150% -150%, -150% 150%, 150% 150%;
+  }
+  50% {
+    background-position: 150% 150%, -150% 150%, 150% -150%, -150% -150%;
+  }
+  100% {
+    background-position: -150% -150%, 150% -150%, -150% 150%, 150% 150%;
+  }
+}
+
+body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)),
+body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #000000 !important;
+  background-image:
+    linear-gradient(125deg,
+      transparent 10%,
+      rgba(255, 48, 48, 0.35) 18%,
+      transparent 22%,
+      rgba(160, 32, 240, 0.35) 32%,
+      transparent 36%,
+      rgba(255, 0, 255, 0.35) 48%,
+      transparent 52%,
+      rgba(0, 191, 255, 0.35) 64%,
+      transparent 68%,
+      rgba(125, 249, 255, 0.30) 80%,
+      transparent 86%),
+    linear-gradient(235deg,
+      transparent 12%,
+      rgba(255, 215, 0, 0.32) 22%,
+      transparent 26%,
+      rgba(192, 192, 192, 0.28) 42%,
+      transparent 46%,
+      rgba(205, 127, 50, 0.32) 62%,
+      transparent 66%,
+      rgba(229, 228, 226, 0.28) 82%,
+      transparent 88%),
+    linear-gradient(45deg,
+      transparent 20%,
+      rgba(255, 48, 48, 0.25) 35%,
+      transparent 38%,
+      rgba(0, 191, 255, 0.25) 65%,
+      transparent 68%),
+    linear-gradient(315deg,
+      transparent 20%,
+      rgba(160, 32, 240, 0.25) 35%,
+      transparent 38%,
+      rgba(255, 215, 0, 0.25) 65%,
+      transparent 68%) !important;
+  background-size: 300% 300%, 300% 300%, 260% 260%, 260% 260% !important;
+  animation: leaderboardLasersSweep 10s linear infinite !important;
+}
