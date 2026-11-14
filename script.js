@@ -3058,7 +3058,7 @@ const container = document.getElementById("cl-levels-container");
 if (!container) return;
 container.innerHTML = "";
 if (customList.levels.length === 0) {
-container.innerHTML = <div class="panel"><p>No levels in this custom list yet. Switch to <strong>List Maker</strong> or load a save code.</p></div>;
+container.innerHTML = `<div class="panel"><p>No levels in this custom list yet. Switch to <strong>List Maker</strong> or load a save code.</p></div>`;
 return;
 }
 customList.levels.forEach((lvl, idx) => {
