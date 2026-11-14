@@ -2914,3 +2914,512 @@ if (document.readyState === "loading") {
     setTimeout(() => clearInterval(pollReady), 8000);
   });
 })();
+
+(function initExtrasAndCustomLists() {
+const MAX_CODE_CHARS = 250000;
+const MAX_LEVELS = 250;
+const MAX_RECORDS_PER_LEVEL = 200;
+let customList = {
+title: "Untitled Custom List",
+levels: []
+};
+function escapeHtml(str) {
+return String(str ?? "")
+.replace(/&/g, "&")
+.replace(/</g, "<")
+.replace(/>/g, ">")
+.replace(/"/g, """)
+.replace(/'/g, "'");
+}
+function cleanText(str, maxLen) {
+if (typeof str !== "string") return "";
+return str.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, maxLen);
+}
+function sanitizeUrl(raw) {
+if (typeof raw !== "string") return "";
+const trimmed = raw.trim().slice(0, 300);
+if (!trimmed) return "";
+try {
+const parsed = new URL(trimmed);
+if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+return parsed.href;
+}
+return "";
+} catch {
+return "";
+}
+}
+function sanitizeRecord(rawRec) {
+if (!rawRec || typeof rawRec !== "object") return null;
+const user = cleanText(rawRec.user, 40);
+if (!user) return null;
+let percent = Number(rawRec.percent);
+if (!Number.isFinite(percent)) percent = 100;
+percent = Math.max(1, Math.min(100, Math.round(percent)));
+const link = sanitizeUrl(rawRec.link || "");
+return { user, percent, link };
+}
+function sanitizeLevel(rawLvl) {
+if (!rawLvl || typeof rawLvl !== "object") return null;
+const name = cleanText(rawLvl.name, 60);
+const verifier = cleanText(rawLvl.verifier, 40);
+const verification = sanitizeUrl(rawLvl.verification);
+if (!name || !verifier || !verification) return null;
+const thumbnail = sanitizeUrl(rawLvl.thumbnail || "");
+const existingId = rawLvl.existingId ? cleanText(String(rawLvl.existingId), 20) : "";
+const records = Array.isArray(rawLvl.records)
+? rawLvl.records.slice(0, MAX_RECORDS_PER_LEVEL).map(sanitizeRecord).filter(Boolean)
+: [];
+return { name, verifier, verification, thumbnail, existingId, records };
+}
+function setStatus(msg, isError = false) {
+const el = document.getElementById("cl-status-msg");
+if (!el) return;
+el.style.color = isError ? "#ef4444" : "var(--accent-green)";
+el.textContent = msg;
+setTimeout(() => {
+if (el.textContent === msg) el.textContent = "";
+}, 4500);
+}
+function encodeCustomList(listObj) {
+const payload = {
+t: cleanText(listObj.title, 60) || "Untitled Custom List",
+l: listObj.levels.slice(0, MAX_LEVELS).map(lvl => ({
+n: lvl.name,
+v: lvl.verifier,
+u: lvl.verification,
+m: lvl.thumbnail || "",
+i: lvl.existingId || "",
+r: (lvl.records || []).map(r => [r.user, r.percent, r.link || ""])
+}))
+};
+return "GDCL1-" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+function decodeCustomList(rawCode) {
+if (typeof rawCode !== "string") return null;
+const trimmed = rawCode.trim();
+if (!trimmed.startsWith("GDCL1-") || trimmed.length > MAX_CODE_CHARS) return null;
+const jsonStr = decodeURIComponent(escape(atob(trimmed.slice(6))));
+const parsed = JSON.parse(jsonStr);
+if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.l)) return null;
+const title = cleanText(parsed.t, 60) || "Untitled Custom List";
+const levels = parsed.l
+.slice(0, MAX_LEVELS)
+.map(item => {
+if (!item || typeof item !== "object") return null;
+return sanitizeLevel({
+name: item.n,
+verifier: item.v,
+verification: item.u,
+thumbnail: item.m,
+existingId: item.i,
+records: Array.isArray(item.r)
+? item.r.map(arr =>
+Array.isArray(arr) ? { user: arr, percent: arr, link: arr } : null
+)
+: []
+});
+})
+.filter(Boolean);
+return { title, levels };
+}
+function parseRecordsTextarea(text) {
+if (!text || typeof text !== "string") return [];
+return text
+.split("\n")
+.map(line => line.trim())
+.filter(Boolean)
+.slice(0, MAX_RECORDS_PER_LEVEL)
+.map(line => {
+const parts = line.split(",").map(p => p.trim());
+return sanitizeRecord({
+user: parts,
+percent: parts !== undefined ? parts : 100,
+link: parts || ""
+});
+})
+.filter(Boolean);
+}
+function getResolvedThumbnail(lvl) {
+if (lvl.thumbnail) return lvl.thumbnail;
+const yt = typeof getYoutubeThumbnail === "function" ? getYoutubeThumbnail(lvl.verification) : "";
+if (yt) return yt;
+if (lvl.existingId) return https://prevter.me{encodeURIComponent(lvl.existingId)};
+return "extreme.png";
+}
+function updateHeaderBadge() {
+const badge = document.getElementById("cl-active-title");
+if (badge) {
+badge.textContent = Active List: ${customList.title} (${customList.levels.length} level${customList.levels.length === 1 ? "" : "s"});
+}
+}
+function renderCustomListView() {
+const container = document.getElementById("cl-levels-container");
+if (!container) return;
+container.innerHTML = "";
+if (customList.levels.length === 0) {
+container.innerHTML = <div class="panel"><p>No levels in this custom list yet. Switch to <strong>List Maker</strong> or load a save code.</p></div>;
+return;
+}
+customList.levels.forEach((lvl, idx) => {
+const pos = idx + 1;
+const pts = (5500 / Math.sqrt(pos)).toFixed(2);
+const thumb = getResolvedThumbnail(lvl);
+const card = document.createElement("div");
+card.className = "cl-level-card";
+const img = document.createElement("img");
+img.className = "cl-level-thumb";
+img.src = thumb;
+img.alt = lvl.name;
+const body = document.createElement("div");
+body.className = "cl-level-body";
+body.innerHTML = <h3><span class="demon-rank">#${pos}</span> — ${escapeHtml(lvl.name)}</h3> <p class="demon-meta-line">Verified by <span class="demon-verifier">${escapeHtml(lvl.verifier)}</span> • <strong>${pts} pts</strong></p> <div> <a href="${escapeHtml(lvl.verification)}" target="_blank" rel="noopener noreferrer nofollow" class="dp-back-btn" style="display:inline-flex;margin:4px 0 0 0;padding:6px 12px;font-size:0.8rem;">Watch Verification ↗</a> </div>;
+if (lvl.records && lvl.records.length > 0) {
+const pillsWrap = document.createElement("div");
+pillsWrap.className = "cl-records-pills";
+lvl.records.forEach(r => {
+if (r.link) {
+const a = document.createElement("a");
+a.className = "cl-rec-pill";
+a.href = r.link;
+a.target = "_blank";
+a.rel = "noopener noreferrer nofollow";
+a.textContent = ${r.user} (${r.percent}%);
+pillsWrap.appendChild(a);
+} else {
+const span = document.createElement("span");
+span.className = "cl-rec-pill";
+span.textContent = ${r.user} (${r.percent}%);
+pillsWrap.appendChild(span);
+}
+});
+body.appendChild(pillsWrap);
+}
+card.appendChild(img);
+card.appendChild(body);
+container.appendChild(card);
+});
+}
+function renderCustomLeaderboard() {
+const container = document.getElementById("cl-leaderboard-container");
+if (!container) return;
+container.innerHTML = "";
+if (customList.levels.length === 0) {
+container.innerHTML = <div class="panel"><p>Add levels to your custom list to generate a leaderboard.</p></div>;
+return;
+}
+const scoreMap = new Map();
+const displayNames = new Map();
+function addScore(rawName, pts) {
+const key = rawName.toLowerCase();
+if (!displayNames.has(key)) displayNames.set(key, rawName);
+scoreMap.set(key, (scoreMap.get(key) || 0) + pts);
+}
+customList.levels.forEach((lvl, idx) => {
+const pos = idx + 1;
+const basePts = 5500 / Math.sqrt(pos);
+addScore(lvl.verifier, basePts);
+const seenOnLevel = new Set([lvl.verifier.toLowerCase()]);
+(lvl.records || []).forEach(r => {
+const rKey = r.user.toLowerCase();
+if (seenOnLevel.has(rKey)) return;
+seenOnLevel.add(rKey);
+const earned = r.percent >= 100 ? basePts : basePts * (r.percent / 100) * 0.5;
+addScore(r.user, earned);
+});
+});
+const ranked = Array.from(scoreMap.entries())
+.map(([key, score]) => ({
+name: displayNames.get(key),
+score
+}))
+.sort((a, b) => b.score - a.score);
+ranked.forEach((p, idx) => {
+const row = document.createElement("div");
+row.className = "cl-lb-row";
+row.innerHTML = <span><strong>#${idx + 1}</strong> &nbsp; ${escapeHtml(p.name)}</span> <strong>${p.score.toFixed(2)} pts</strong>;
+container.appendChild(row);
+});
+}
+function renderMakerOrder() {
+const listEl = document.getElementById("cl-maker-order-list");
+if (!listEl) return;
+listEl.innerHTML = "";
+if (customList.levels.length === 0) {
+listEl.innerHTML = <p style="color:var(--text-muted);font-size:0.88rem;">No levels added yet.</p>;
+return;
+}
+customList.levels.forEach((lvl, idx) => {
+const row = document.createElement("div");
+row.className = "cl-order-item";
+const meta = document.createElement("div");
+meta.className = "cl-order-meta";
+meta.innerHTML = <strong>#${idx + 1} — ${escapeHtml(lvl.name)}</strong> <span>Verifier: ${escapeHtml(lvl.verifier)} • ${(lvl.records || []).length} record(s)</span>;
+const btns = document.createElement("div");
+btns.className = "cl-order-btns";
+const upBtn = document.createElement("button");
+upBtn.type = "button";
+upBtn.className = "cl-mini-btn";
+upBtn.textContent = "↑";
+upBtn.disabled = idx === 0;
+upBtn.addEventListener("click", () => {
+const temp = customList.levels[idx - 1];
+customList.levels[idx - 1] = customList.levels[idx];
+customList.levels[idx] = temp;
+refreshAllCustomViews();
+});
+const downBtn = document.createElement("button");
+downBtn.type = "button";
+downBtn.className = "cl-mini-btn";
+downBtn.textContent = "↓";
+downBtn.disabled = idx === customList.levels.length - 1;
+downBtn.addEventListener("click", () => {
+const temp = customList.levels[idx + 1];
+customList.levels[idx + 1] = customList.levels[idx];
+customList.levels[idx] = temp;
+refreshAllCustomViews();
+});
+const addRecBtn = document.createElement("button");
+addRecBtn.type = "button";
+addRecBtn.className = "cl-mini-btn";
+addRecBtn.textContent = "+Rec";
+addRecBtn.addEventListener("click", () => {
+const raw = prompt(Add record to "${lvl.name}" (Format: Player, Percent, OptionalURL):);
+if (!raw) return;
+const parsed = parseRecordsTextarea(raw);
+if (parsed.length === 0) {
+setStatus("Invalid record format.", true);
+return;
+}
+lvl.records = [...(lvl.records || []), ...parsed].slice(0, MAX_RECORDS_PER_LEVEL);
+refreshAllCustomViews();
+setStatus(Added record for ${parsed.user}.);
+});
+const delBtn = document.createElement("button");
+delBtn.type = "button";
+delBtn.className = "cl-mini-btn danger";
+delBtn.textContent = "✕";
+delBtn.addEventListener("click", () => {
+customList.levels.splice(idx, 1);
+refreshAllCustomViews();
+});
+btns.append(upBtn, downBtn, addRecBtn, delBtn);
+row.append(meta, btns);
+listEl.appendChild(row);
+});
+}
+function refreshAllCustomViews() {
+updateHeaderBadge();
+renderCustomListView();
+renderCustomLeaderboard();
+renderMakerOrder();
+}
+function populateExistingSelect() {
+const select = document.getElementById("cl-import-select");
+if (!select) return;
+const demons = (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons)
+.filter(d => !d.cosmetic);
+select.innerHTML = "";
+demons.forEach(d => {
+const opt = document.createElement("option");
+opt.value = String(d.id);
+opt.textContent = #${d.position || "?"} — ${d.name};
+select.appendChild(opt);
+});
+}
+function convertOfficialDemonToCustom(d) {
+return sanitizeLevel({
+name: cleanDisplayName(d.name),
+verifier: cleanDisplayName(d.verifier),
+verification: d.verification || "https://youtube.com",
+thumbnail: d.thumbnail || "",
+existingId: String(d.id || ""),
+records: (d.records || []).map(r => {
+if (typeof r === "string") {
+return { user: cleanDisplayName(r), percent: 100, link: "" };
+}
+return {
+user: cleanDisplayName(r.user || ""),
+percent: r.percent || 100,
+link: r.link || ""
+};
+})
+});
+}
+document.addEventListener("DOMContentLoaded", () => {
+const dropdown = document.getElementById("extras-dropdown");
+const toggleBtn = document.getElementById("extras-dropdown-toggle");
+const menuItems = document.querySelectorAll(".extras-menu-item");
+if (dropdown && toggleBtn) {
+function syncExtrasActiveState() {
+const anyActive = Array.from(menuItems).some(item => item.classList.contains("active"));
+toggleBtn.classList.toggle("active", anyActive);
+}
+toggleBtn.addEventListener("click", (e) => {
+e.stopPropagation();
+dropdown.classList.toggle("open");
+});
+menuItems.forEach(item => {
+item.addEventListener("click", () => {
+dropdown.classList.remove("open");
+setTimeout(syncExtrasActiveState, 0);
+});
+});
+document.querySelectorAll('.tabs > .tab-btn:not(.extras-dropdown-btn)').forEach(btn => {
+btn.addEventListener("click", () => {
+dropdown.classList.remove("open");
+toggleBtn.classList.remove("active");
+});
+});
+document.addEventListener("click", (e) => {
+if (!dropdown.contains(e.target)) {
+dropdown.classList.remove("open");
+}
+});
+setTimeout(syncExtrasActiveState, 100);
+}
+document.querySelectorAll(".cl-view-btn").forEach(btn => {
+btn.addEventListener("click", () => {
+document.querySelectorAll(".cl-view-btn").forEach(b => b.classList.remove("active"));
+btn.classList.add("active");
+const target = btn.dataset.clview;
+document.getElementById("cl-pane-list").style.display = target === "list" ? "block" : "none";
+document.getElementById("cl-pane-leaderboard").style.display = target === "leaderboard" ? "block" : "none";
+document.getElementById("cl-pane-maker").style.display = target === "maker" ? "block" : "none";
+refreshAllCustomViews();
+});
+});
+document.getElementById("cl-list-name-input")?.addEventListener("input", e => {
+customList.title = cleanText(e.target.value, 60) || "Untitled Custom List";
+updateHeaderBadge();
+});
+document.getElementById("cl-import-add-btn")?.addEventListener("click", () => {
+if (customList.levels.length >= MAX_LEVELS) {
+setStatus(Maximum of ${MAX_LEVELS} levels reached., true);
+return;
+}
+const id = document.getElementById("cl-import-select")?.value;
+const demons = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+const found = demons.find(d => String(d.id) === String(id));
+if (!found) return;
+const converted = convertOfficialDemonToCustom(found);
+if (converted) {
+customList.levels.push(converted);
+refreshAllCustomViews();
+setStatus(Added "${converted.name}" to custom list.);
+}
+});
+document.getElementById("cl-import-all-btn")?.addEventListener("click", () => {
+const demons = (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons)
+.filter(d => !d.cosmetic)
+.slice(0, MAX_LEVELS);
+customList.levels = demons.map(convertOfficialDemonToCustom).filter(Boolean);
+refreshAllCustomViews();
+setStatus(Imported ${customList.levels.length} levels.);
+});
+document.getElementById("cl-shuffle-btn")?.addEventListener("click", () => {
+if (customList.levels.length < 2) {
+setStatus("Add at least 2 levels to shuffle.", true);
+return;
+}
+for (let i = customList.levels.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+const temp = customList.levels[i];
+customList.levels[i] = customList.levels[j];
+customList.levels[j] = temp;
+}
+refreshAllCustomViews();
+setStatus("List order shuffled!");
+});
+document.getElementById("cl-add-custom-btn")?.addEventListener("click", () => {
+if (customList.levels.length >= MAX_LEVELS) {
+setStatus(Maximum of ${MAX_LEVELS} levels reached., true);
+return;
+}
+const nameInput = document.getElementById("cl-new-name");
+const verifierInput = document.getElementById("cl-new-verifier");
+const verifUrlInput = document.getElementById("cl-new-verification");
+const thumbInput = document.getElementById("cl-new-thumb");
+const recordsInput = document.getElementById("cl-new-records");
+const lvl = sanitizeLevel({
+name: nameInput.value,
+verifier: verifierInput.value,
+verification: verifUrlInput.value,
+thumbnail: thumbInput.value,
+records: parseRecordsTextarea(recordsInput.value)
+});
+if (!lvl) {
+setStatus("Enter a valid Level Name, Verifier, and http(s) Verification URL.", true);
+return;
+}
+customList.levels.push(lvl);
+nameInput.value = "";
+verifierInput.value = "";
+verifUrlInput.value = "";
+thumbInput.value = "";
+recordsInput.value = "";
+refreshAllCustomViews();
+setStatus(Created "${lvl.name}"!);
+});
+document.getElementById("cl-copy-code-btn")?.addEventListener("click", () => {
+if (customList.levels.length === 0) {
+setStatus("Add at least one level before generating a save code.", true);
+return;
+}
+const code = encodeCustomList(customList);
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(code).then(() => {
+setStatus("Custom list save code copied to clipboard!");
+}).catch(() => {
+prompt("Copy your custom list save code:", code);
+});
+} else {
+prompt("Copy your custom list save code:", code);
+}
+});
+document.getElementById("cl-toggle-load-btn")?.addEventListener("click", () => {
+const drawer = document.getElementById("cl-load-drawer");
+if (!drawer) return;
+drawer.style.display = drawer.style.display === "none" ? "flex" : "none";
+});
+document.getElementById("cl-confirm-load-btn")?.addEventListener("click", () => {
+const input = document.getElementById("cl-load-input");
+if (!input || !input.value.trim()) return;
+try {
+const decoded = decodeCustomList(input.value);
+if (!decoded) {
+setStatus("Invalid or unsafe custom list code.", true);
+return;
+}
+customList = decoded;
+const titleInput = document.getElementById("cl-list-name-input");
+if (titleInput) titleInput.value = customList.title;
+input.value = "";
+document.getElementById("cl-load-drawer").style.display = "none";
+refreshAllCustomViews();
+setStatus(Loaded "${customList.title}" (${customList.levels.length} levels).);
+} catch {
+setStatus("Failed to decode custom list code.", true);
+}
+});
+document.getElementById("cl-reset-btn")?.addEventListener("click", () => {
+customList = { title: "Untitled Custom List", levels: [] };
+const titleInput = document.getElementById("cl-list-name-input");
+if (titleInput) titleInput.value = "";
+refreshAllCustomViews();
+setStatus("Custom list cleared.");
+});
+document.querySelector('.extras-menu-item[data-tab="custom-lists"]')?.addEventListener("click", () => {
+populateExistingSelect();
+refreshAllCustomViews();
+});
+const pollDemons = setInterval(() => {
+if (globalDemons && globalDemons.length > 0) {
+clearInterval(pollDemons);
+populateExistingSelect();
+refreshAllCustomViews();
+}
+}, 150);
+setTimeout(() => clearInterval(pollDemons), 8000);
+});
+})();
