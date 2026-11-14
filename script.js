@@ -2146,8 +2146,8 @@ setHomeStatsLoading();
 
 const LIST_DESCRIPTIONS = {
   main: "The main section of the Demonlist. These demons are the hardest levels in the game. Records are accepted above a given threshold and award a large amount of points!",
-  extended: "The extended section of the Demonlist (ranks 76–100). Records are still accepted and award points toward the leaderboard.",
-  legacy: "The legacy section of the Demonlist (ranks 101+). These levels no longer award list points, but remain archived for history."
+  extended: "The extended section of the Demonlist (ranks 76–150). Records are still accepted and award points toward the leaderboard.",
+  legacy: "The beyond section of the Demonlist (ranks 151+). These levels award list points, and might be accessible."
 };
 
 let activeMenuCategory = null;
