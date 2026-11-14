@@ -1295,3 +1295,44 @@ body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
   background-size: 300% 300%, 300% 300%, 260% 260%, 260% 260% !important;
   animation: leaderboardLasersSweep 10s linear infinite !important;
 }
+
+@keyframes demonlistColorCycle {
+  0%, 14% {
+    background-color: #16082c;
+    background-position: 0% 20%, 50% 0%, 0 0, 0 0;
+  }
+  20%, 34% {
+    background-color: #290824;
+    background-position: 50% 50%, 30% 40%, 0 0, 0 0;
+  }
+  40%, 54% {
+    background-color: #2b080d;
+    background-position: 85% 75%, 20% 80%, 0 0, 0 0;
+  }
+  60%, 74% {
+    background-color: #1a0407;
+    background-position: 40% 60%, 70% 30%, 0 0, 0 0;
+  }
+  80%, 94% {
+    background-color: #0d0103;
+    background-position: 15% 35%, 60% 15%, 0 0, 0 0;
+  }
+  100% {
+    background-color: #16082c;
+    background-position: 0% 20%, 50% 0%, 0 0, 0 0;
+  }
+}
+
+html body.dark:has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#demon-page.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #16082c !important;
+  background-image:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.09) 0%, transparent 50%),
+    radial-gradient(circle at 75% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) !important;
+  background-size: 200% 200%, 200% 200%, 48px 48px, 48px 48px !important;
+  animation: demonlistColorCycle 25s ease-in-out infinite !important;
+}
