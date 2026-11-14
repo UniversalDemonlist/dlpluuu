@@ -5220,3 +5220,396 @@ window.exitCustomList = function () {
   });
 })();
 
+    function renderAll() {
+      const badge = freshTab.querySelector("#cl-active-title");
+      if (badge) {
+        badge.textContent = "Active List: " + state.title + " (" + state.levels.length + " levels)";
+      }
+
+      const levelsBox = freshTab.querySelector("#cl-levels-container");
+      if (levelsBox) {
+        levelsBox.innerHTML = "";
+        if (state.levels.length === 0) {
+          levelsBox.innerHTML = '<div class="panel"><p>No levels yet. Switch to <strong>List Maker</strong> or load a save code.</p></div>';
+        } else {
+          state.levels.forEach(function (lvl, idx) {
+            const pos = idx + 1;
+            const pts = (5500 / Math.sqrt(pos)).toFixed(2);
+            const ytId = getYtId(lvl.verification);
+            const thumb = lvl.thumbnail || (ytId ? "https://ytimg.com" + ytId + "/hqdefault.jpg" : (lvl.id ? "https://prevter.me" + encodeURIComponent(lvl.id) : "extreme.png"));
+
+            const card = document.createElement("div");
+            card.className = "demon-card";
+
+            const img = document.createElement("img");
+            img.src = thumb;
+            img.alt = lvl.name;
+
+            const info = document.createElement("div");
+            info.className = "demon-info";
+
+            const h2 = document.createElement("h2");
+            const rSpan = document.createElement("span");
+            rSpan.className = "demon-rank";
+            rSpan.textContent = "#" + pos;
+            h2.append(rSpan, document.createTextNode(" — " + lvl.name));
+
+            const meta = document.createElement("p");
+            meta.className = "demon-meta-line";
+            meta.textContent = "Verified by " + formatName(lvl.verifier) + " • " + pts + " pts";
+
+            info.append(h2, meta);
+            card.append(img, info);
+
+            card.addEventListener("click", function () {
+              openDemonModalPage(lvl, pos);
+            });
+
+            levelsBox.appendChild(card);
+          });
+        }
+      }
+
+      const lbBox = freshTab.querySelector("#cl-leaderboard-container");
+      const profBox = freshTab.querySelector("#cl-player-profile");
+      if (lbBox) {
+        lbBox.innerHTML = "";
+        if (state.levels.length === 0) {
+          lbBox.innerHTML = "<p>Add levels to generate a leaderboard.</p>";
+          if (profBox) profBox.innerHTML = '<p style="color:var(--text-muted);">No custom list loaded.</p>';
+        } else {
+          const pMap = new Map();
+          function addP(raw, pts, txt) {
+            if (isHiddenUser(raw)) return;
+            const disp = formatName(raw);
+            const key = disp.toLowerCase();
+            if (!pMap.has(key)) pMap.set(key, { name: disp, score: 0, items: [] });
+            const obj = pMap.get(key);
+            obj.score += pts;
+            obj.items.push(txt);
+          }
+
+          state.levels.forEach(function (lvl, idx) {
+            const pos = idx + 1;
+            const base = 5500 / Math.sqrt(pos);
+            addP(lvl.verifier, base, "#" + pos + " " + lvl.name + " (Verified)");
+            const seen = new Set([formatName(lvl.verifier).toLowerCase()]);
+            (lvl.records || []).forEach(function (r) {
+              if (isHiddenUser(r.user)) return;
+              const k = formatName(r.user).toLowerCase();
+              if (seen.has(k)) return;
+              seen.add(k);
+              const earned = r.percent >= 100 ? base : base * (r.percent / 100) * 0.5;
+              addP(r.user, earned, "#" + pos + " " + lvl.name + " (" + r.percent + "%)");
+            });
+          });
+
+          const q = (freshTab.querySelector("#cl-player-search")?.value || "").toLowerCase().trim();
+          const ranked = Array.from(pMap.values())
+            .filter(function (p) { return !q || p.name.toLowerCase().includes(q); })
+            .sort(function (a, b) { return b.score - a.score; });
+
+          function showProf(p, rankNum, el) {
+            lbBox.querySelectorAll(".player-card").forEach(function (c) { c.classList.remove("selected-player"); });
+            if (el) el.classList.add("selected-player");
+            if (!profBox) return;
+            profBox.innerHTML = "";
+            const hdr = document.createElement("div");
+            hdr.className = "player-profile-header";
+            const h1 = document.createElement("h1");
+            h1.textContent = "#" + rankNum + " — " + p.name;
+            const sp = document.createElement("p");
+            sp.textContent = "Score: " + p.score.toFixed(2) + " pts";
+            hdr.append(h1, sp);
+            profBox.appendChild(hdr);
+            p.items.forEach(function (t) {
+              const row = document.createElement("div");
+              row.className = "completed-card";
+              row.textContent = t;
+              profBox.appendChild(row);
+            });
+          }
+
+          ranked.forEach(function (p, i) {
+            const card = typeof createPlayerCard === "function"
+              ? createPlayerCard(p.name, p.score, i + 1)
+              : document.createElement("div");
+            if (!card.className) {
+              card.className = "player-card";
+              card.textContent = "#" + (i + 1) + " " + p.name + " — " + p.score.toFixed(2) + " pts";
+            }
+            const cNode = card.cloneNode(true);
+            cNode.addEventListener("click", function () { showProf(p, i + 1, cNode); });
+            lbBox.appendChild(cNode);
+            if (i === 0) showProf(p, 1, cNode);
+          });
+        }
+      }
+
+      const orderBox = freshTab.querySelector("#cl-maker-order-list");
+      if (orderBox) {
+        orderBox.innerHTML = "";
+        if (state.levels.length === 0) {
+          orderBox.innerHTML = '<p style="color:var(--text-muted);font-size:0.88rem;">No levels added yet.</p>';
+        } else {
+          state.levels.forEach(function (lvl, idx) {
+            const row = document.createElement("div");
+            row.className = "cl-order-item";
+            const meta = document.createElement("div");
+            meta.className = "cl-order-meta";
+            const st = document.createElement("strong");
+            st.textContent = "#" + (idx + 1) + " — " + lvl.name;
+            const sp = document.createElement("span");
+            sp.textContent = "Verifier: " + formatName(lvl.verifier) + " • " + (lvl.records || []).length + " record(s)";
+            meta.append(st, sp);
+
+            const btns = document.createElement("div");
+            btns.className = "cl-order-btns";
+
+            const up = document.createElement("button");
+            up.type = "button";
+            up.className = "cl-mini-btn";
+            up.textContent = "↑";
+            up.disabled = idx === 0;
+            up.addEventListener("click", function () {
+              const prev = state.levels.at(idx - 1);
+              state.levels.splice(idx - 1, 2, lvl, prev);
+              renderAll();
+            });
+
+            const dn = document.createElement("button");
+            dn.type = "button";
+            dn.className = "cl-mini-btn";
+            dn.textContent = "↓";
+            dn.disabled = idx === state.levels.length - 1;
+            dn.addEventListener("click", function () {
+              const next = state.levels.at(idx + 1);
+              state.levels.splice(idx, 2, next, lvl);
+              renderAll();
+            });
+
+            const addR = document.createElement("button");
+            addR.type = "button";
+            addR.className = "cl-mini-btn";
+            addR.textContent = "+Rec";
+            addR.addEventListener("click", function () {
+              const raw = prompt('Add record to "' + lvl.name + '" (Player, Percent, OptionalURL):');
+              if (!raw) return;
+              const pts = raw.split(",").map(function (x) { return x.trim(); });
+              const u = cleanStr(pts.at(0), 40);
+              if (!u) return;
+              const pct = Math.max(1, Math.min(100, Math.round(Number(pts.at(1)) || 100)));
+              lvl.records = (lvl.records || []).concat([{ user: u, percent: pct, link: cleanUrl(pts.at(2)) }]);
+              renderAll();
+            });
+
+            const del = document.createElement("button");
+            del.type = "button";
+            del.className = "cl-mini-btn danger";
+            del.textContent = "✕";
+            del.addEventListener("click", function () {
+              state.levels.splice(idx, 1);
+              renderAll();
+            });
+
+            btns.append(up, dn, addR, del);
+            row.append(meta, btns);
+            orderBox.appendChild(row);
+          });
+        }
+      }
+    }
+
+
+    freshTab.querySelectorAll(".cl-view-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        freshTab.querySelectorAll(".cl-view-btn").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        const v = btn.dataset.clview;
+        freshTab.querySelector("#cl-pane-list").style.display = v === "list" ? "block" : "none";
+        freshTab.querySelector("#cl-pane-leaderboard").style.display = v === "leaderboard" ? "block" : "none";
+        freshTab.querySelector("#cl-pane-maker").style.display = v === "maker" ? "block" : "none";
+        renderAll();
+      });
+    });
+
+    freshTab.querySelector("#cl-player-search")?.addEventListener("input", renderAll);
+
+    freshTab.querySelector("#cl-list-name-input")?.addEventListener("input", function (e) {
+      state.title = cleanStr(e.target.value, 60) || "Untitled Custom List";
+      renderAll();
+    });
+
+    freshTab.querySelector("#cl-add-custom-btn")?.addEventListener("click", function () {
+      const name = cleanStr(freshTab.querySelector("#cl-new-name")?.value, 60);
+      const verifier = cleanStr(freshTab.querySelector("#cl-new-verifier")?.value, 40);
+      const verification = cleanUrl(freshTab.querySelector("#cl-new-verification")?.value);
+      const thumbnail = cleanUrl(freshTab.querySelector("#cl-new-thumb")?.value);
+      const recRaw = freshTab.querySelector("#cl-new-records")?.value || "";
+
+      if (!name || !verifier || !verification) {
+        notify("Enter Level Name, Verifier, and a valid http(s) Video URL.", true);
+        return;
+      }
+
+      const records = recRaw.split("\n").map(function (line) {
+        const p = line.split(",").map(function (x) { return x.trim(); });
+        const u = cleanStr(p.at(0), 40);
+        if (!u) return null;
+        return {
+          user: u,
+          percent: Math.max(1, Math.min(100, Math.round(Number(p.at(1)) || 100))),
+          link: cleanUrl(p.at(2))
+        };
+      }).filter(Boolean);
+
+      state.levels.push({
+        id: "",
+        name: name,
+        verifier: verifier,
+        creator: verifier,
+        password: "Free Copy",
+        verification: verification,
+        thumbnail: thumbnail,
+        records: records
+      });
+
+      freshTab.querySelector("#cl-new-name").value = "";
+      freshTab.querySelector("#cl-new-verifier").value = "";
+      freshTab.querySelector("#cl-new-verification").value = "";
+      freshTab.querySelector("#cl-new-thumb").value = "";
+      freshTab.querySelector("#cl-new-records").value = "";
+
+      renderAll();
+      notify('Added "' + name + '"!');
+    });
+
+    freshTab.querySelector("#cl-import-add-btn")?.addEventListener("click", function () {
+      const id = freshTab.querySelector("#cl-import-select")?.value;
+      const src = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+      const d = (src || []).find(function (x) { return String(x.id) === String(id); });
+      if (!d) return;
+      state.levels.push({
+        id: String(d.id || ""),
+        name: formatName(d.name),
+        verifier: formatName(d.verifier),
+        creator: d.creator || d.verifier,
+        password: d.password || "Free Copy",
+        verification: d.verification || "https://youtube.com",
+        thumbnail: d.thumbnail || "",
+        records: (d.records || []).map(function (r) {
+          return typeof r === "string"
+            ? { user: r, percent: 100, link: "" }
+            : { user: r.user || "", percent: r.percent || 100, link: r.link || "" };
+        })
+      });
+      renderAll();
+      notify('Imported "' + d.name + '".');
+    });
+
+    freshTab.querySelector("#cl-import-all-btn")?.addEventListener("click", function () {
+      const src = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+      state.levels = (src || []).filter(function (d) { return !d.cosmetic; }).slice(0, 250).map(function (d) {
+        return {
+          id: String(d.id || ""),
+          name: formatName(d.name),
+          verifier: formatName(d.verifier),
+          creator: d.creator || d.verifier,
+          password: d.password || "Free Copy",
+          verification: d.verification || "https://youtube.com",
+          thumbnail: d.thumbnail || "",
+          records: (d.records || []).map(function (r) {
+            return typeof r === "string"
+              ? { user: r, percent: 100, link: "" }
+              : { user: r.user || "", percent: r.percent || 100, link: r.link || "" };
+          })
+        };
+      });
+      renderAll();
+      notify("Imported " + state.levels.length + " levels.");
+    });
+
+    freshTab.querySelector("#cl-shuffle-btn")?.addEventListener("click", function () {
+      if (state.levels.length < 2) return notify("Need at least 2 levels to shuffle.", true);
+      for (let i = state.levels.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const a = state.levels.at(i);
+        const b = state.levels.at(j);
+        state.levels.splice(i, 1, b);
+        state.levels.splice(j, 1, a);
+      }
+      renderAll();
+      notify("Shuffled!");
+    });
+
+    freshTab.querySelector("#cl-copy-code-btn")?.addEventListener("click", function () {
+      if (state.levels.length === 0) return notify("Add a level first.", true);
+      const code = "GDCL1-" + btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(function () { notify("Save code copied!"); }).catch(function () { prompt("Copy save code:", code); });
+      } else {
+        prompt("Copy save code:", code);
+      }
+    });
+
+    freshTab.querySelector("#cl-toggle-load-btn")?.addEventListener("click", function () {
+      const d = freshTab.querySelector("#cl-load-drawer");
+      if (d) d.style.display = d.style.display === "none" ? "flex" : "none";
+    });
+
+    freshTab.querySelector("#cl-confirm-load-btn")?.addEventListener("click", function () {
+      const inp = freshTab.querySelector("#cl-load-input");
+      const raw = (inp?.value || "").trim();
+      if (!raw.startsWith("GDCL1-")) return notify("Invalid code.", true);
+      try {
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(raw.slice(6)))));
+        if (!parsed || !Array.isArray(parsed.levels)) return notify("Invalid code.", true);
+        state = {
+          title: cleanStr(parsed.title, 60) || "Untitled Custom List",
+          levels: parsed.levels.slice(0, 250)
+        };
+        const tInp = freshTab.querySelector("#cl-list-name-input");
+        if (tInp) tInp.value = state.title;
+        inp.value = "";
+        freshTab.querySelector("#cl-load-drawer").style.display = "none";
+        renderAll();
+        notify('Loaded "' + state.title + '".');
+      } catch {
+        notify("Failed to load code.", true);
+      }
+    });
+
+    freshTab.querySelector("#cl-reset-btn")?.addEventListener("click", function () {
+      state = { title: "Untitled Custom List", levels: [] };
+      const tInp = freshTab.querySelector("#cl-list-name-input");
+      if (tInp) tInp.value = "";
+      renderAll();
+      notify("Cleared.");
+    });
+
+    const poll = setInterval(function () {
+      const src = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+      if (Array.isArray(src) && src.length > 0) {
+        clearInterval(poll);
+        const sel = freshTab.querySelector("#cl-import-select");
+        if (sel) {
+          sel.innerHTML = "";
+          src.filter(function (d) { return !d.cosmetic; }).forEach(function (d, i) {
+            const o = document.createElement("option");
+            o.value = String(d.id);
+            o.textContent = "#" + (d.position || i + 1) + " — " + d.name;
+            sel.appendChild(o);
+          });
+        }
+        renderAll();
+      }
+    }, 150);
+    setTimeout(function () { clearInterval(poll); }, 8000);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(init, 80); });
+  } else {
+    setTimeout(init, 80);
+  }
+})();
