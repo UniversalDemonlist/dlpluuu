@@ -2005,3 +2005,32 @@ html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
 .rules-chevron {
   display: none !important;
 }
+
+html body.dark:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #090b11 !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #f1f5f9 !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: -120px !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.14 !important;
+  background-image:
+    url("leaderboard.png"),
+    url("leaderboard.png") !important;
+  background-size: 40px 40px, 40px 40px !important;
+  background-position: 0 0, 60px 60px !important;
+  background-repeat: repeat !important;
+  animation: leaderboardPureChecker 14s linear infinite !important;
+}
