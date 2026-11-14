@@ -2261,4 +2261,87 @@ if (document.readyState === "loading") {
   syncMegaMenuWithSpaceUK();
 }
 
+function applyBeyondAndExtendedRanges() {
+  const getList = () => {
+    let visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    visible = visible.filter(d => !d.cosmetic && d.position);
+    if (typeof hideCheated !== "undefined" && hideCheated && Array.isArray(cheatedList)) {
+      visible = visible.filter(d => !cheatedList.includes(String(d.id).toLowerCase()));
+    }
+    return visible;
+  };
+
+  function syncMenu() {
+    const visible = getList();
+    mainList = visible.filter(d => d.position <= 75);
+    extendedList = visible.filter(d => d.position >= 76 && d.position <= 150);
+    legacyList = visible.filter(d => d.position >= 151);
+
+    const grid = document.getElementById("megamenu-grid");
+    const desc = document.getElementById("megamenu-desc");
+    const activeTab = document.querySelector(".megamenu-tab.active");
+    if (!grid || !activeTab) return;
+
+    const category = activeTab.dataset.list;
+    const rangeMap = {
+      main: mainList,
+      extended: extendedList,
+      legacy: legacyList
+    };
+
+    const descMap = {
+      main: "The main section of the Demonlist (ranks 1–75). These demons are the hardest levels in the game and award the most points!",
+      extended: "The extended section of the Demonlist (ranks 76–150). Records are still accepted and award points toward the leaderboard.",
+      legacy: "The beyond section of the Demonlist (ranks 151+). These levels award list points, and might be accessible."
+    };
+
+    const items = rangeMap[category] || [];
+    if (desc) desc.textContent = descMap[category] || "";
+
+    grid.innerHTML = items
+      .map(d => {
+        const rawAuthor = d.author || d.creator || d.verifier || "";
+        const author = typeof cleanDisplayName === "function"
+          ? cleanDisplayName(rawAuthor)
+          : rawAuthor.replace(/\[c\]/gi, "").trim();
+
+        return `
+          <div class="megamenu-item" data-pos="${d.position}">
+            <div class="megamenu-item-title">#${d.position} - ${d.name}</div>
+            <div class="megamenu-item-creator">${author}</div>
+          </div>
+        `;
+      })
+      .join("");
+
+    grid.querySelectorAll(".megamenu-item").forEach(el => {
+      el.addEventListener("click", () => {
+        if (typeof stopAllVideos === "function") stopAllVideos();
+        const pos = Number(el.dataset.pos);
+        const demon = items.find(d => d.position === pos);
+        const panel = document.getElementById("megamenu-panel");
+        if (panel) panel.classList.remove("open");
+        document.querySelectorAll(".megamenu-tab").forEach(t => t.classList.remove("active"));
+        if (demon && typeof openDemonPage === "function") openDemonPage(demon);
+      });
+    });
+  }
+
+  document.querySelectorAll(".megamenu-tab").forEach(tab => {
+    tab.addEventListener("click", () => setTimeout(syncMenu, 0));
+  });
+
+  ["spaceuk-toggle", "toggle-cheated"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener("click", () => setTimeout(syncMenu, 0));
+  });
+
+  syncMenu();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", applyBeyondAndExtendedRanges);
+} else {
+  applyBeyondAndExtendedRanges();
+}
 
