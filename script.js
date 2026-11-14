@@ -2031,4 +2031,49 @@ setHomeStatsLoading();
   });
 })();
 
+(function showFivePercentScoreOnCards() {
+  const origCreateDemonCard = window.createDemonCard;
+
+  window.createDemonCard = function (demon) {
+    const card = origCreateDemonCard.apply(this, arguments);
+    if (!demon || demon.cosmetic || demon.missingJson) return card;
+
+    const fullScore = demon.position
+      ? 5500 / Math.sqrt(demon.position)
+      : 5500 / Math.sqrt(999);
+    const fivePercentScore = fullScore * 0.05;
+
+    const info = card.querySelector(".demon-info");
+    if (!info) return card;
+
+    // Remove the old single-score line if present
+    Array.from(info.querySelectorAll("p")).forEach(p => {
+      if (p.textContent.trim().startsWith("Score:")) {
+        p.remove();
+      }
+    });
+
+    // Update or create the meta line with 5% on the left and 100% on the right
+    let metaLine = info.querySelector(".demon-meta-line");
+    if (!metaLine) {
+      metaLine = document.createElement("p");
+      metaLine.className = "demon-meta-line";
+      const diffLine = info.querySelector(".demon-diff-line") || info.querySelector("p:last-of-type");
+      if (diffLine) {
+        info.insertBefore(metaLine, diffLine);
+      } else {
+        info.appendChild(metaLine);
+      }
+    }
+
+    metaLine.innerHTML = `
+      <span class="demon-verifier">${cleanDisplayName(demon.verifier)}</span>
+      <span class="demon-dot">•</span>
+      <span>${fivePercentScore.toFixed(2)} — <span class="demon-score">${fullScore.toFixed(2)}</span> points</span>
+    `;
+
+    return card;
+  };
+})();
+
 
