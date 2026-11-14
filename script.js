@@ -1774,67 +1774,95 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-(function initStandaloneHashRouter() {
-  let isRouting = false;
+function initHashRouting() {
+  let internalNav = false;
 
-  document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (isRouting) return;
-      const tab = btn.getAttribute("data-tab");
-      if (tab && window.location.hash !== `#${tab}`) {
-        history.pushState(null, "", `#${tab}`);
-      }
-    });
-  });
+  const setHash = (hash) => {
+    if (internalNav) return;
+    const target = "#" + hash.replace(/^#/, "");
+    if (window.location.hash !== target) {
+      history.pushState(null, "", target);
+    }
+  };
 
-  const originalOpenDemonPage = window.openDemonPage;
-  if (typeof originalOpenDemonPage === "function") {
+  const origOpenDemon = window.openDemonPage;
+  if (typeof origOpenDemon === "function") {
     window.openDemonPage = function (demon, ...args) {
-      if (!isRouting && demon && demon.id) {
-        const targetHash = `#demon/${encodeURIComponent(demon.id)}`;
-        if (window.location.hash !== targetHash) {
-          history.pushState(null, "", targetHash);
-        }
+      origOpenDemon.call(this, demon, ...args);
+      if (demon && demon.position) {
+        setHash(`demon/${demon.position}`);
       }
-      return originalOpenDemonPage.apply(this, [demon, ...args]);
     };
   }
 
-  function syncFromHash() {
-    const hash = window.location.hash.replace("#", "");
-    if (!hash) return;
-
-    isRouting = true;
-
-    if (hash.startsWith("demon/")) {
-      const id = decodeURIComponent(hash.replace("demon/", ""));
-      const waitForDemons = setInterval(() => {
-        if (typeof getVisibleDemons === "function" && globalDemons.length > 0) {
-          clearInterval(waitForDemons);
-          const demon = getVisibleDemons().find(d => String(d.id) === id);
-          if (demon) originalOpenDemonPage(demon);
-          isRouting = false;
-        }
-      }, 100);
-      return;
-    }
-
-    if (hash.startsWith("rules-")) {
-      document.querySelector('.tab-btn[data-tab="rules"]')?.click();
-      setTimeout(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
-        isRouting = false;
-      }, 50);
-      return;
-    }
-
-    const tabBtn = document.querySelector(`.tab-btn[data-tab="${hash}"]`);
-    if (tabBtn) tabBtn.click();
-
-    isRouting = false;
+  const origOpenPlayer = window.openPlayerPage;
+  if (typeof origOpenPlayer === "function") {
+    window.openPlayerPage = function (key, scores, ...args) {
+      origOpenPlayer.call(this, key, scores, ...args);
+      if (key && document.getElementById("leaderboard")?.classList.contains("active")) {
+        setHash(`player/${encodeURIComponent(key)}`);
+      }
+    };
   }
 
-  window.addEventListener("hashchange", syncFromHash);
-  window.addEventListener("popstate", syncFromHash);
-  window.addEventListener("DOMContentLoaded", syncFromHash);
-})();
+  document.addEventListener("click", (e) => {
+    const tabBtn = e.target.closest(".tab-btn[data-tab]");
+    if (tabBtn) {
+      setHash(tabBtn.getAttribute("data-tab"));
+    }
+  });
+
+  const routeFromHash = () => {
+    const raw = window.location.hash.replace(/^#/, "").trim();
+    if (!raw || raw.startsWith("rules-")) return;
+
+    internalNav = true;
+    try {
+      const demonMatch = raw.match(/^(?:demon\/)?(\d+)$/i);
+      if (demonMatch) {
+        const pos = Number(demonMatch[1]);
+        const waitForDemons = setInterval(() => {
+          const demons = typeof getVisibleDemons === "function" ? getVisibleDemons() : [];
+          if (demons.length > 0) {
+            clearInterval(waitForDemons);
+            const match = demons.find((d) => d.position === pos);
+            if (match && typeof window.openDemonPage === "function") {
+              internalNav = true;
+              window.openDemonPage(match);
+              internalNav = false;
+            }
+          }
+        }, 100);
+        setTimeout(() => clearInterval(waitForDemons), 8000);
+        return;
+      }
+
+      const playerMatch = raw.match(/^player\/(.+)$/i);
+      if (playerMatch) {
+        const key = decodeURIComponent(playerMatch[1]).toLowerCase();
+        document.querySelector('.tab-btn[data-tab="leaderboard"]')?.click();
+        const waitForScores = setInterval(() => {
+          if (window._leaderboardScores && Object.keys(window._leaderboardScores).length > 0) {
+            clearInterval(waitForScores);
+            internalNav = true;
+            window.openPlayerPage?.(key, window._leaderboardScores);
+            internalNav = false;
+          }
+        }, 100);
+        setTimeout(() => clearInterval(waitForScores), 8000);
+        return;
+      }
+
+      const tabBtn = document.querySelector(`.tab-btn[data-tab="${raw.toLowerCase()}"]`);
+      if (tabBtn) tabBtn.click();
+    } finally {
+      internalNav = false;
+    }
+  };
+
+  window.addEventListener("hashchange", routeFromHash);
+  routeFromHash();
+}
+
+document.addEventListener("DOMContentLoaded", initHashRouting);
+
