@@ -5123,3 +5123,44 @@ body:not(.dark)::-webkit-scrollbar-thumb {
   background: #94a3b8;
   border: 2px solid #f1f5f9;
 }
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3a57 #070a12;
+}
+
+.megamenu-grid {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3a57 #0d121c;
+}
+
+html::-webkit-scrollbar {
+  width: 9px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #070a12;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2563eb, #38bdf8);
+  border-radius: 999px;
+  border: 2px solid #070a12;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #3b82f6, #7dd3fc);
+}
+
+.megamenu-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.megamenu-grid::-webkit-scrollbar-track {
+  background: #0d121c;
+}
+
+.megamenu-grid::-webkit-scrollbar-thumb {
+  background: #2c3a57;
+  border-radius: 999px;
+}
