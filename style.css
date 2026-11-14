@@ -5052,3 +5052,23 @@ nav,
   margin-top: 0 !important;
   z-index: 1 !important;
 }
+
+footer,
+.footer,
+body:has(#leaderboard.active) footer,
+body:has(#leaderboard.active) .footer {
+  position: relative;
+  z-index: 2;
+  background: #0d121c !important;
+  background-image: none !important;
+  color: #cbd5e1 !important;
+}
+
+body:not(.dark) footer,
+body:not(.dark) .footer,
+body:not(.dark):has(#leaderboard.active) footer,
+body:not(.dark):has(#leaderboard.active) .footer {
+  background: #f8fafc !important;
+  background-image: none !important;
+  color: #0f172a !important;
+}
