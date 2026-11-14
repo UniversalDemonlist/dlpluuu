@@ -462,6 +462,43 @@
   </div>
 </div>
 
+    <div id="roulette" class="tab-content">
+  <h1>List Roulette</h1>
+
+  <div class="panel roulette-setup-panel">
+    <div class="roulette-options">
+      <label class="roulette-check">
+        <input type="checkbox" id="rl-opt-main" checked>
+        <span>Main List (1–75)</span>
+      </label>
+      <label class="roulette-check">
+        <input type="checkbox" id="rl-opt-ext" checked>
+        <span>Extended List (76–150)</span>
+      </label>
+      <label class="roulette-check">
+        <input type="checkbox" id="rl-opt-beyond">
+        <span>Beyond List (151+)</span>
+      </label>
+    </div>
+
+    <div class="roulette-actions">
+      <button type="button" id="rl-start-btn" class="sidebar-action-btn">Start New Run</button>
+      <button type="button" id="rl-save-btn" class="dp-back-btn">Copy Save Code</button>
+      <button type="button" id="rl-load-toggle-btn" class="dp-back-btn">Load Code</button>
+    </div>
+
+    <div id="rl-load-box" class="roulette-load-box" style="display:none;">
+      <input type="text" id="rl-code-input" placeholder="Paste your roulette save code here">
+      <button type="button" id="rl-load-confirm-btn" class="sidebar-action-btn">Load</button>
+    </div>
+
+    <p id="rl-status-msg" class="roulette-status"></p>
+  </div>
+
+  <div id="rl-active-area"></div>
+  <div id="rl-history-area" class="roulette-history"></div>
+</div>
+
     
     <footer class="site-footer">
   <div class="footer-inner">
