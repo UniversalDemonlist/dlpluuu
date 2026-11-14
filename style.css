@@ -1580,3 +1580,156 @@ html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
   animation: leaderboardPureChecker 14s linear infinite !important;
 }
 
+.list-warning,
+.leaderboard-warning {
+  background: #332200 !important;
+  border: 1px solid #d97706 !important;
+  color: #fde68a !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+body:not(.dark) .list-warning,
+body:not(.dark) .leaderboard-warning {
+  background: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+  color: #78350f !important;
+}
+
+.callout-blue {
+  background: #1c1938 !important;
+  border-color: #4f46e5 !important;
+  border-left: 4px solid #7c6df2 !important;
+}
+
+.callout-amber {
+  background: #332005 !important;
+  border-color: #d97706 !important;
+  border-left: 4px solid #f59e0b !important;
+}
+
+.callout-teal {
+  background: #062920 !important;
+  border-color: #059669 !important;
+  border-left: 4px solid #10b981 !important;
+}
+
+body:not(.dark) .callout-blue {
+  background: #eef2ff !important;
+}
+
+body:not(.dark) .callout-amber {
+  background: #fffbeb !important;
+}
+
+body:not(.dark) .callout-teal {
+  background: #ecfdf5 !important;
+}
+
+@keyframes homeTitleGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes homeGlowPulse {
+  0%, 100% {
+    background-position: 20% 15%, 80% 25%, 50% 85%, 0 0, 0 0;
+  }
+  50% {
+    background-position: 35% 30%, 65% 15%, 45% 70%, 0 0, 0 0;
+  }
+}
+
+html body.dark:has(#home.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #060913 !important;
+  background-image:
+    radial-gradient(circle at 25% 18%, rgba(56, 189, 248, 0.24) 0%, transparent 45%),
+    radial-gradient(circle at 78% 22%, rgba(99, 102, 241, 0.26) 0%, transparent 48%),
+    radial-gradient(circle at 50% 85%, rgba(14, 165, 233, 0.18) 0%, transparent 55%),
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px) !important;
+  background-size: 160% 160%, 160% 160%, 160% 160%, 44px 44px, 44px 44px !important;
+  animation: homeGlowPulse 14s ease-in-out infinite !important;
+}
+
+html body:not(.dark):has(#home.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #eef5ff !important;
+  background-image:
+    radial-gradient(circle at 25% 18%, rgba(59, 130, 246, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 78% 22%, rgba(99, 102, 241, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 50% 85%, rgba(14, 165, 233, 0.12) 0%, transparent 55%),
+    linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px) !important;
+  background-size: 160% 160%, 160% 160%, 160% 160%, 44px 44px, 44px 44px !important;
+  animation: homeGlowPulse 14s ease-in-out infinite !important;
+}
+
+#home .home-title {
+  font-size: 2.6rem !important;
+  letter-spacing: 4px !important;
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #38bdf8) !important;
+  background-size: 250% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.35)) !important;
+  animation: homeTitleGradient 6s linear infinite !important;
+}
+
+#home .home-subtitle {
+  letter-spacing: 2px !important;
+  color: var(--text-muted) !important;
+  font-size: 1.05rem !important;
+}
+
+#home .home-stats-row {
+  gap: 24px !important;
+}
+
+#home .home-stat-item {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 16px !important;
+  padding: 18px 32px !important;
+  min-width: 155px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+#home .home-stat-item:hover {
+  transform: translateY(-4px) !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.2) !important;
+}
+
+#home .home-list-btn {
+  background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
+  box-shadow: 0 6px 22px rgba(56, 189, 248, 0.4) !important;
+}
+
+#home .home-list-btn:hover {
+  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.6) !important;
+}
+
+#home .home-panel {
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease !important;
+}
+
+#home .home-panel:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+}
+
+#home .home-panel h2 {
+  color: var(--accent-blue) !important;
+  letter-spacing: 0.5px !important;
+}
+
