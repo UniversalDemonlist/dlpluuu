@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupThemeToggle();
   loadEverything();
   setupSearchBar();
-  initMegamenu();
+  initMegaMenu();
   setupPlayerSearch();
   setupSubTabs();
   setupLeaderboardSubTabs();
