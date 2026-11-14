@@ -4558,3 +4558,27 @@ body:not(.dark) .sidebar-staff-list {
 body:has(#rules.active) .site-footer {
   margin-top: 0 !important;
 }
+
+.player-card:has(.rank-legend),
+.player-card:has(.rank-absolute),
+.player-card:has(.rank-mythic-i),
+.player-card:has(.rank-mythic-ii),
+.player-card:has(.rank-mythic),
+.player-card:has(.rank-champion-i),
+.player-card:has(.rank-champion-ii) {
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.player-card:has(.rank-legend)::before,
+.player-card:has(.rank-absolute)::before,
+.player-card:has(.rank-mythic-i)::before,
+.player-card:has(.rank-mythic-ii)::before,
+.player-card:has(.rank-mythic)::before,
+.player-card:has(.rank-champion-i)::before,
+.player-card:has(.rank-champion-ii)::before {
+  inset: 0 !important;
+  border-radius: 12px !important;
+}
