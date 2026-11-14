@@ -3023,3 +3023,82 @@ html body:not(.dark):has(#custom-lists.active):not(:has(#old-bg-toggle:checked))
   }
 }
 
+#cl-levels-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+#cl-levels-container .demon-card {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  cursor: pointer !important;
+}
+
+@media (max-width: 700px) {
+  #cl-levels-container .demon-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+#cl-pane-leaderboard .leaderboard-split {
+  display: grid !important;
+  grid-template-columns: 380px 1fr !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 960px) {
+  #cl-pane-leaderboard .leaderboard-split {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+#cl-pane-leaderboard .leaderboard-left,
+#cl-pane-leaderboard .leaderboard-right {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 10px !important;
+  padding: 20px !important;
+}
+
+#cl-player-search {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px 14px !important;
+  margin-bottom: 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border-subtle) !important;
+  background: var(--bg-input) !important;
+  color: var(--text-main) !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
+}
+
+#cl-leaderboard-container,
+#cl-lb-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  max-height: 620px !important;
+  overflow-y: auto !important;
+}
+
+#cl-pane-leaderboard .completed-card {
+  position: relative;
+  height: 54px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  margin-bottom: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  font-weight: 700;
+}
