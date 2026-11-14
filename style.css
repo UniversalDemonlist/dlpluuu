@@ -4770,3 +4770,28 @@ body:not(.dark) .dp-back-btn {
     grid-template-columns: 1fr;
   }
 }
+
+#demonlist {
+  padding-top: 8px !important;
+  margin-top: 0 !important;
+}
+
+#demonlist .panel {
+  padding-top: 12px !important;
+  margin-top: 0 !important;
+  overflow: visible !important;
+}
+
+.megamenu-wrapper {
+  position: relative;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  z-index: 9998 !important;
+}
+
+#search-bar {
+  position: relative;
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+  z-index: 1 !important;
+}
