@@ -4687,3 +4687,233 @@ window.exitCustomList = function () {
     ensureDetailContainer();
   }
 })();
+
+(function unifyCustomDemonPages() {
+  function extractYoutubeId(url) {
+    if (!url || typeof url !== "string") return "";
+    try {
+      const u = new URL(url.trim());
+      if (u.hostname.includes("youtu.be")) {
+        return u.pathname.replace("/", "").split("/").at(0) || "";
+      }
+      if (u.hostname.includes("youtube.com")) {
+        if (u.pathname.startsWith("/shorts/")) {
+          return u.pathname.split("/").at(2) || "";
+        }
+        if (u.pathname.startsWith("/embed/")) {
+          return u.pathname.split("/").at(2) || "";
+        }
+        return u.searchParams.get("v") || "";
+      }
+    } catch {}
+    return "";
+  }
+
+  function renderFullCustomDemonPage(demonObj, position) {
+    const demonPage = document.getElementById("demon-page");
+    if (!demonPage) return;
+
+    document.querySelectorAll(".tab-content").forEach(function (tab) {
+      tab.classList.remove("active");
+    });
+    demonPage.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const score = (5500 / Math.sqrt(position)).toFixed(2);
+    const ytId = extractYoutubeId(demonObj.verification);
+    const records = Array.isArray(demonObj.records) ? demonObj.records : [];
+
+    demonPage.innerHTML = "";
+
+    const backBtn = document.createElement("button");
+    backBtn.type = "button";
+    backBtn.className = "dp-back-btn";
+    backBtn.textContent = "← Back to Custom List";
+    backBtn.addEventListener("click", function () {
+      demonPage.innerHTML = "";
+      demonPage.classList.remove("active");
+      const clTab = document.getElementById("custom-lists");
+      if (clTab) clTab.classList.add("active");
+      const listPane = document.getElementById("cl-pane-list");
+      const listContainer = document.getElementById("cl-levels-container");
+      const detailContainer = document.getElementById("cl-demon-detail");
+      if (listPane) listPane.style.display = "block";
+      if (listContainer) listContainer.style.display = "flex";
+      if (detailContainer) detailContainer.style.display = "none";
+    });
+    demonPage.appendChild(backBtn);
+
+    const mainCard = document.createElement("div");
+    mainCard.className = "dp-main-card";
+
+    const header = document.createElement("div");
+    header.className = "dp-header";
+
+    const titleWrap = document.createElement("div");
+    const h1 = document.createElement("h1");
+    h1.className = "dp-title";
+    h1.textContent = demonObj.name;
+
+    const creatorsP = document.createElement("p");
+    creatorsP.className = "dp-creators";
+    const creatorName = demonObj.creator || demonObj.verifier;
+    creatorsP.textContent = "Published by " + creatorName + " • Verified by " + demonObj.verifier;
+    titleWrap.append(h1, creatorsP);
+
+    const rankPill = document.createElement("span");
+    rankPill.className = "dp-rank-pill";
+    rankPill.textContent = "#" + position;
+
+    header.append(titleWrap, rankPill);
+    mainCard.appendChild(header);
+
+    if (ytId) {
+      const videoWrap = document.createElement("div");
+      videoWrap.className = "dp-video-wrap";
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://youtube-nocookie.com" + encodeURIComponent(ytId);
+      iframe.title = demonObj.name + " Verification";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      videoWrap.appendChild(iframe);
+      mainCard.appendChild(videoWrap);
+    } else if (demonObj.verification) {
+      const fallbackLink = document.createElement("a");
+      fallbackLink.href = demonObj.verification;
+      fallbackLink.target = "_blank";
+      fallbackLink.rel = "noopener noreferrer nofollow";
+      fallbackLink.className = "sidebar-action-btn";
+      fallbackLink.style.display = "inline-block";
+      fallbackLink.style.width = "auto";
+      fallbackLink.style.marginBottom = "16px";
+      fallbackLink.textContent = "Watch Verification Video ↗";
+      mainCard.appendChild(fallbackLink);
+    }
+
+    const infoGrid = document.createElement("div");
+    infoGrid.className = "dp-info-grid";
+
+    const infoItems = [
+      { label: "List Score (100%)", value: score + " pts" },
+      { label: "Verifier", value: demonObj.verifier },
+      { label: "Password", value: demonObj.password || "Free Copy" }
+    ];
+
+    infoItems.forEach(function (item) {
+      const box = document.createElement("div");
+      box.className = "dp-info-box";
+      const lbl = document.createElement("span");
+      lbl.className = "dp-info-label";
+      lbl.textContent = item.label;
+      const val = document.createElement("span");
+      val.className = "dp-info-value";
+      val.textContent = item.value;
+      box.append(lbl, val);
+      infoGrid.appendChild(box);
+    });
+
+    mainCard.appendChild(infoGrid);
+    demonPage.appendChild(mainCard);
+
+    const recordsCard = document.createElement("div");
+    recordsCard.className = "dp-records-card";
+
+    const recH2 = document.createElement("h2");
+    recH2.textContent = "Records (" + records.length + ")";
+    recordsCard.appendChild(recH2);
+
+    if (records.length === 0) {
+      const noneP = document.createElement("p");
+      noneP.style.color = "var(--text-muted)";
+      noneP.textContent = "No records submitted yet.";
+      recordsCard.appendChild(noneP);
+    } else {
+      const listDiv = document.createElement("div");
+      listDiv.className = "dp-records-list";
+
+      records.forEach(function (r) {
+        const row = document.createElement("div");
+        row.className = "dp-record-row";
+
+        const userSpan = document.createElement("span");
+        userSpan.className = "dp-record-user";
+        userSpan.textContent = r.user;
+
+        const rightBox = document.createElement("div");
+        rightBox.style.display = "flex";
+        rightBox.style.alignItems = "center";
+        rightBox.style.gap = "12px";
+
+        const pctSpan = document.createElement("span");
+        pctSpan.className = "dp-record-pct";
+        pctSpan.textContent = r.percent + "%";
+        rightBox.appendChild(pctSpan);
+
+        if (r.link) {
+          const linkA = document.createElement("a");
+          linkA.href = r.link;
+          linkA.target = "_blank";
+          linkA.rel = "noopener noreferrer nofollow";
+          linkA.className = "dp-record-link";
+          linkA.textContent = "Video ↗";
+          rightBox.appendChild(linkA);
+        }
+
+        row.append(userSpan, rightBox);
+        listDiv.appendChild(row);
+      });
+
+      recordsCard.appendChild(listDiv);
+    }
+
+    demonPage.appendChild(recordsCard);
+  }
+
+  document.addEventListener("click", function (e) {
+    const card = e.target.closest("#cl-levels-container .demon-card");
+    if (!card) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const allCards = Array.from(document.querySelectorAll("#cl-levels-container .demon-card"));
+    const index = allCards.indexOf(card);
+    if (index === -1) return;
+
+    const position = index + 1;
+    const h2Text = card.querySelector("h2")?.textContent || "";
+    const levelName = h2Text.replace(/^#\d+\s*[—-]\s*/, "").trim() || "Custom Level";
+    const metaText = card.querySelector(".demon-meta-line")?.textContent || "";
+    const verifierMatch = metaText.match(/Verified by\s+(.+?)\s*•/);
+    const verifierName = verifierMatch ? verifierMatch.at(1).trim() : "Unknown";
+
+    const officialMatch = (typeof globalDemons !== "undefined" && Array.isArray(globalDemons))
+      ? globalDemons.find(function (d) {
+          const cleanOfficial = typeof cleanDisplayName === "function" ? cleanDisplayName(d.name) : d.name;
+          return cleanOfficial.toLowerCase() === levelName.toLowerCase();
+        })
+      : null;
+
+    const demonData = {
+      name: levelName,
+      verifier: verifierName,
+      creator: officialMatch ? (officialMatch.creator || verifierName) : verifierName,
+      password: officialMatch ? (officialMatch.password || "Free Copy") : "Free Copy",
+      verification: officialMatch ? (officialMatch.verification || "") : "",
+      records: officialMatch && Array.isArray(officialMatch.records)
+        ? officialMatch.records.map(function (r) {
+            if (typeof r === "string") {
+              return { user: typeof cleanDisplayName === "function" ? cleanDisplayName(r) : r, percent: 100, link: "" };
+            }
+            return {
+              user: typeof cleanDisplayName === "function" ? cleanDisplayName(r.user || "") : (r.user || ""),
+              percent: r.percent || 100,
+              link: r.link || ""
+            };
+          })
+        : []
+    };
+
+    renderFullCustomDemonPage(demonData, position);
+  }, true);
+})();
