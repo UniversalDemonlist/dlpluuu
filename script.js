@@ -3050,7 +3050,7 @@ return "extreme.png";
 function updateHeaderBadge() {
 const badge = document.getElementById("cl-active-title");
 if (badge) {
-badge.textContent = Active List: ${customList.title} (${customList.levels.length} level${customList.levels.length === 1 ? "" : "s"});
+badge.textContent = `Active List: ${customList.title} (${customList.levels.length} level${customList.levels.length === 1 ? "" : "s"})`;
 }
 }
 function renderCustomListView() {
