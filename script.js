@@ -1774,3 +1774,67 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+(function initStandaloneHashRouter() {
+  let isRouting = false;
+
+  document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (isRouting) return;
+      const tab = btn.getAttribute("data-tab");
+      if (tab && window.location.hash !== `#${tab}`) {
+        history.pushState(null, "", `#${tab}`);
+      }
+    });
+  });
+
+  const originalOpenDemonPage = window.openDemonPage;
+  if (typeof originalOpenDemonPage === "function") {
+    window.openDemonPage = function (demon, ...args) {
+      if (!isRouting && demon && demon.id) {
+        const targetHash = `#demon/${encodeURIComponent(demon.id)}`;
+        if (window.location.hash !== targetHash) {
+          history.pushState(null, "", targetHash);
+        }
+      }
+      return originalOpenDemonPage.apply(this, [demon, ...args]);
+    };
+  }
+
+  function syncFromHash() {
+    const hash = window.location.hash.replace("#", "");
+    if (!hash) return;
+
+    isRouting = true;
+
+    if (hash.startsWith("demon/")) {
+      const id = decodeURIComponent(hash.replace("demon/", ""));
+      const waitForDemons = setInterval(() => {
+        if (typeof getVisibleDemons === "function" && globalDemons.length > 0) {
+          clearInterval(waitForDemons);
+          const demon = getVisibleDemons().find(d => String(d.id) === id);
+          if (demon) originalOpenDemonPage(demon);
+          isRouting = false;
+        }
+      }, 100);
+      return;
+    }
+
+    if (hash.startsWith("rules-")) {
+      document.querySelector('.tab-btn[data-tab="rules"]')?.click();
+      setTimeout(() => {
+        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+        isRouting = false;
+      }, 50);
+      return;
+    }
+
+    const tabBtn = document.querySelector(`.tab-btn[data-tab="${hash}"]`);
+    if (tabBtn) tabBtn.click();
+
+    isRouting = false;
+  }
+
+  window.addEventListener("hashchange", syncFromHash);
+  window.addEventListener("popstate", syncFromHash);
+  window.addEventListener("DOMContentLoaded", syncFromHash);
+})();
