@@ -2581,3 +2581,8 @@ body:not(.dark) .podium-silver .podium-rank-tag {
   color: var(--text-muted);
 }
 
+.tab-btn[data-tab="roulette"]::before {
+  content: none !important;
+  display: none !important;
+}
+
