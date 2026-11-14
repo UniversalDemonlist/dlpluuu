@@ -4161,3 +4161,200 @@ window.exitCustomList = function () {
     });
   }
 
+  function renderMakerOrder() {
+    const badge = document.getElementById("cl-active-title");
+    if (badge) {
+      badge.textContent = "Active List: " + customList.title + " (" + customList.levels.length + " levels)";
+    }
+
+    const listEl = document.getElementById("cl-maker-order-list");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+
+    if (customList.levels.length === 0) {
+      listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.88rem;">No levels added yet.</p>';
+      return;
+    }
+
+    customList.levels.forEach(function (lvl, idx) {
+      const row = document.createElement("div");
+      row.className = "cl-order-item";
+
+      const meta = document.createElement("div");
+      meta.className = "cl-order-meta";
+
+      const strong = document.createElement("strong");
+      strong.textContent = "#" + (idx + 1) + " — " + lvl.name;
+
+      const span = document.createElement("span");
+      span.textContent = "Verifier: " + lvl.verifier + " • " + (lvl.records ? lvl.records.length : 0) + " record(s)";
+
+      meta.append(strong, span);
+
+      const btns = document.createElement("div");
+      btns.className = "cl-order-btns";
+
+      const upBtn = document.createElement("button");
+      upBtn.type = "button";
+      upBtn.className = "cl-mini-btn";
+      upBtn.textContent = "↑";
+      upBtn.disabled = idx === 0;
+      upBtn.addEventListener("click", function () {
+        const prev = customList.levels.at(idx - 1);
+        customList.levels.splice(idx - 1, 2, lvl, prev);
+        refreshAllCustomUI();
+      });
+
+      const downBtn = document.createElement("button");
+      downBtn.type = "button";
+      downBtn.className = "cl-mini-btn";
+      downBtn.textContent = "↓";
+      downBtn.disabled = idx === customList.levels.length - 1;
+      downBtn.addEventListener("click", function () {
+        const next = customList.levels.at(idx + 1);
+        customList.levels.splice(idx, 2, next, lvl);
+        refreshAllCustomUI();
+      });
+
+      const addRecBtn = document.createElement("button");
+      addRecBtn.type = "button";
+      addRecBtn.className = "cl-mini-btn";
+      addRecBtn.textContent = "+Rec";
+      addRecBtn.addEventListener("click", function () {
+        const raw = prompt('Add record to "' + lvl.name + '" (Format: Player, Percent, OptionalURL):');
+        if (!raw) return;
+        const parts = raw.split(",").map(function (p) { return p.trim(); });
+        const rec = sanitizeRecord({
+          user: parts.at(0) || "",
+          percent: parts.at(1) !== undefined ? parts.at(1) : 100,
+          link: parts.at(2) || ""
+        });
+        if (!rec) {
+          setStatus("Invalid record format.", true);
+          return;
+        }
+        lvl.records = (lvl.records || []).concat([rec]).slice(0, MAX_RECORDS_PER_LEVEL);
+        refreshAllCustomUI();
+        setStatus("Added record for " + rec.user + ".");
+      });
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "cl-mini-btn danger";
+      delBtn.textContent = "✕";
+      delBtn.addEventListener("click", function () {
+        customList.levels.splice(idx, 1);
+        refreshAllCustomUI();
+      });
+
+      btns.append(upBtn, downBtn, addRecBtn, delBtn);
+      row.append(meta, btns);
+      listEl.appendChild(row);
+    });
+  }
+
+  function refreshAllCustomUI() {
+    renderMakerOrder();
+    renderCustomListCards();
+    renderCustomLeaderboard();
+  }
+
+  function fillImportSelect() {
+    const select = document.getElementById("cl-import-select");
+    if (!select || !Array.isArray(globalDemons)) return;
+    select.innerHTML = "";
+    const visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    visible.filter(function (d) { return !d.cosmetic; }).forEach(function (d, i) {
+      const opt = document.createElement("option");
+      opt.value = String(d.id);
+      opt.textContent = "#" + (d.position || i + 1) + " — " + d.name;
+      select.appendChild(opt);
+    });
+  }
+
+   document.addEventListener("DOMContentLoaded", function () {
+    const tabsBar = document.querySelector(".tabs");
+    if (tabsBar && !document.getElementById("extras-dropdown")) {
+      const rouletteBtn = tabsBar.querySelector('[data-tab="roulette"]');
+      const wrap = document.createElement("div");
+      wrap.className = "extras-dropdown";
+      wrap.id = "extras-dropdown";
+      wrap.innerHTML =
+        '<button type="button" class="tab-btn extras-dropdown-btn" id="extras-dropdown-toggle">Extras <span class="extras-caret">▾</span></button>' +
+        '<div class="extras-dropdown-menu" id="extras-dropdown-menu">' +
+          '<button type="button" class="tab-btn extras-menu-item" data-tab="roulette">Roulette</button>' +
+          '<button type="button" class="tab-btn extras-menu-item" data-tab="custom-lists">Custom Lists</button>' +
+        '</div>';
+
+      if (rouletteBtn) {
+        rouletteBtn.replaceWith(wrap);
+      } else {
+        tabsBar.appendChild(wrap);
+      }
+    }
+
+    if (!document.getElementById("custom-lists")) {
+      const footer = document.querySelector(".site-footer");
+      const section = document.createElement("div");
+      section.id = "custom-lists";
+      section.className = "tab-content";
+      section.innerHTML =
+        '<div class="cl-topbar">' +
+          '<h1>Custom Lists</h1>' +
+          '<div class="cl-mode-tabs">' +
+            '<button type="button" class="cl-view-btn active" data-clview="list">List</button>' +
+            '<button type="button" class="cl-view-btn" data-clview="leaderboard">Leaderboard</button>' +
+            '<button type="button" class="cl-view-btn" data-clview="maker">List Maker</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="panel cl-io-bar">' +
+          '<div class="cl-io-left"><span id="cl-active-title" class="cl-active-badge">Active List: Untitled Custom List (0 levels)</span></div>' +
+          '<div class="cl-io-actions">' +
+            '<button type="button" id="cl-copy-code-btn" class="sidebar-action-btn">Copy Save Code</button>' +
+            '<button type="button" id="cl-toggle-load-btn" class="dp-back-btn">Load Code</button>' +
+            '<button type="button" id="cl-reset-btn" class="rl-giveup-btn">Clear List</button>' +
+          '</div>' +
+          '<div id="cl-load-drawer" class="cl-load-drawer" style="display:none;">' +
+            '<input type="text" id="cl-load-input" placeholder="Paste GDCL1-... save code here">' +
+            '<button type="button" id="cl-confirm-load-btn" class="sidebar-action-btn">Load List</button>' +
+          '</div>' +
+          '<p id="cl-status-msg" class="roulette-status"></p>' +
+        '</div>' +
+        '<div id="cl-pane-list" class="cl-pane active"><div id="cl-levels-container"></div><div id="cl-demon-detail" style="display:none;"></div></div>' +
+        '<div id="cl-pane-leaderboard" class="cl-pane" style="display:none;">' +
+          '<div class="leaderboard-split">' +
+            '<div class="leaderboard-left"><input type="text" id="cl-player-search" placeholder="Search custom list players"><div id="cl-leaderboard-container"></div></div>' +
+            '<div class="leaderboard-right" id="cl-player-profile"><p style="color:var(--text-muted);">Select a player on the left to view their custom list completions.</p></div>' +
+          '</div>' +
+        '</div>' +
+        '<div id="cl-pane-maker" class="cl-pane" style="display:none;">' +
+          '<div class="cl-maker-grid">' +
+            '<div class="panel">' +
+              '<h2 class="cl-section-title">1. List Settings & Import Existing</h2>' +
+              '<div class="cl-field"><label>Custom List Name</label><input type="text" id="cl-list-name-input" maxlength="60" placeholder="My Custom Demonlist"></div>' +
+              '<div class="cl-field"><label>Add Existing Level from Official List</label>' +
+                '<div class="cl-inline-row"><select id="cl-import-select"></select><button type="button" id="cl-import-add-btn" class="sidebar-action-btn">Add</button></div>' +
+              '</div>' +
+              '<div class="cl-inline-row" style="margin-top:10px;">' +
+                '<button type="button" id="cl-import-all-btn" class="dp-back-btn">Import All Official Levels</button>' +
+                '<button type="button" id="cl-shuffle-btn" class="dp-back-btn">Shuffle Order</button>' +
+              '</div>' +
+              '<hr class="cl-divider">' +
+              '<h2 class="cl-section-title">2. Create New Custom Level</h2>' +
+              '<div class="cl-field"><label>Level Name *</label><input type="text" id="cl-new-name" maxlength="60" placeholder="e.g. Acheron"></div>' +
+              '<div class="cl-field"><label>Verifier *</label><input type="text" id="cl-new-verifier" maxlength="40" placeholder="e.g. Zoink"></div>' +
+              '<div class="cl-field"><label>Verification Video URL *</label><input type="url" id="cl-new-verification" maxlength="200" placeholder="https://youtube.com..."></div>' +
+              '<div class="cl-field"><label>Thumbnail URL (Optional)</label><input type="url" id="cl-new-thumb" maxlength="200" placeholder="https://..."></div>' +
+              '<div class="cl-field"><label>Records (Optional — Player, Percent, VideoURL)</label><textarea id="cl-new-records" rows="4" maxlength="4000" placeholder="PlayerOne, 100, https://youtube.com..."></textarea></div>' +
+              '<button type="button" id="cl-add-custom-btn" class="sidebar-action-btn">Add Custom Level</button>' +
+            '</div>' +
+            '<div class="panel"><h2 class="cl-section-title">3. Current List Order</h2><div id="cl-maker-order-list" class="cl-maker-order-list"></div></div>' +
+          '</div>' +
+        '</div>';
+
+      if (footer && footer.parentNode) {
+        footer.parentNode.insertBefore(section, footer);
+      } else {
+        document.body.appendChild(section);
+      }
+    }
