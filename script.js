@@ -6048,3 +6048,261 @@ window.exitCustomList = function () {
     obs.observe(activeArea, { childList: true });
   });
 })();
+
+(function initHigherOrLowerGame() {
+  const BEST_KEY = "gdl_hl_best_streak_v1";
+  let currentStreak = 0;
+  let bestStreak = 0;
+  let leftDemon = null;
+  let rightDemon = null;
+  let locked = false;
+
+  try {
+    bestStreak = Number(localStorage.getItem(BEST_KEY)) || 0;
+  } catch {}
+
+  function getPool() {
+    const raw = typeof getVisibleDemons === "function" ? getVisibleDemons() : (typeof globalDemons !== "undefined" ? globalDemons : []);
+    return (raw || []).filter(function (d) {
+      return !d.cosmetic && d.position;
+    });
+  }
+
+  function getLevelThumb(d) {
+    if (d.thumbnail && d.thumbnail.trim()) return d.thumbnail.trim();
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(d.verification);
+      if (yt) return yt;
+    }
+    return "https://prevter.me" + encodeURIComponent(d.id);
+  }
+
+  function formatDisplay(name) {
+    return typeof cleanDisplayName === "function" ? cleanDisplayName(name) : String(name || "");
+  }
+
+  function pickRandomExcluding(pool, excludeId) {
+    const candidates = pool.filter(function (d) {
+      return String(d.id) !== String(excludeId);
+    });
+    const list = candidates.length > 0 ? candidates : pool;
+    return list.at(Math.floor(Math.random() * list.length));
+  }
+
+  function updateScorePills() {
+    const curEl = document.getElementById("hl-cur-streak");
+    const bestEl = document.getElementById("hl-best-streak");
+    if (curEl) curEl.textContent = String(currentStreak);
+    if (bestEl) bestEl.textContent = String(bestStreak);
+  }
+
+  function startNewHlGame() {
+    const pool = getPool();
+    if (pool.length < 2) return;
+    currentStreak = 0;
+    locked = false;
+    leftDemon = pickRandomExcluding(pool, null);
+    rightDemon = pickRandomExcluding(pool, leftDemon.id);
+    updateScorePills();
+    renderArena(false, null);
+  }
+
+  function handleGuess(guessHigher) {
+    if (locked || !leftDemon || !rightDemon) return;
+    locked = true;
+
+    const isActuallyHigher = rightDemon.position < leftDemon.position;
+    const correct = guessHigher ? isActuallyHigher : !isActuallyHigher;
+
+    if (correct) {
+      currentStreak++;
+      if (currentStreak > bestStreak) {
+        bestStreak = currentStreak;
+        try {
+          localStorage.setItem(BEST_KEY, String(bestStreak));
+        } catch {}
+      }
+      updateScorePills();
+      renderArena(true, true);
+
+      setTimeout(function () {
+        const pool = getPool();
+        leftDemon = rightDemon;
+        rightDemon = pickRandomExcluding(pool, leftDemon.id);
+        locked = false;
+        renderArena(false, null);
+      }, 1150);
+    } else {
+      renderArena(true, false);
+    }
+  }
+
+  function renderArena(revealed, wasCorrect) {
+    const stage = document.getElementById("hl-stage");
+    if (!stage || !leftDemon || !rightDemon) return;
+
+    stage.innerHTML = "";
+
+    const arena = document.createElement("div");
+    arena.className = "hl-arena";
+
+    function buildCard(demon, showRank, stateClass) {
+      const card = document.createElement("div");
+      card.className = "hl-card" + (stateClass ? " " + stateClass : "");
+
+      const img = document.createElement("img");
+      img.className = "hl-card-thumb";
+      img.src = getLevelThumb(demon);
+      img.alt = demon.name;
+      img.addEventListener("error", function () {
+        if (!img.src.endsWith("extreme.png")) img.src = "extreme.png";
+      });
+
+      const body = document.createElement("div");
+      body.className = "hl-card-body";
+
+      const title = document.createElement("h2");
+      title.className = "hl-card-title";
+      title.textContent = formatDisplay(demon.name);
+
+      const sub = document.createElement("p");
+      sub.className = "hl-card-sub";
+      sub.textContent = "Verified by " + formatDisplay(demon.verifier);
+
+      body.append(title, sub);
+
+      if (showRank) {
+        const pts = (5500 / Math.sqrt(demon.position)).toFixed(2);
+        const rankDiv = document.createElement("div");
+        rankDiv.className = "hl-rank-reveal";
+        rankDiv.textContent = "#" + demon.position;
+
+        const ptsDiv = document.createElement("div");
+        ptsDiv.className = "hl-pts-reveal";
+        ptsDiv.textContent = pts + " pts";
+
+        body.append(rankDiv, ptsDiv);
+      } else {
+        const promptP = document.createElement("p");
+        promptP.className = "hl-card-sub";
+        promptP.style.marginTop = "6px";
+        promptP.textContent = "is ranked…";
+
+        const btnGroup = document.createElement("div");
+        btnGroup.className = "hl-btn-group";
+
+        const higherBtn = document.createElement("button");
+        higherBtn.type = "button";
+        higherBtn.className = "hl-guess-btn";
+        higherBtn.textContent = "▲ Higher (Harder)";
+        higherBtn.addEventListener("click", function () {
+          handleGuess(true);
+        });
+
+        const lowerBtn = document.createElement("button");
+        lowerBtn.type = "button";
+        lowerBtn.className = "hl-guess-btn";
+        lowerBtn.textContent = "▼ Lower (Easier)";
+        lowerBtn.addEventListener("click", function () {
+          handleGuess(false);
+        });
+
+        btnGroup.append(higherBtn, lowerBtn);
+        body.append(promptP, btnGroup);
+      }
+
+      card.append(img, body);
+      return card;
+    }
+
+    const leftCard = buildCard(leftDemon, true, "");
+    const vsDiv = document.createElement("div");
+    vsDiv.className = "hl-vs-badge";
+    vsDiv.textContent = "VS";
+
+    const rightState = revealed ? (wasCorrect ? "hl-correct" : "hl-wrong") : "";
+    const rightCard = buildCard(rightDemon, revealed, rightState);
+
+    arena.append(leftCard, vsDiv, rightCard);
+    stage.appendChild(arena);
+
+    if (revealed && !wasCorrect) {
+      const over = document.createElement("div");
+      over.className = "hl-gameover-box";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = "Wrong Guess!";
+
+      const p = document.createElement("p");
+      p.textContent = formatDisplay(rightDemon.name) + " is #" + rightDemon.position + " (vs " + formatDisplay(leftDemon.name) + " at #" + leftDemon.position + "). Final Streak: " + currentStreak;
+
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button";
+      retryBtn.className = "sidebar-action-btn";
+      retryBtn.style.width = "auto";
+      retryBtn.style.marginTop = "12px";
+      retryBtn.textContent = "Play Again";
+      retryBtn.addEventListener("click", startNewHlGame);
+
+      over.append(h2, p, retryBtn);
+      stage.appendChild(over);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const menu = document.getElementById("extras-dropdown-menu");
+    if (menu && !menu.querySelector('[data-tab="higher-lower"]')) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tab-btn extras-menu-item";
+      btn.setAttribute("data-tab", "higher-lower");
+      btn.textContent = "Higher or Lower";
+      menu.appendChild(btn);
+
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+        document.querySelectorAll(".tab-content").forEach(function (c) { c.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById("extras-dropdown-toggle")?.classList.add("active");
+        const target = document.getElementById("higher-lower");
+        if (target) {
+          target.classList.add("active");
+          window.location.hash = "higher-lower";
+        }
+        document.getElementById("extras-dropdown")?.classList.remove("open");
+        if (!leftDemon) startNewHlGame();
+      });
+    }
+
+    if (!document.getElementById("higher-lower")) {
+      const footer = document.querySelector(".site-footer");
+      const sec = document.createElement("div");
+      sec.id = "higher-lower";
+      sec.className = "tab-content";
+      sec.innerHTML =
+        '<div class="hl-topbar">' +
+          '<h1>Higher or Lower</h1>' +
+          '<div class="hl-score-pills">' +
+            '<div class="hl-pill">Streak: <span id="hl-cur-streak">0</span></div>' +
+            '<div class="hl-pill">Best: <span id="hl-best-streak">' + bestStreak + '</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div id="hl-stage"></div>';
+
+      if (footer && footer.parentNode) {
+        footer.parentNode.insertBefore(sec, footer);
+      } else {
+        document.body.appendChild(sec);
+      }
+    }
+
+    const poll = setInterval(function () {
+      if (getPool().length >= 2) {
+        clearInterval(poll);
+        startNewHlGame();
+      }
+    }, 150);
+    setTimeout(function () { clearInterval(poll); }, 8000);
+  });
+})();
