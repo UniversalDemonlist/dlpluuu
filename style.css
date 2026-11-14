@@ -2225,3 +2225,16 @@ html body:not(.dark):has(#guidelines.active) {
   box-shadow: none !important;
 }
 
+html body.dark:has(#home.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#home.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#staff.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#staff.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#rules.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#rules.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#guidelines.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#guidelines.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: var(--bg-body) !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
