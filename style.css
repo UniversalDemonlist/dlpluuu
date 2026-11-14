@@ -5503,3 +5503,97 @@ body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
   background-attachment: scroll !important;
   animation: none !important;
 }
+
+@keyframes demonFaceCycle {
+  0%, 100% {
+    background-image: url("data/easy.png");
+    opacity: 0.14;
+  }
+  10% {
+    opacity: 0;
+  }
+  20% {
+    background-image: url("data/medium.png");
+    opacity: 0.14;
+  }
+  30% {
+    opacity: 0;
+  }
+  40% {
+    background-image: url("data/hard.png");
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0;
+  }
+  60% {
+    background-image: url("data/insane.png");
+    opacity: 0.14;
+  }
+  70% {
+    opacity: 0;
+  }
+  80% {
+    background-image: url("data/extreme.png");
+    opacity: 0.14;
+  }
+  90% {
+    opacity: 0;
+  }
+}
+
+@keyframes checkerboardFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(112px, -112px, 0);
+  }
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #080406 !important;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(220, 38, 38, 0.26) 0%, transparent 45%),
+    radial-gradient(circle at 50% 5%, rgba(153, 27, 27, 0.32) 0%, transparent 52%),
+    radial-gradient(circle at 82% 18%, rgba(239, 68, 68, 0.22) 0%, transparent 48%),
+    linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 38, 38, 0.05) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px !important;
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "";
+  position: fixed;
+  inset: -112px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.14;
+  background-image: url("data/easy.png");
+  background-size: 56px 56px !important;
+  background-position: 0 0 !important;
+  background-repeat: repeat !important;
+  -webkit-mask-image: conic-gradient(
+    #000 90deg,
+    transparent 90deg 180deg,
+    #000 180deg 270deg,
+    transparent 270deg
+  ) !important;
+  -webkit-mask-size: 112px 112px !important;
+  mask-image: conic-gradient(
+    #000 90deg,
+    transparent 90deg 180deg,
+    #000 180deg 270deg,
+    transparent 270deg
+  ) !important;
+  mask-size: 112px 112px !important;
+  animation: checkerboardFloat 12s linear infinite, demonFaceCycle 25s ease-in-out infinite !important;
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::after {
+  display: none !important;
+}
+
+body:has(#leaderboard.active)::after {
+  display: none !important;
+}
