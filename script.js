@@ -3557,3 +3557,181 @@ if (document.readyState === "loading") {
   });
 })();
 
+window._customListState = {
+  active: false,
+  title: "Official Demonlist",
+  demons: []
+};
+
+window.useCustomList = function (levels, title) {
+  if (!Array.isArray(levels) || levels.length === 0) return false;
+
+  const cleanTitle = typeof title === "string" && title.trim()
+    ? title.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, 60)
+    : "Custom Demonlist";
+
+  const formatted = levels.map(function (lvl, index) {
+    const safeUrl = function (u) {
+      try {
+        const parsed = new URL(String(u || "").trim());
+        return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
+      } catch {
+        return "";
+      }
+    };
+
+    const rawRecords = Array.isArray(lvl.records) ? lvl.records : [];
+    const cleanRecords = rawRecords.map(function (r) {
+      if (typeof r === "string") {
+        return { user: r.trim().slice(0, 40), percent: 100, link: "" };
+      }
+      const pct = Number(r.percent);
+      return {
+        user: String(r.user || "").trim().slice(0, 40),
+        percent: Number.isFinite(pct) ? Math.max(1, Math.min(100, Math.round(pct))) : 100,
+        link: safeUrl(r.link)
+      };
+    }).filter(function (r) {
+      return r.user.length > 0;
+    });
+
+    return {
+      id: lvl.id ? String(lvl.id).slice(0, 30) : "custom-" + (index + 1),
+      name: String(lvl.name || "Untitled").trim().slice(0, 60),
+      verifier: String(lvl.verifier || "Unknown").trim().slice(0, 40),
+      creator: String(lvl.creator || lvl.verifier || "Unknown").trim().slice(0, 40),
+      verification: safeUrl(lvl.verification) || "https://youtube.com",
+      thumbnail: safeUrl(lvl.thumbnail),
+      password: String(lvl.password || "Free Copy").slice(0, 20),
+      position: index + 1,
+      cosmetic: false,
+      records: cleanRecords
+    };
+  });
+
+  window._customListState = {
+    active: true,
+    title: cleanTitle,
+    demons: formatted
+  };
+
+  const banner = document.getElementById("cl-active-banner");
+  const bannerText = document.getElementById("cl-banner-text");
+  if (banner && bannerText) {
+    banner.style.display = "flex";
+    bannerText.textContent = "Custom List: " + cleanTitle + " (" + formatted.length + " levels)";
+  }
+
+  if (typeof renderDemonCards === "function") renderDemonCards();
+  if (typeof populateMegaMenu === "function") populateMegaMenu();
+  if (typeof loadLeaderboard === "function") loadLeaderboard();
+  if (typeof window.renderAllTopThree === "function") window.renderAllTopThree();
+
+  return true;
+};
+
+window.exitCustomList = function () {
+  window._customListState = {
+    active: false,
+    title: "Official Demonlist",
+    demons: []
+  };
+
+  const banner = document.getElementById("cl-active-banner");
+  if (banner) banner.style.display = "none";
+
+  if (typeof renderDemonCards === "function") renderDemonCards();
+  if (typeof populateMegaMenu === "function") populateMegaMenu();
+  if (typeof loadLeaderboard === "function") loadLeaderboard();
+  if (typeof window.renderAllTopThree === "function") window.renderAllTopThree();
+};
+
+(function hookCustomListIntoSite() {
+  const originalGetVisibleDemons = window.getVisibleDemons;
+  window.getVisibleDemons = function () {
+    if (window._customListState && window._customListState.active) {
+      return window._customListState.demons;
+    }
+    return typeof originalGetVisibleDemons === "function" ? originalGetVisibleDemons() : globalDemons;
+  };
+
+  const originalLoadLeaderboard = window.loadLeaderboard;
+  window.loadLeaderboard = async function () {
+    if (window._customListState && window._customListState.active) {
+      const demons = window._customListState.demons;
+      const scores = {};
+      const playerMap = new Map();
+
+      const addPts = function (rawName, pts) {
+        if (!rawName) return;
+        const key = typeof normalizeName === "function" ? normalizeName(rawName) : rawName.toLowerCase();
+        if (!key) return;
+        if (!playerMap.has(key)) {
+          playerMap.set(key, typeof cleanDisplayName === "function" ? cleanDisplayName(rawName) : rawName);
+        }
+        scores[key] = (scores[key] || 0) + pts;
+      };
+
+      demons.forEach(function (d) {
+        const baseScore = 5500 / Math.sqrt(d.position);
+        addPts(d.verifier, baseScore);
+
+        const seen = new Set([
+          typeof normalizeName === "function" ? normalizeName(d.verifier) : d.verifier.toLowerCase()
+        ]);
+
+        (d.records || []).forEach(function (r) {
+          const rKey = typeof normalizeName === "function" ? normalizeName(r.user) : r.user.toLowerCase();
+          if (!rKey || seen.has(rKey)) return;
+          seen.add(rKey);
+          const earned = r.percent >= 100 ? baseScore : baseScore * (r.percent / 100) * 0.5;
+          addPts(r.user, earned);
+        });
+      });
+
+      window._leaderboardScores = scores;
+      window._playerMap = playerMap;
+
+      const container = document.getElementById("leaderboard-container");
+      if (!container) return;
+
+      const searchQuery = (document.getElementById("player-search")?.value || "").toLowerCase();
+      const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
+
+      const sorted = Object.entries(scores)
+        .map(function (pair) {
+          const name = playerMap.get(pair[0]);
+          const hardest = typeof getPlayerHardestDemon === "function" ? getPlayerHardestDemon(name) : null;
+          return {
+            key: pair[0],
+            name: name,
+            score: pair[1],
+            hardestPosition: hardest ? hardest.position : 999999
+          };
+        })
+        .filter(function (p) {
+          return !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery);
+        });
+
+      if (filterMode === "points") {
+        sorted.sort(function (a, b) { return b.score - a.score; });
+      } else {
+        sorted.sort(function (a, b) { return a.hardestPosition - b.hardestPosition || b.score - a.score; });
+      }
+
+      container.innerHTML = "";
+      if (sorted.length > 0 && typeof createPlayerCard === "function") {
+        sorted.forEach(function (p, i) {
+          container.appendChild(createPlayerCard(p.name, p.score, i + 1));
+        });
+      } else {
+        container.innerHTML = "<p>No players with scores in this custom list yet.</p>";
+      }
+      return;
+    }
+
+    if (typeof originalLoadLeaderboard === "function") {
+      return originalLoadLeaderboard.apply(this, arguments);
+    }
+  };
+})();
