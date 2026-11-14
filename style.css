@@ -963,3 +963,274 @@ body:has(#demonlist.active) #demonlist {
 position: relative;
 z-index: 1;
 }
+
+.site-footer {
+  width: 100%;
+  background: #0d1018 !important;
+  border-top: 1px solid #232d42 !important;
+  padding: 32px 24px;
+  margin-top: 48px;
+  color: #94a3b8 !important;
+  position: relative;
+  z-index: 2;
+}
+body:has(#rules.active) .site-footer {
+  margin-top: 0;
+}
+.footer-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  color: #f8fafc !important;
+  margin-bottom: 6px;
+}
+.footer-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+.footer-tagline {
+  margin: 0 0 20px;
+  font-size: 0.88rem;
+  color: #94a3b8 !important;
+}
+.footer-divider {
+  height: 1px;
+  background: #232d42 !important;
+  margin-bottom: 18px;
+}
+.footer-bottom {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #94a3b8 !important;
+}
+
+#back-to-top-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #3b82f6;
+  border: 1px solid #60a5fa;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 300;
+}
+#back-to-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+#back-to-top-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.player-card .rank-badge {
+  display: none !important;
+}
+.player-card,
+.player-card *,
+#leaderboard-container {
+  opacity: 1 !important;
+  visibility: visible !important;
+  content-visibility: visible !important;
+}
+.player-card {
+  display: flex !important;
+  background: #171f2c !important;
+  border: 1px solid #263147 !important;
+  color: #f8fafc !important;
+  min-height: 92px !important;
+  height: auto !important;
+}
+body:not(.dark) .player-card {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+@keyframes demonlistGradientFlow {
+  0% {
+    background-position: 0% 20%, 50% 0%, 100% 30%, 50% 100%, 0 0, 0 0;
+  }
+  50% {
+    background-position: 80% 70%, 20% 80%, 30% 10%, 70% 20%, 0 0, 0 0;
+  }
+  100% {
+    background-position: 0% 20%, 50% 0%, 100% 30%, 50% 100%, 0 0, 0 0;
+  }
+}
+
+@keyframes demonGridScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(96px, -96px, 0);
+  }
+}
+
+@keyframes demonFaceFade {
+  0%, 14% {
+    background-image: url("data/easy.png");
+    opacity: 0.14;
+  }
+  17% {
+    opacity: 0.03;
+  }
+  20%, 34% {
+    background-image: url("data/medium.png");
+    opacity: 0.14;
+  }
+  37% {
+    opacity: 0.03;
+  }
+  40%, 54% {
+    background-image: url("data/hard.png");
+    opacity: 0.14;
+  }
+  57% {
+    opacity: 0.03;
+  }
+  60%, 74% {
+    background-image: url("data/insane.png");
+    opacity: 0.14;
+  }
+  77% {
+    opacity: 0.03;
+  }
+  80%, 94% {
+    background-image: url("data/extreme.png");
+    opacity: 0.14;
+  }
+  97% {
+    opacity: 0.03;
+  }
+  100% {
+    background-image: url("data/easy.png");
+    opacity: 0.14;
+  }
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+body:has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #080306 !important;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(239, 68, 68, 0.34) 0%, transparent 48%),
+    radial-gradient(circle at 50% 0%, rgba(153, 27, 27, 0.42) 0%, transparent 58%),
+    radial-gradient(circle at 85% 25%, rgba(249, 115, 22, 0.24) 0%, transparent 48%),
+    radial-gradient(circle at 40% 90%, rgba(185, 28, 28, 0.28) 0%, transparent 55%),
+    linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 38, 38, 0.05) 1px, transparent 1px) !important;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 48px 48px, 48px 48px !important;
+  animation: demonlistGradientFlow 14s ease-in-out infinite !important;
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::before,
+body:has(#demon-page.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed;
+  inset: -96px;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data/easy.png");
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  background-position: center;
+  animation:
+    demonGridScroll 12s linear infinite,
+    demonFaceFade 25s ease-in-out infinite !important;
+}
+
+.difficulty-face {
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain !important;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+@keyframes leaderboardGradientFlow {
+  0% {
+    background-position: 0% 10%, 50% 0%, 100% 20%, 50% 100%, 0 0, 0 0;
+  }
+  50% {
+    background-position: 85% 75%, 25% 85%, 20% 15%, 75% 25%, 0 0, 0 0;
+  }
+  100% {
+    background-position: 0% 10%, 50% 0%, 100% 20%, 50% 100%, 0 0, 0 0;
+  }
+}
+
+@keyframes leaderboardCheckerScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(112px, -112px, 0);
+  }
+}
+
+body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #070512 !important;
+  background-image:
+    radial-gradient(circle at 18% 15%, rgba(255, 48, 95, 0.30) 0%, transparent 48%),
+    radial-gradient(circle at 52% 0%, rgba(147, 51, 234, 0.38) 0%, transparent 56%),
+    radial-gradient(circle at 85% 22%, rgba(56, 189, 248, 0.25) 0%, transparent 48%),
+    radial-gradient(circle at 45% 92%, rgba(217, 70, 239, 0.28) 0%, transparent 55%),
+    linear-gradient(rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 72, 153, 0.05) 1px, transparent 1px) !important;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 56px 56px, 56px 56px !important;
+  animation: leaderboardGradientFlow 13s ease-in-out infinite !important;
+}
+
+body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #f3efff !important;
+  background-image:
+    radial-gradient(circle at 18% 15%, rgba(255, 48, 95, 0.16) 0%, transparent 48%),
+    radial-gradient(circle at 52% 0%, rgba(147, 51, 234, 0.22) 0%, transparent 56%),
+    radial-gradient(circle at 85% 22%, rgba(56, 189, 248, 0.18) 0%, transparent 48%),
+    radial-gradient(circle at 45% 92%, rgba(217, 70, 239, 0.16) 0%, transparent 55%),
+    linear-gradient(rgba(168, 85, 247, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 72, 153, 0.06) 1px, transparent 1px) !important;
+}
+
+body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed;
+  inset: -112px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  background-image:
+    url("leaderboard.png"),
+    url("leaderboard.png");
+  background-size: 56px 56px, 56px 56px;
+  background-position: 0 0, 56px 56px;
+  background-repeat: repeat;
+  animation: leaderboardCheckerScroll 14s linear infinite !important;
+}
+
+body:has(#demonlist.active) #demonlist,
+body:has(#demon-page.active) #demon-page,
+body:has(#leaderboard.active) #leaderboard {
+  position: relative;
+  z-index: 1;
+}
