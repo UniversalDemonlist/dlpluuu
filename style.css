@@ -4816,3 +4816,30 @@ body:not(.dark):has(#leaderboard.active) {
     radial-gradient(circle at 85% 12%, rgba(255, 0, 255, 0.10) 0%, transparent 45%) !important;
   background-size: 100% 100% !important;
 }
+
+#demonlist #search-bar,
+#demonlist .search-bar,
+#demonlist input[type="text"],
+#demonlist .controls-row,
+#demonlist .filter-row {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  float: none !important;
+}
+
+#demonlist #demon-container {
+  position: relative !important;
+  clear: both !important;
+  margin-top: 12px !important;
+  padding-top: 0 !important;
+  top: auto !important;
+}
