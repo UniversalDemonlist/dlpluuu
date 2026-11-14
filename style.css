@@ -1777,3 +1777,10 @@ html body:has(#demon-page.active):not(:has(#old-bg-toggle:checked))::before {
   animation: demonSmoothEndless 14s linear infinite !important;
 }
 
+.player-card .player-info p:last-of-type {
+  display: none !important;
+}
+
+.player-card {
+  min-height: 76px !important;
+}
