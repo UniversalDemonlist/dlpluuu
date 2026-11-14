@@ -3091,7 +3091,7 @@ a.href = r.link;
 a.target = "_blank";
 a.rel = "noopener noreferrer nofollow";
 a.textContent = ${r.user} (${r.percent}%);
-pillsWrap.appendChild(a);
+a.textContent = `${r.user} (${r.percent}%)`;
 } else {
 const span = document.createElement("span");
 span.className = "cl-rec-pill";
