@@ -3161,3 +3161,21 @@ html body:not(.dark):has(#custom-lists.active):not(:has(#old-bg-toggle:checked))
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+
+.rl-wheel-wrapper {
+  width: 390px !important;
+  height: 390px !important;
+}
+
+.rl-wheel-canvas {
+  width: 380px !important;
+  height: 380px !important;
+  filter: contrast(1.2) brightness(1.12) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5)) !important;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.rl-wheel-caption {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--text-main) !important;
+}
