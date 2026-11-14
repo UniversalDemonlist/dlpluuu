@@ -2238,3 +2238,230 @@ html body:not(.dark):has(#guidelines.active):not(:has(#old-bg-toggle:checked)) {
   animation: none !important;
 }
 
+.tab-btn[data-tab="roulette"]::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-image: url("extreme.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+#roulette {
+  max-width: 960px;
+}
+
+.roulette-setup-panel {
+  margin-bottom: 18px;
+}
+
+.roulette-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.roulette-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+.roulette-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.roulette-actions .sidebar-action-btn {
+  width: auto;
+  padding: 10px 18px;
+}
+
+.roulette-actions .dp-back-btn {
+  margin-bottom: 0;
+  padding: 10px 16px;
+}
+
+.roulette-load-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.roulette-load-box input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.88rem;
+}
+
+.roulette-load-box .sidebar-action-btn {
+  width: auto;
+  padding: 10px 20px;
+}
+
+.roulette-status {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+.rl-current-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+@media (max-width: 700px) {
+  .rl-current-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.rl-current-card img {
+  width: 245px;
+  height: 138px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .rl-current-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.rl-current-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rl-target-badge {
+  display: inline-block;
+  width: fit-content;
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.rl-current-info h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.rl-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.rl-controls input {
+  width: 130px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.rl-done-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent-green);
+  color: #090b11;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.rl-giveup-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.roulette-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rl-history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.rl-history-pct {
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+.rl-summary-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+html body.dark:has(#roulette.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#roulette.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: var(--bg-body) !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
