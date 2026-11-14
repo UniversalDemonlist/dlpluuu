@@ -5164,3 +5164,147 @@ html::-webkit-scrollbar-thumb:hover {
   background: #2c3a57;
   border-radius: 999px;
 }
+
+.bg-toggle-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #141a26;
+  border: 1px solid #263147;
+  color: #e2e8f0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.bg-toggle-tab:hover {
+  border-color: #ef4444;
+  background: #1c2436;
+}
+
+.bg-toggle-label-old {
+  display: none;
+}
+
+body:has(#old-bg-toggle:checked) .bg-toggle-label-new {
+  display: none;
+}
+
+body:has(#old-bg-toggle:checked) .bg-toggle-label-old {
+  display: inline;
+}
+
+@keyframes demonlistRedGlowShift {
+  0% {
+    background-position: 15% 0%, 50% 0%, 85% 0%, 0 0, 0 0;
+  }
+  50% {
+    background-position: 35% 18%, 65% 8%, 65% 22%, 0 0, 0 0;
+  }
+  100% {
+    background-position: 15% 0%, 50% 0%, 85% 0%, 0 0, 0 0;
+  }
+}
+
+@keyframes demonFaceCycle {
+  0%, 100% {
+    background-image: url("data/easy.png");
+    opacity: 0.13;
+  }
+  10% {
+    opacity: 0;
+  }
+  20% {
+    background-image: url("data/medium.png");
+    opacity: 0.13;
+  }
+  30% {
+    opacity: 0;
+  }
+  40% {
+    background-image: url("data/hard.png");
+    opacity: 0.13;
+  }
+  50% {
+    opacity: 0;
+  }
+  60% {
+    background-image: url("data/insane.png");
+    opacity: 0.13;
+  }
+  70% {
+    opacity: 0;
+  }
+  80% {
+    background-image: url("data/extreme.png");
+    opacity: 0.13;
+  }
+  90% {
+    opacity: 0;
+  }
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #080406 !important;
+  background-image:
+    radial-gradient(circle at 20% 12%, rgba(220, 38, 38, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 50% 0%, rgba(153, 27, 27, 0.34) 0%, transparent 55%),
+    radial-gradient(circle at 82% 16%, rgba(239, 68, 68, 0.22) 0%, transparent 46%),
+    linear-gradient(rgba(239, 68, 68, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 38, 38, 0.04) 1px, transparent 1px) !important;
+  background-size: 160% 160%, 160% 160%, 160% 160%, 44px 44px, 44px 44px !important;
+  background-attachment: fixed !important;
+  animation: demonlistRedGlowShift 16s ease-in-out infinite !important;
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.13;
+  filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.45));
+  background-image: url("data/easy.png");
+  background-size: 64px 64px;
+  background-repeat: repeat;
+  -webkit-mask-image: conic-gradient(
+    #000 90deg,
+    transparent 90deg 180deg,
+    #000 180deg 270deg,
+    transparent 270deg
+  );
+  -webkit-mask-size: 128px 128px;
+  mask-image: conic-gradient(
+    #000 90deg,
+    transparent 90deg 180deg,
+    #000 180deg 270deg,
+    transparent 270deg
+  );
+  mask-size: 128px 128px;
+  animation: checkerboardFloat 16s linear infinite, demonFaceCycle 25s ease-in-out infinite;
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at center, transparent 48%, rgba(6, 3, 5, 0.9) 100%);
+}
+
+body:has(#demonlist.active) #demonlist {
+  position: relative;
+  z-index: 1;
+}
+
+body:has(#old-bg-toggle:checked)::before,
+body:has(#old-bg-toggle:checked)::after {
+  display: none !important;
+}
