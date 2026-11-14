@@ -3044,7 +3044,7 @@ function getResolvedThumbnail(lvl) {
 if (lvl.thumbnail) return lvl.thumbnail;
 const yt = typeof getYoutubeThumbnail === "function" ? getYoutubeThumbnail(lvl.verification) : "";
 if (yt) return yt;
-if (lvl.existingId) return https://prevter.me{encodeURIComponent(lvl.existingId)};
+if (lvl.existingId) return `https://prevter.me{encodeURIComponent(lvl.existingId)}`;
 return "extreme.png";
 }
 function updateHeaderBadge() {
