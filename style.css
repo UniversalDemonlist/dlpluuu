@@ -5642,3 +5642,226 @@ body:has(#leaderboard.active) {
   animation: none !important;
   background-attachment: scroll !important;
 }
+
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.megamenu-grid::-webkit-scrollbar {
+  display: none;
+}
+
+body::before,
+body::after {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+}
+
+.demon-card,
+.player-card,
+.demon-card *,
+.player-card * {
+  content-visibility: visible !important;
+  contain: none !important;
+  will-change: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#rules nav,
+#rules aside,
+#rules .sidebar,
+#guidelines nav,
+#guidelines aside,
+#guidelines .sidebar,
+.tab-content nav,
+.tab-content aside {
+  position: sticky !important;
+  top: 84px !important;
+  left: auto !important;
+  right: auto !important;
+  width: auto !important;
+  z-index: 10 !important;
+}
+
+#demonlist .panel {
+  position: relative !important;
+  top: 0 !important;
+  z-index: 500 !important;
+  overflow: visible !important;
+  margin-bottom: 24px !important;
+}
+
+#demonlist #search-bar {
+  position: relative !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+  z-index: 1 !important;
+}
+
+#demonlist #demons,
+#demonlist #demon-container {
+  position: relative !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  z-index: 1 !important;
+}
+
+.megamenu-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 4px;
+  font-family: "Montserrat", sans-serif;
+  z-index: 9998;
+}
+
+.megamenu-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: rgba(13, 18, 28, 0.96);
+  border: 1px solid #232d42;
+  border-radius: 10px;
+}
+
+.megamenu-wrapper:has(.megamenu-panel.open) .megamenu-tabs {
+  border-radius: 10px 10px 0 0;
+}
+
+.megamenu-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #cbd5e1;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.megamenu-tab:hover {
+  color: #ffffff;
+}
+
+.megamenu-tab.active {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
+}
+
+.megamenu-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 20, 30, 0.98);
+  border: 1px solid #232d42;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 18px 24px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+}
+
+.megamenu-panel.open {
+  display: block;
+}
+
+.megamenu-desc {
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  max-width: 680px;
+  margin: 0 auto 20px;
+}
+
+.megamenu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px 12px;
+  max-height: 440px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.megamenu-item {
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.megamenu-item:hover {
+  background: rgba(96, 165, 250, 0.14);
+  transform: translateY(-1px);
+}
+
+.megamenu-item-title {
+  color: #f8fafc;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.megamenu-item-creator {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .megamenu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .megamenu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #080406 !important;
+  background-image:
+    radial-gradient(circle at 20% 12%, rgba(220, 38, 38, 0.25) 0%, transparent 45%),
+    radial-gradient(circle at 50% 0%, rgba(153, 27, 27, 0.30) 0%, transparent 55%),
+    radial-gradient(circle at 82% 16%, rgba(239, 68, 68, 0.20) 0%, transparent 46%),
+    linear-gradient(rgba(239, 68, 68, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220, 38, 38, 0.04) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px !important;
+}
+
+body:has(#leaderboard.active) {
+  background-color: #090710 !important;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 48, 48, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 52% 0%, rgba(160, 32, 240, 0.28) 0%, transparent 52%),
+    radial-gradient(circle at 85% 15%, rgba(255, 0, 255, 0.20) 0%, transparent 46%),
+    linear-gradient(rgba(160, 32, 240, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 255, 0.04) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px !important;
+}
+
+footer,
+.footer,
+body:has(#leaderboard.active) footer,
+body:has(#leaderboard.active) .footer,
+body:has(#demonlist.active) footer,
+body:has(#demonlist.active) .footer {
+  position: relative;
+  z-index: 2;
+  background: #0d121c !important;
+  background-image: none !important;
+  color: #cbd5e1 !important;
+}
