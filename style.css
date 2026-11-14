@@ -902,3 +902,64 @@ z-index: 300;
 }
 #back-to-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
 #back-to-top-btn:hover { background: #2563eb; transform: translateY(-2px);}
+
+.player-card .rank-badge {
+display: none !important;
+}
+.player-card,
+.player-card *,
+#leaderboard-container {
+opacity: 1 !important;
+visibility: visible !important;
+content-visibility: visible !important;
+}
+.player-card {
+display: flex !important;
+background: #171f2c !important;
+border: 1px solid #263147 !important;
+color: #f8fafc !important;
+min-height: 92px !important;
+height: auto !important;
+}
+body:not(.dark) .player-card {
+background: #ffffff !important;
+border-color: #cbd5e1 !important;
+color: #0f172a !important;
+}
+@keyframes demonlistGlowAnim {
+0% { background-position: 0% 0%, 50% 0%, 100% 0%, 0 0, 0 0; }
+50% { background-position: 35% 20%, 65% 15%, 70% 25%, 0 0, 0 0; }
+100% { background-position: 0% 0%, 50% 0%, 100% 0%, 0 0, 0 0; }
+}
+@keyframes demonGridScroll {
+0% { transform: translate3d(0, 0, 0); }
+100% { transform: translate3d(80px, -80px, 0); }
+}
+@keyframes demonFaceCycle {
+0%, 100% { background-image: url("data/easy.png"); }
+20% { background-image: url("data/medium.png"); }
+40% { background-image: url("data/hard.png"); }
+60% { background-image: url("data/insane.png"); }
+80% { background-image: url("data/extreme.png"); }
+}
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
+background-size: 160% 160%, 160% 160%, 160% 160%, 40px 40px, 40px 40px !important;
+animation: demonlistGlowAnim 12s ease-in-out infinite !important;
+}
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::before {
+content: "" !important;
+display: block !important;
+position: fixed;
+inset: -80px;
+z-index: 0;
+pointer-events: none;
+opacity: 0.14;
+background-image: url("data/easy.png");
+background-size: 56px 56px;
+background-repeat: repeat;
+animation: demonGridScroll 10s linear infinite, demonFaceCycle 20s steps(1) infinite !important;
+}
+body:has(#demonlist.active) #demonlist {
+position: relative;
+z-index: 1;
+}
