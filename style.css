@@ -1749,3 +1749,31 @@ html body:not(.dark):has(#home.active):not(:has(#old-bg-toggle:checked)) {
   background-size: 160% 160%, 160% 160%, 160% 160% !important;
 }
 
+@keyframes demonSmoothEndless {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(160px, -160px, 0);
+  }
+}
+
+html body:has(#demonlist.active):not(:has(#old-bg-toggle:checked))::before,
+html body:has(#demon-page.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: -160px !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.14 !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='320' height='320' viewBox='0 0 320 320'><image href='data/easy.png' x='12' y='12' width='40' height='40'/><image href='data/medium.png' x='172' y='12' width='40' height='40'/><image href='data/hard.png' x='92' y='92' width='40' height='40'/><image href='data/insane.png' x='252' y='92' width='40' height='40'/><image href='data/extreme.png' x='12' y='172' width='40' height='40'/><image href='data/easy.png' x='172' y='172' width='40' height='40'/><image href='data/medium.png' x='92' y='252' width='40' height='40'/><image href='data/hard.png' x='252' y='252' width='40' height='40'/></svg>") !important;
+  background-size: 160px 160px !important;
+  background-repeat: repeat !important;
+  background-position: 0 0 !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  animation: demonSmoothEndless 14s linear infinite !important;
+}
+
