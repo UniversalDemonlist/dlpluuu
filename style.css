@@ -5072,3 +5072,54 @@ body:not(.dark):has(#leaderboard.active) .footer {
   background-image: none !important;
   color: #0f172a !important;
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3a57 #070a12;
+}
+
+body:has(#leaderboard.active) * {
+  scrollbar-color: #7e22ce #070410;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070a12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2563eb, #38bdf8);
+  border-radius: 999px;
+  border: 2px solid #070a12;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #3b82f6, #7dd3fc);
+}
+
+body:has(#leaderboard.active)::-webkit-scrollbar-track {
+  background: #070410;
+}
+
+body:has(#leaderboard.active)::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff3030, #a020f0, #ff00ff);
+  border-radius: 999px;
+  border: 2px solid #070410;
+}
+
+body:has(#leaderboard.active)::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff5c5c, #c084fc, #ff66ff);
+}
+
+body:not(.dark)::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+body:not(.dark)::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border: 2px solid #f1f5f9;
+}
