@@ -1399,3 +1399,108 @@ html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) 
   background-size: 320% 320%, 320% 320%, 280% 280%, 280% 280% !important;
   animation: leaderboardCosmicBeams 28s linear infinite !important;
 }
+
+html body.dark:has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#demon-page.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #000000 !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+@keyframes leaderboardUltraCosmic {
+  0% {
+    background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 50% 50%, 20% 80%, 80% 20%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 100%, 100% 0%, 0% 0%, 50% 50%, 80% 20%, 20% 80%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 50% 50%, 20% 80%, 80% 20%;
+  }
+}
+
+html body.dark:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #000000 !important;
+  background-image:
+    linear-gradient(125deg,
+      transparent 14%,
+      rgba(255, 48, 48, 0.22) 16.5%,
+      rgba(255, 180, 180, 0.85) 17%,
+      rgba(255, 48, 48, 0.22) 17.5%,
+      transparent 20%,
+      transparent 30%,
+      rgba(160, 32, 240, 0.25) 32.5%,
+      rgba(235, 190, 255, 0.85) 33%,
+      rgba(160, 32, 240, 0.25) 33.5%,
+      transparent 36%,
+      transparent 48%,
+      rgba(255, 0, 255, 0.22) 50.5%,
+      rgba(255, 200, 255, 0.85) 51%,
+      rgba(255, 0, 255, 0.22) 51.5%,
+      transparent 54%,
+      transparent 66%,
+      rgba(0, 191, 255, 0.22) 68.5%,
+      rgba(200, 245, 255, 0.85) 69%,
+      rgba(0, 191, 255, 0.22) 69.5%,
+      transparent 72%,
+      transparent 82%,
+      rgba(125, 249, 255, 0.20) 84.5%,
+      rgba(230, 255, 255, 0.80) 85%,
+      rgba(125, 249, 255, 0.20) 85.5%,
+      transparent 88%),
+    linear-gradient(235deg,
+      transparent 18%,
+      rgba(255, 215, 0, 0.22) 20.5%,
+      rgba(255, 248, 200, 0.85) 21%,
+      rgba(255, 215, 0, 0.22) 21.5%,
+      transparent 24%,
+      transparent 40%,
+      rgba(229, 228, 226, 0.18) 42.5%,
+      rgba(255, 255, 255, 0.75) 43%,
+      rgba(229, 228, 226, 0.18) 43.5%,
+      transparent 46%,
+      transparent 64%,
+      rgba(205, 127, 50, 0.22) 66.5%,
+      rgba(255, 220, 185, 0.80) 67%,
+      rgba(205, 127, 50, 0.22) 67.5%,
+      transparent 70%,
+      transparent 82%,
+      rgba(192, 192, 192, 0.18) 84.5%,
+      rgba(255, 255, 255, 0.70) 85%,
+      rgba(192, 192, 192, 0.18) 85.5%,
+      transparent 88%),
+    linear-gradient(48deg,
+      transparent 29%,
+      rgba(160, 32, 240, 0.18) 31.8%,
+      rgba(255, 255, 255, 0.70) 32%,
+      rgba(160, 32, 240, 0.18) 32.2%,
+      transparent 35%,
+      transparent 69%,
+      rgba(0, 191, 255, 0.18) 71.8%,
+      rgba(255, 255, 255, 0.70) 72%,
+      rgba(0, 191, 255, 0.18) 72.2%,
+      transparent 75%),
+    linear-gradient(312deg,
+      transparent 24%,
+      rgba(255, 48, 48, 0.18) 26.8%,
+      rgba(255, 255, 255, 0.70) 27%,
+      rgba(255, 48, 48, 0.18) 27.2%,
+      transparent 30%,
+      transparent 74%,
+      rgba(255, 215, 0, 0.18) 76.8%,
+      rgba(255, 255, 255, 0.70) 77%,
+      rgba(255, 215, 0, 0.18) 77.2%,
+      transparent 80%),
+    radial-gradient(circle at 50% 45%, rgba(160, 32, 240, 0.14) 0%, transparent 60%),
+    radial-gradient(circle at 20% 25%, rgba(255, 48, 48, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(0, 191, 255, 0.12) 0%, transparent 45%) !important;
+  background-size: 360% 360%, 360% 360%, 320% 320%, 320% 320%, 100% 100%, 160% 160%, 160% 160% !important;
+  animation: leaderboardUltraCosmic 34s ease-in-out infinite !important;
+}
+
+html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
+  opacity: 0.12 !important;
+}
