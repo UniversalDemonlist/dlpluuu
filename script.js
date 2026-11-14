@@ -2681,4 +2681,127 @@ if (document.readyState === "loading") {
   });
 })();
 
+(function enforceBannedAcrossAllModes() {
+  function isPlayerBanned(rawName) {
+    if (!rawName || typeof rawName !== "string") return false;
+    const target = normalizeName(rawName);
+    if (!target) return false;
+    return (bannedPlayers || []).some(b => normalizeName(b) === target);
+  }
+
+  window.isPlayerBanned = isPlayerBanned;
+
+  const origGetVisibleDemons = window.getVisibleDemons;
+  window.getVisibleDemons = function () {
+    let newPosition = 1;
+
+    return globalDemons
+      .map(demon => {
+        let records = (demon.records || []).map(r => {
+          if (typeof r === "string") {
+            return { user: r, percent: 100, link: "" };
+          }
+          return {
+            user: r.user || "",
+            percent: r.percent || 100,
+            link: r.link || ""
+          };
+        });
+
+        records = records.filter(r => !isPlayerBanned(r.user));
+
+        if (disableSpaceUK) {
+          records = records.filter(r => !r.user.toLowerCase().includes("[c]"));
+        }
+
+        let verifier = demon.verifier || "Unknown";
+        const verifierBanned = isPlayerBanned(verifier);
+        const verifierIsCheater = verifier.toLowerCase().includes("[c]");
+
+        if (verifierBanned || (disableSpaceUK && verifierIsCheater)) {
+          if (records.length > 0) {
+            verifier = records.user;
+          } else {
+            return null;
+          }
+        }
+
+        return {
+          ...demon,
+          verifier,
+          records,
+          position: demon.cosmetic ? null : newPosition++
+        };
+      })
+      .filter(Boolean);
+  };
+
+  const origLoadLeaderboard = window.loadLeaderboard;
+  window.loadLeaderboard = async function (...args) {
+    await origLoadLeaderboard.apply(this, args);
+
+    setTimeout(() => {
+      if (!window._leaderboardScores || !window._playerMap) return;
+
+      let changed = false;
+      Object.keys(window._leaderboardScores).forEach(key => {
+        const display = window._playerMap.get(key) || key;
+        if (isPlayerBanned(display) || isPlayerBanned(key)) {
+          delete window._leaderboardScores[key];
+          window._playerMap.delete(key);
+          changed = true;
+        }
+      });
+
+      if (changed) {
+        const container = document.getElementById("leaderboard-container");
+        if (!container) return;
+
+        const searchQuery = (document.getElementById("player-search")?.value || "").toLowerCase();
+        const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
+
+        const allPlayers = Object.entries(window._leaderboardScores).map(([key, score]) => {
+          const name = window._playerMap.get(key);
+          const hardest = getPlayerHardestDemon(name);
+          return {
+            key,
+            name,
+            score,
+            hardestPosition: hardest?.position || 999999,
+            rankName: getPlayerRank(score)
+          };
+        });
+
+        if (typeof updateHomeStats === "function") {
+          updateHomeStats(allPlayers.length);
+        }
+
+        const sorted = allPlayers.filter(p => {
+          if (!searchQuery.trim()) return true;
+          return cleanDisplayName(p.name).toLowerCase().includes(searchQuery);
+        });
+
+        if (filterMode === "points") {
+          sorted.sort((a, b) => b.score - a.score);
+        } else if (filterMode === "tier") {
+          sorted.sort((a, b) => a.hardestPosition - b.hardestPosition || b.score - a.score);
+        }
+
+        container.innerHTML = `
+          <div class="leaderboard-warning">
+            WARNING: Rankings might not be accurate due to this list not being very popular. Take your rank with a grain of salt.
+          </div>
+        `;
+
+        if (sorted.length > 0) {
+          sorted.forEach((p, index) => {
+            container.appendChild(createPlayerCard(p.name, p.score, index + 1));
+          });
+        } else {
+          container.innerHTML = "<p>No players with scores yet.</p>";
+        }
+      }
+    }, 520);
+  };
+})();
 
