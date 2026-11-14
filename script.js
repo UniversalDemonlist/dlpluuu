@@ -1877,4 +1877,12 @@ function initHashRouting() {
 
 document.addEventListener("DOMContentLoaded", initHashRouting);
 
+function setHomeStatsLoading() {
+  ["home-stat-users", "home-stat-records", "home-stat-levels"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = "Loading...";
+  });
+}
+
+setHomeStatsLoading();
 
