@@ -3735,3 +3735,247 @@ window.exitCustomList = function () {
     }
   };
 })();
+
+(function () {
+  const MAX_CODE_CHARS = 250000;
+  const MAX_LEVELS = 250;
+  const MAX_RECORDS_PER_LEVEL = 200;
+
+  let customList = {
+    title: "Untitled Custom List",
+    levels: []
+  };
+
+  function cleanText(str, maxLen) {
+    if (typeof str !== "string") return "";
+    return str.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, maxLen);
+  }
+
+  function sanitizeUrl(raw) {
+    if (typeof raw !== "string") return "";
+    const trimmed = raw.trim().slice(0, 300);
+    if (!trimmed) return "";
+    try {
+      const parsed = new URL(trimmed);
+      return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.href : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function sanitizeRecord(rawRec) {
+    if (!rawRec || typeof rawRec !== "object") return null;
+    const user = cleanText(rawRec.user, 40);
+    if (!user) return null;
+    let percent = Number(rawRec.percent);
+    if (!Number.isFinite(percent)) percent = 100;
+    percent = Math.max(1, Math.min(100, Math.round(percent)));
+    return {
+      user: user,
+      percent: percent,
+      link: sanitizeUrl(rawRec.link || "")
+    };
+  }
+
+  function sanitizeLevel(rawLvl) {
+    if (!rawLvl || typeof rawLvl !== "object") return null;
+    const name = cleanText(rawLvl.name, 60);
+    const verifier = cleanText(rawLvl.verifier, 40);
+    const verification = sanitizeUrl(rawLvl.verification);
+    if (!name || !verifier || !verification) return null;
+    const records = Array.isArray(rawLvl.records)
+      ? rawLvl.records.slice(0, MAX_RECORDS_PER_LEVEL).map(sanitizeRecord).filter(Boolean)
+      : [];
+    return {
+      id: rawLvl.id ? cleanText(String(rawLvl.id), 30) : "",
+      name: name,
+      verifier: verifier,
+      creator: rawLvl.creator ? cleanText(rawLvl.creator, 40) : verifier,
+      verification: verification,
+      thumbnail: sanitizeUrl(rawLvl.thumbnail || ""),
+      password: rawLvl.password ? cleanText(String(rawLvl.password), 20) : "Free Copy",
+      records: records
+    };
+  }
+
+  function setStatus(msg, isError) {
+    const el = document.getElementById("cl-status-msg");
+    if (!el) return;
+    el.style.color = isError ? "#ef4444" : "var(--accent-green)";
+    el.textContent = msg;
+    setTimeout(function () {
+      if (el.textContent === msg) el.textContent = "";
+    }, 4000);
+  }
+
+   function getThumb(lvl) {
+    if (lvl.thumbnail) return lvl.thumbnail;
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(lvl.verification);
+      if (yt) return yt;
+    }
+    if (lvl.id && !String(lvl.id).startsWith("custom")) {
+      return "https://prevter.me" + encodeURIComponent(lvl.id);
+    }
+    return "extreme.png";
+  }
+
+  function getYoutubeEmbed(url) {
+    try {
+      const u = new URL(url);
+      let vid = "";
+      if (u.hostname.includes("youtu.be")) {
+        vid = u.pathname.slice(1);
+      } else if (u.hostname.includes("youtube.com")) {
+        vid = u.searchParams.get("v") || "";
+      }
+      return vid ? "https://youtube.com" + encodeURIComponent(vid) : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function openCustomDemonDetail(lvl, position) {
+    const listEl = document.getElementById("cl-levels-container");
+    const detailEl = document.getElementById("cl-demon-detail");
+    if (!listEl || !detailEl) return;
+
+    listEl.style.display = "none";
+    detailEl.style.display = "block";
+    detailEl.innerHTML = "";
+
+    const score = (5500 / Math.sqrt(position)).toFixed(2);
+    const embedUrl = getYoutubeEmbed(lvl.verification);
+
+    const backBtn = document.createElement("button");
+    backBtn.type = "button";
+    backBtn.className = "dp-back-btn";
+    backBtn.textContent = "← Back to Custom List";
+    backBtn.addEventListener("click", function () {
+      detailEl.style.display = "none";
+      listEl.style.display = "flex";
+    });
+    detailEl.appendChild(backBtn);
+
+    const mainCard = document.createElement("div");
+    mainCard.className = "dp-main-card";
+
+    const header = document.createElement("div");
+    header.className = "dp-header";
+
+    const titleWrap = document.createElement("div");
+    const h1 = document.createElement("h1");
+    h1.className = "dp-title";
+    h1.textContent = lvl.name;
+
+    const sub = document.createElement("p");
+    sub.className = "dp-creators";
+    sub.textContent = "By " + (lvl.creator || lvl.verifier) + " • Verified by " + lvl.verifier;
+    titleWrap.append(h1, sub);
+
+    const pill = document.createElement("span");
+    pill.className = "dp-rank-pill";
+    pill.textContent = "#" + position;
+
+    header.append(titleWrap, pill);
+    mainCard.appendChild(header);
+
+    if (embedUrl) {
+      const videoWrap = document.createElement("div");
+      videoWrap.className = "dp-video-wrap";
+      const iframe = document.createElement("iframe");
+      iframe.src = embedUrl;
+      iframe.allowFullscreen = true;
+      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      videoWrap.appendChild(iframe);
+      mainCard.appendChild(videoWrap);
+    } else {
+      const linkBtn = document.createElement("a");
+      linkBtn.href = lvl.verification;
+      linkBtn.target = "_blank";
+      linkBtn.rel = "noopener noreferrer nofollow";
+      linkBtn.className = "sidebar-action-btn";
+      linkBtn.style.display = "inline-block";
+      linkBtn.style.width = "auto";
+      linkBtn.textContent = "Watch Verification Video ↗";
+      mainCard.appendChild(linkBtn);
+    }
+
+    const infoGrid = document.createElement("div");
+    infoGrid.className = "dp-info-grid";
+
+    const boxes = [
+      { label: "List Score (100%)", value: score + " pts" },
+      { label: "Verifier", value: lvl.verifier },
+      { label: "Password", value: lvl.password || "Free Copy" },
+      { label: "Level ID", value: lvl.id || "Custom" }
+    ];
+
+    boxes.forEach(function (b) {
+      const box = document.createElement("div");
+      box.className = "dp-info-box";
+      const lbl = document.createElement("span");
+      lbl.className = "dp-info-label";
+      lbl.textContent = b.label;
+      const val = document.createElement("span");
+      val.className = "dp-info-value";
+      val.textContent = b.value;
+      box.append(lbl, val);
+      infoGrid.appendChild(box);
+    });
+
+    mainCard.appendChild(infoGrid);
+    detailEl.appendChild(mainCard);
+
+    const recCard = document.createElement("div");
+    recCard.className = "dp-records-card";
+    const recTitle = document.createElement("h2");
+    recTitle.textContent = "Records (" + (lvl.records ? lvl.records.length : 0) + ")";
+    recCard.appendChild(recTitle);
+
+    if (lvl.records && lvl.records.length > 0) {
+      const recList = document.createElement("div");
+      recList.className = "dp-records-list";
+      lvl.records.forEach(function (r) {
+        const row = document.createElement("div");
+        row.className = "dp-record-row";
+
+        const userSpan = document.createElement("span");
+        userSpan.className = "dp-record-user";
+        userSpan.textContent = r.user;
+
+        const rightWrap = document.createElement("div");
+        rightWrap.style.display = "flex";
+        rightWrap.style.alignItems = "center";
+        rightWrap.style.gap = "12px";
+
+        const pctSpan = document.createElement("span");
+        pctSpan.className = "dp-record-pct";
+        pctSpan.textContent = r.percent + "%";
+        rightWrap.appendChild(pctSpan);
+
+        if (r.link) {
+          const vidLink = document.createElement("a");
+          vidLink.href = r.link;
+          vidLink.target = "_blank";
+          vidLink.rel = "noopener noreferrer nofollow";
+          vidLink.className = "dp-record-link";
+          vidLink.textContent = "Video ↗";
+          rightWrap.appendChild(vidLink);
+        }
+
+        row.append(userSpan, rightWrap);
+        recList.appendChild(row);
+      });
+      recCard.appendChild(recList);
+    } else {
+      const emptyP = document.createElement("p");
+      emptyP.style.color = "var(--text-muted)";
+      emptyP.textContent = "No records submitted on this level yet.";
+      recCard.appendChild(emptyP);
+    }
+
+    detailEl.appendChild(recCard);
+  }
+
+ 
