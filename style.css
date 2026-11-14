@@ -1336,3 +1336,66 @@ html body:not(.dark):has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
   background-size: 200% 200%, 200% 200%, 48px 48px, 48px 48px !important;
   animation: demonlistColorCycle 25s ease-in-out infinite !important;
 }
+
+@keyframes leaderboardCosmicBeams {
+  0% {
+    background-position: -150% -150%, 150% -150%, -150% 150%, 150% 150%;
+  }
+  50% {
+    background-position: 150% 150%, -150% 150%, 150% -150%, -150% -150%;
+  }
+  100% {
+    background-position: -150% -150%, 150% -150%, -150% 150%, 150% 150%;
+  }
+}
+
+html body.dark:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #000000 !important;
+  background-image:
+    linear-gradient(125deg,
+      transparent 17%,
+      rgba(255, 48, 48, 0.45) 18%,
+      transparent 19%,
+      transparent 31%,
+      rgba(160, 32, 240, 0.45) 32%,
+      transparent 33%,
+      transparent 47%,
+      rgba(255, 0, 255, 0.45) 48%,
+      transparent 49%,
+      transparent 63%,
+      rgba(0, 191, 255, 0.45) 64%,
+      transparent 65%,
+      transparent 79%,
+      rgba(125, 249, 255, 0.40) 80%,
+      transparent 81%),
+    linear-gradient(235deg,
+      transparent 21%,
+      rgba(255, 215, 0, 0.42) 22%,
+      transparent 23%,
+      transparent 41%,
+      rgba(192, 192, 192, 0.35) 42%,
+      transparent 43%,
+      transparent 61%,
+      rgba(205, 127, 50, 0.42) 62%,
+      transparent 63%,
+      transparent 81%,
+      rgba(229, 228, 226, 0.35) 82%,
+      transparent 83%),
+    linear-gradient(45deg,
+      transparent 34.4%,
+      rgba(255, 48, 48, 0.35) 35%,
+      transparent 35.6%,
+      transparent 64.4%,
+      rgba(0, 191, 255, 0.35) 65%,
+      transparent 65.6%),
+    linear-gradient(315deg,
+      transparent 34.4%,
+      rgba(160, 32, 240, 0.35) 35%,
+      transparent 35.6%,
+      transparent 64.4%,
+      rgba(255, 215, 0, 0.35) 65%,
+      transparent 65.6%) !important;
+  background-size: 320% 320%, 320% 320%, 280% 280%, 280% 280% !important;
+  animation: leaderboardCosmicBeams 28s linear infinite !important;
+}
