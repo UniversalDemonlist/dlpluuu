@@ -5220,6 +5220,240 @@ window.exitCustomList = function () {
   });
 })();
 
+(function cleanResetCustomLists() {
+  function init() {
+    const allCustomTabs = document.querySelectorAll("#custom-lists");
+    for (let i = 1; i < allCustomTabs.length; i++) {
+      allCustomTabs.item(i).remove();
+    }
+
+    const tab = document.getElementById("custom-lists");
+    if (!tab) return;
+
+    const freshTab = tab.cloneNode(true);
+    tab.parentNode.replaceChild(freshTab, tab);
+
+    let state = {
+      title: "Untitled Custom List",
+      levels: []
+    };
+
+    function cleanStr(s, max) {
+      return typeof s === "string" ? s.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, max) : "";
+    }
+
+    function cleanUrl(u) {
+      const t = cleanStr(u, 300);
+      if (!t) return "";
+      try {
+        const p = new URL(t);
+        return p.protocol === "http:" || p.protocol === "https:" ? p.href : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function isHiddenUser(name) {
+      if (!name) return true;
+      if (typeof window.isPlayerBanned === "function" && window.isPlayerBanned(name)) return true;
+      if (typeof disableSpaceUK !== "undefined" && disableSpaceUK && String(name).toLowerCase().includes("[c]")) return true;
+      return false;
+    }
+
+    function formatName(name) {
+      return typeof cleanDisplayName === "function" ? cleanDisplayName(name) : cleanStr(name, 40);
+    }
+
+    function notify(msg, isErr) {
+      const el = freshTab.querySelector("#cl-status-msg");
+      if (!el) return;
+      el.style.color = isErr ? "#ef4444" : "var(--accent-green)";
+      el.textContent = msg;
+      setTimeout(function () {
+        if (el.textContent === msg) el.textContent = "";
+      }, 4000);
+    }
+
+    function getYtId(url) {
+      const m = String(url || "").match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      return m ? m.at(1) : "";
+    }
+
+    function openDemonModalPage(lvl, pos) {
+      let dp = document.getElementById("demon-page");
+      if (!dp) {
+        dp = document.createElement("div");
+        dp.id = "demon-page";
+        dp.className = "tab-content";
+        freshTab.parentNode.appendChild(dp);
+      }
+
+      document.querySelectorAll(".tab-content").forEach(function (c) {
+        c.classList.remove("active");
+        c.style.display = "none";
+      });
+
+      dp.classList.add("active");
+      dp.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const score = (5500 / Math.sqrt(pos)).toFixed(2);
+      const ytId = getYtId(lvl.verification);
+      const recs = (lvl.records || []).filter(function (r) {
+        return !isHiddenUser(r.user);
+      });
+
+      dp.innerHTML = "";
+
+      const backBtn = document.createElement("button");
+      backBtn.type = "button";
+      backBtn.className = "dp-back-btn";
+      backBtn.textContent = "← Back to Custom List";
+      backBtn.addEventListener("click", function () {
+        dp.innerHTML = "";
+        dp.classList.remove("active");
+        dp.style.display = "none";
+        document.querySelectorAll(".tab-content").forEach(function (c) {
+          c.style.display = "";
+        });
+        freshTab.classList.add("active");
+      });
+      dp.appendChild(backBtn);
+
+      const mainCard = document.createElement("div");
+      mainCard.className = "dp-main-card";
+
+      const header = document.createElement("div");
+      header.className = "dp-header";
+
+      const tWrap = document.createElement("div");
+      const h1 = document.createElement("h1");
+      h1.className = "dp-title";
+      h1.textContent = lvl.name;
+
+      const sub = document.createElement("p");
+      sub.className = "dp-creators";
+      sub.textContent = "Published by " + formatName(lvl.creator || lvl.verifier) + " • Verified by " + formatName(lvl.verifier);
+      tWrap.append(h1, sub);
+
+      const pill = document.createElement("span");
+      pill.className = "dp-rank-pill";
+      pill.textContent = "#" + pos;
+
+      header.append(tWrap, pill);
+      mainCard.appendChild(header);
+
+      if (ytId) {
+        const vWrap = document.createElement("div");
+        vWrap.className = "dp-video-wrap";
+        if (window.location.protocol === "file:") {
+          const box = document.createElement("div");
+          box.style.padding = "20px";
+          box.style.textAlign = "center";
+          box.style.background = "var(--bg-input)";
+          box.style.borderRadius = "8px";
+          const a = document.createElement("a");
+          a.href = lvl.verification;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer nofollow";
+          a.className = "sidebar-action-btn";
+          a.style.display = "inline-block";
+          a.style.width = "auto";
+          a.textContent = "Watch Verification on YouTube ↗";
+          box.appendChild(a);
+          vWrap.appendChild(box);
+        } else {
+          const iframe = document.createElement("iframe");
+          iframe.src = "https://youtube.com" + encodeURIComponent(ytId);
+          iframe.setAttribute("frameborder", "0");
+          iframe.allowFullscreen = true;
+          vWrap.appendChild(iframe);
+        }
+        mainCard.appendChild(vWrap);
+      } else if (lvl.verification) {
+        const a = document.createElement("a");
+        a.href = lvl.verification;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer nofollow";
+        a.className = "sidebar-action-btn";
+        a.style.display = "inline-block";
+        a.style.width = "auto";
+        a.style.marginBottom = "14px";
+        a.textContent = "Watch Verification Video ↗";
+        mainCard.appendChild(a);
+      }
+
+      const grid = document.createElement("div");
+      grid.className = "dp-info-grid";
+      [
+        { l: "List Score (100%)", v: score + " pts" },
+        { l: "Verifier", v: formatName(lvl.verifier) },
+        { l: "Password", v: lvl.password || "Free Copy" }
+      ].forEach(function (item) {
+        const b = document.createElement("div");
+        b.className = "dp-info-box";
+        const s1 = document.createElement("span");
+        s1.className = "dp-info-label";
+        s1.textContent = item.l;
+        const s2 = document.createElement("span");
+        s2.className = "dp-info-value";
+        s2.textContent = item.v;
+        b.append(s1, s2);
+        grid.appendChild(b);
+      });
+      mainCard.appendChild(grid);
+      dp.appendChild(mainCard);
+
+      const recCard = document.createElement("div");
+      recCard.className = "dp-records-card";
+      const recH2 = document.createElement("h2");
+      recH2.textContent = "Records (" + recs.length + ")";
+      recCard.appendChild(recH2);
+
+      if (recs.length === 0) {
+        const p = document.createElement("p");
+        p.style.color = "var(--text-muted)";
+        p.textContent = "No records submitted yet.";
+        recCard.appendChild(p);
+      } else {
+        const list = document.createElement("div");
+        list.className = "dp-records-list";
+        recs.forEach(function (r) {
+          const row = document.createElement("div");
+          row.className = "dp-record-row";
+          const u = document.createElement("span");
+          u.className = "dp-record-user";
+          u.textContent = formatName(r.user);
+
+          const right = document.createElement("div");
+          right.style.display = "flex";
+          right.style.alignItems = "center";
+          right.style.gap = "12px";
+
+          const pct = document.createElement("span");
+          pct.className = "dp-record-pct";
+          pct.textContent = r.percent + "%";
+          right.appendChild(pct);
+
+          if (r.link) {
+            const la = document.createElement("a");
+            la.href = r.link;
+            la.target = "_blank";
+            la.rel = "noopener noreferrer nofollow";
+            la.className = "dp-record-link";
+            la.textContent = "Video ↗";
+            right.appendChild(la);
+          }
+
+          row.append(u, right);
+          list.appendChild(row);
+        });
+        recCard.appendChild(list);
+      }
+      dp.appendChild(recCard);
+    }
+
+      
     function renderAll() {
       const badge = freshTab.querySelector("#cl-active-title");
       if (badge) {
