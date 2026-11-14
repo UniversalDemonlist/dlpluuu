@@ -1886,3 +1886,13 @@ function setHomeStatsLoading() {
 
 setHomeStatsLoading();
 
+(function fixPrematureHomeStats() {
+  const originalUpdate = window.updateHomeStats;
+  window.updateHomeStats = function (leaderboardCount = null) {
+    if (!globalDemons || globalDemons.length === 0) return;
+    if (typeof originalUpdate === "function") {
+      originalUpdate(leaderboardCount);
+    }
+  };
+})();
+
