@@ -2046,14 +2046,12 @@ setHomeStatsLoading();
     const info = card.querySelector(".demon-info");
     if (!info) return card;
 
-    // Remove the old single-score line if present
     Array.from(info.querySelectorAll("p")).forEach(p => {
       if (p.textContent.trim().startsWith("Score:")) {
         p.remove();
       }
     });
 
-    // Update or create the meta line with 5% on the left and 100% on the right
     let metaLine = info.querySelector(".demon-meta-line");
     if (!metaLine) {
       metaLine = document.createElement("p");
@@ -2073,6 +2071,76 @@ setHomeStatsLoading();
     `;
 
     return card;
+  };
+})();
+
+(function showProgressOnPlayerPages() {
+  const prevOpenPlayerPage = window.openPlayerPage;
+
+  window.openPlayerPage = function (key, scores) {
+    prevOpenPlayerPage(key, scores);
+
+    const container = document.getElementById("leaderboard-profile-view");
+    const profileEl = container?.querySelector(".player-profile");
+    if (!profileEl) return;
+
+    const progressRuns = [];
+
+    getVisibleDemons().forEach(demon => {
+      if (demon.cosmetic) return;
+
+      let bestPercent = 0;
+      (demon.records || []).forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: Number(r.percent) || 100 };
+
+        if (normalizeName(record.user) === key && record.percent < 100 && record.percent >= 5) {
+          if (record.percent > bestPercent) bestPercent = record.percent;
+        }
+      });
+
+      if (bestPercent > 0) {
+        progressRuns.push({
+          demon,
+          name: demon.name,
+          position: demon.position,
+          percent: bestPercent,
+          background: demon.background || demon.thumbnail || getYoutubeThumbnail(demon.verification) || ""
+        });
+      }
+    });
+
+    if (progressRuns.length === 0) return;
+
+    progressRuns.sort((a, b) => (a.position || 9999) - (b.position || 9999));
+
+    const section = document.createElement("div");
+    section.className = "player-profile-section";
+    section.innerHTML = `
+      <h2>Progress</h2>
+      <div class="completed-grid">
+        ${progressRuns.map(p => `
+          <div class="completed-card fancy-completed progress-card" data-demon="${p.name}" style="background-image:url('${p.background}'); cursor:pointer;" title="Open ${p.name}">
+            <div class="completed-overlay"></div>
+            <div class="completed-info">
+              <h3>#${p.position} — ${p.name}</h3>
+              <span style="color:#38bdf8; font-weight:800; font-size:0.95rem;">${p.percent}%</span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    section.querySelectorAll(".progress-card").forEach(card => {
+      const targetName = card.getAttribute("data-demon");
+      const match = progressRuns.find(p => p.name === targetName);
+      if (match) {
+        card.addEventListener("click", () => openDemonPage(match.demon));
+      }
+    });
+
+    profileEl.appendChild(section);
   };
 })();
 
