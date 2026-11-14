@@ -1896,3 +1896,25 @@ setHomeStatsLoading();
   };
 })();
 
+(function bindDemonDropdowns() {
+  const wireDropdown = (selectId) => {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    select.addEventListener("change", () => {
+      const pos = Number(select.value);
+      if (!pos) return;
+
+      const demon = getVisibleDemons().find(d => d.position === pos);
+      if (demon) openDemonPage(demon);
+
+      select.value = "";
+    });
+  };
+
+  wireDropdown("select-main");
+  wireDropdown("select-extended");
+  wireDropdown("select-legacy");
+})();
+
+
