@@ -2388,6 +2388,297 @@ if (document.readyState === "loading") {
   forceMegaMenuVerifierOnly();
 }
 
+(function initListRoulette() {
+  let rlState = {
+    active: false,
+    finished: false,
+    gaveUp: false,
+    target: 1,
+    poolIds: [],
+    usedIds: [],
+    currentId: null,
+    history: []
+  };
 
+  const STORAGE_KEY = "gdl_roulette_save_v1";
+
+  function showStatus(msg, isError = false) {
+    const el = document.getElementById("rl-status-msg");
+    if (!el) return;
+    el.style.color = isError ? "#ef4444" : "var(--accent-green)";
+    el.textContent = msg;
+    setTimeout(() => {
+      if (el.textContent === msg) el.textContent = "";
+    }, 4000);
+  }
+
+  function getDemonById(id) {
+    const list = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    return list.find(d => String(d.id) === String(id)) || globalDemons.find(d => String(d.id) === String(id));
+  }
+
+  function buildPool() {
+    const useMain = document.getElementById("rl-opt-main")?.checked;
+    const useExt = document.getElementById("rl-opt-ext")?.checked;
+    const useBeyond = document.getElementById("rl-opt-beyond")?.checked;
+
+    const visible = (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons)
+      .filter(d => !d.cosmetic && d.position);
+
+    return visible.filter(d => {
+      if (d.position <= 75 && useMain) return true;
+      if (d.position >= 76 && d.position <= 150 && useExt) return true;
+      if (d.position >= 151 && useBeyond) return true;
+      return false;
+    });
+  }
+
+  function persistLocal() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(rlState));
+    } catch {}
+  }
+
+  function restoreLocal() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.poolIds)) {
+          rlState = parsed;
+        }
+      }
+    } catch {}
+  }
+
+  function encodeSaveCode(state) {
+    const compact = {
+      a: state.active ? 1 : 0,
+      f: state.finished ? 1 : 0,
+      g: state.gaveUp ? 1 : 0,
+      t: state.target,
+      p: state.poolIds,
+      u: state.usedIds,
+      c: state.currentId,
+      h: state.history.map(item => [item.id, item.percent])
+    };
+    return "GDL1-" + btoa(unescape(encodeURIComponent(JSON.stringify(compact))));
+  }
+
+  function decodeSaveCode(code) {
+    const cleaned = code.trim();
+    if (!cleaned.startsWith("GDL1-")) return null;
+    const raw = decodeURIComponent(escape(atob(cleaned.slice(5))));
+    const c = JSON.parse(raw);
+    if (!c || !Array.isArray(c.p) || typeof c.t !== "number") return null;
+    return {
+      active: Boolean(c.a),
+      finished: Boolean(c.f),
+      gaveUp: Boolean(c.g),
+      target: c.t,
+      poolIds: c.p,
+      usedIds: Array.isArray(c.u) ? c.u : [],
+      currentId: c.c || null,
+      history: Array.isArray(c.h) ? c.h.map(x => ({ id: x[0], percent: x[1] })) : []
+    };
+  }
+
+  function pickNextDemon() {
+    const remaining = rlState.poolIds.filter(id => !rlState.usedIds.includes(id));
+    if (remaining.length === 0 || rlState.target > 100) {
+      rlState.active = false;
+      rlState.finished = true;
+      rlState.currentId = null;
+      return;
+    }
+    const chosenId = remaining[Math.floor(Math.random() * remaining.length)];
+    rlState.currentId = chosenId;
+    rlState.usedIds.push(chosenId);
+  }
+
+  function startNewRun() {
+    const pool = buildPool();
+    if (pool.length === 0) {
+      showStatus("Select at least one list section with available levels.", true);
+      return;
+    }
+    rlState = {
+      active: true,
+      finished: false,
+      gaveUp: false,
+      target: 1,
+      poolIds: pool.map(d => String(d.id)),
+      usedIds: [],
+      currentId: null,
+      history: []
+    };
+    pickNextDemon();
+    persistLocal();
+    renderRoulette();
+    showStatus("New roulette run started!");
+  }
+
+  function submitProgress(pct) {
+    if (!rlState.active || !rlState.currentId) return;
+    const val = Number(pct);
+    if (isNaN(val) || val < rlState.target || val > 100) {
+      showStatus(`Enter a percentage between ${rlState.target}% and 100%.`, true);
+      return;
+    }
+
+    rlState.history.unshift({
+      id: rlState.currentId,
+      percent: val
+    });
+
+    if (val >= 100) {
+      rlState.active = false;
+      rlState.finished = true;
+      rlState.currentId = null;
+    } else {
+      rlState.target = val + 1;
+      pickNextDemon();
+    }
+
+    persistLocal();
+    renderRoulette();
+  }
+
+  function giveUpRun() {
+    if (!rlState.active) return;
+    rlState.active = false;
+    rlState.finished = true;
+    rlState.gaveUp = true;
+    persistLocal();
+    renderRoulette();
+  }
+
+  function renderRoulette() {
+    const activeArea = document.getElementById("rl-active-area");
+    const historyArea = document.getElementById("rl-history-area");
+    if (!activeArea || !historyArea) return;
+
+    activeArea.innerHTML = "";
+    historyArea.innerHTML = "";
+
+    if (rlState.finished) {
+      const score = rlState.history.length;
+      const title = rlState.gaveUp ? "Run Ended" : "Roulette Completed!";
+      activeArea.innerHTML = `
+        <div class="rl-summary-box">
+          <h2>${title}</h2>
+          <p>Levels Cleared: <strong>${score}</strong> • Highest Percent: <strong>${rlState.history[0]?.percent || 0}%</strong></p>
+        </div>
+      `;
+    } else if (rlState.active && rlState.currentId) {
+      const demon = getDemonById(rlState.currentId);
+      if (demon) {
+        const thumb =
+          (demon.thumbnail && demon.thumbnail.trim()) ||
+          getYoutubeThumbnail(demon.verification) ||
+          `https://prevter.me{demon.id}`;
+
+        const card = document.createElement("div");
+        card.className = "rl-current-card";
+        card.innerHTML = `
+          <img src="${thumb}" alt="${demon.name}" title="Open ${demon.name}">
+          <div class="rl-current-info">
+            <span class="rl-target-badge">GOAL: AT LEAST ${rlState.target}%</span>
+            <h2>#${demon.position || "?"} — ${demon.name}</h2>
+            <p class="demon-meta-line">Verified by <span class="demon-verifier">${cleanDisplayName(demon.verifier)}</span></p>
+            <div class="rl-controls">
+              <input type="number" id="rl-pct-input" min="${rlState.target}" max="100" value="${rlState.target}" placeholder="${rlState.target}%">
+              <button type="button" id="rl-done-btn" class="rl-done-btn">Done</button>
+              <button type="button" id="rl-giveup-btn" class="rl-giveup-btn">Give Up</button>
+            </div>
+          </div>
+        `;
+
+        card.querySelector("img").addEventListener("click", () => openDemonPage(demon));
+        card.querySelector("#rl-done-btn").addEventListener("click", () => {
+          const val = card.querySelector("#rl-pct-input").value;
+          submitProgress(val);
+        });
+        card.querySelector("#rl-pct-input").addEventListener("keydown", (e) => {
+          if (e.key === "Enter") submitProgress(e.target.value);
+        });
+        card.querySelector("#rl-giveup-btn").addEventListener("click", giveUpRun);
+
+        activeArea.appendChild(card);
+      }
+    }
+
+    if (rlState.history.length > 0) {
+      rlState.history.forEach((entry, idx) => {
+        const d = getDemonById(entry.id);
+        const name = d ? `#${d.position || "?"} — ${d.name}` : `Level ID ${entry.id}`;
+        const row = document.createElement("div");
+        row.className = "rl-history-row";
+        row.innerHTML = `
+          <span><strong>#${rlState.history.length - idx}</strong> &nbsp; ${name}</span>
+          <span class="rl-history-pct">${entry.percent}%</span>
+        `;
+        if (d) {
+          row.style.cursor = "pointer";
+          row.addEventListener("click", () => openDemonPage(d));
+        }
+        historyArea.appendChild(row);
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    restoreLocal();
+
+    document.getElementById("rl-start-btn")?.addEventListener("click", startNewRun);
+
+    document.getElementById("rl-save-btn")?.addEventListener("click", () => {
+      if (!rlState.active && !rlState.finished) {
+        showStatus("Start a roulette run first before saving.", true);
+        return;
+      }
+      const code = encodeSaveCode(rlState);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          showStatus("Save code copied to clipboard!");
+        }).catch(() => {
+          prompt("Copy your save code:", code);
+        });
+      } else {
+        prompt("Copy your save code:", code);
+      }
+    });
+
+    document.getElementById("rl-load-toggle-btn")?.addEventListener("click", () => {
+      const box = document.getElementById("rl-load-box");
+      if (!box) return;
+      box.style.display = box.style.display === "none" ? "flex" : "none";
+    });
+
+    document.getElementById("rl-load-confirm-btn")?.addEventListener("click", () => {
+      const input = document.getElementById("rl-code-input");
+      if (!input || !input.value.trim()) return;
+      try {
+        const decoded = decodeSaveCode(input.value);
+        if (!decoded) {
+          showStatus("Invalid save code.", true);
+          return;
+        }
+        rlState = decoded;
+        persistLocal();
+        renderRoulette();
+        input.value = "";
+        document.getElementById("rl-load-box").style.display = "none";
+        showStatus("Save code loaded successfully!");
+      } catch {
+        showStatus("Invalid save code.", true);
+      }
+    });
+
+    document.querySelector('[data-tab="roulette"]')?.addEventListener("click", () => {
+      renderRoulette();
+    });
+  });
+})();
 
 
