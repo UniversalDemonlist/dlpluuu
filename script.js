@@ -4669,3 +4669,21 @@ window.exitCustomList = function () {
     setTimeout(bindCleanDropdown, 50);
   }
 })();
+
+(function fixCustomListDetailAndLayout() {
+  function ensureDetailContainer() {
+    const paneList = document.getElementById("cl-pane-list");
+    if (paneList && !document.getElementById("cl-demon-detail")) {
+      const detailDiv = document.createElement("div");
+      detailDiv.id = "cl-demon-detail";
+      detailDiv.style.display = "none";
+      paneList.appendChild(detailDiv);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", ensureDetailContainer);
+  } else {
+    ensureDetailContainer();
+  }
+})();
