@@ -1504,3 +1504,52 @@ html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) 
 html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
   opacity: 0.12 !important;
 }
+
+html body:has(#old-bg-toggle:checked),
+html body.dark:has(#old-bg-toggle:checked),
+html body:not(.dark):has(#old-bg-toggle:checked) {
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  animation: none !important;
+}
+
+html body.dark:has(#old-bg-toggle:checked) {
+  background-image: url("OtherBackground.png") !important;
+}
+
+html body:not(.dark):has(#old-bg-toggle:checked) {
+  background-image: url("Background.png") !important;
+}
+
+html body:has(#old-bg-toggle:checked)::before,
+html body:has(#old-bg-toggle:checked)::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+
+@keyframes leaderboardCheckerClean {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(112px, -112px, 0);
+  }
+}
+
+html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: -112px !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.14 !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='112' height='112' viewBox='0 0 112 112'><image href='leaderboard.png' x='10' y='10' width='36' height='36'/><image href='leaderboard.png' x='66' y='66' width='36' height='36'/></svg>") !important;
+  background-size: 112px 112px !important;
+  background-position: 0 0 !important;
+  background-repeat: repeat !important;
+  animation: leaderboardCheckerClean 12s linear infinite !important;
+}
