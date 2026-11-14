@@ -1784,3 +1784,22 @@ html body:has(#demon-page.active):not(:has(#old-bg-toggle:checked))::before {
 .player-card {
   min-height: 76px !important;
 }
+
+
+html body.dark:has(#home.active) {
+  background-color: var(--bg-body) !important;
+  background-image: url("OtherBackground.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  animation: none !important;
+}
+
+html body:not(.dark):has(#home.active) {
+  background-color: var(--bg-body) !important;
+  background-image: url("Background.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  animation: none !important;
+}
