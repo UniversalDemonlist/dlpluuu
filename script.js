@@ -1718,7 +1718,7 @@ function rebuildVisibleLists() {
     d.position > 100
   );
 
-  renderMegaMenugrid();
+  renderMegaMenuGrid();
 }
 
 function startTargetedTagRemover() {
