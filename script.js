@@ -3316,3 +3316,244 @@ if (document.readyState === "loading") {
     });
   }
 
+      document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.getElementById("extras-dropdown");
+    const toggleBtn = document.getElementById("extras-dropdown-toggle");
+    const menuItems = document.querySelectorAll(".extras-menu-item");
+
+    if (dropdown && toggleBtn) {
+      function syncExtrasActiveState() {
+        const anyActive = Array.from(menuItems).some(function (item) {
+          return item.classList.contains("active");
+        });
+        toggleBtn.classList.toggle("active", anyActive);
+      }
+
+      toggleBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("open");
+      });
+
+      menuItems.forEach(function (item) {
+        item.addEventListener("click", function () {
+          dropdown.classList.remove("open");
+          setTimeout(syncExtrasActiveState, 0);
+        });
+      });
+
+      document.querySelectorAll(".tabs > .tab-btn:not(.extras-dropdown-btn)").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          dropdown.classList.remove("open");
+          toggleBtn.classList.remove("active");
+        });
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove("open");
+        }
+      });
+
+      setTimeout(syncExtrasActiveState, 100);
+    }
+
+    document.querySelectorAll(".cl-view-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".cl-view-btn").forEach(function (b) {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+        const target = btn.dataset.clview;
+        document.getElementById("cl-pane-list").style.display = target === "list" ? "block" : "none";
+        document.getElementById("cl-pane-leaderboard").style.display = target === "leaderboard" ? "block" : "none";
+        document.getElementById("cl-pane-maker").style.display = target === "maker" ? "block" : "none";
+        refreshAllCustomViews();
+      });
+    });
+
+    const listNameInput = document.getElementById("cl-list-name-input");
+    if (listNameInput) {
+      listNameInput.addEventListener("input", function (e) {
+        customList.title = cleanText(e.target.value, 60) || "Untitled Custom List";
+        updateHeaderBadge();
+      });
+    }
+
+    const importAddBtn = document.getElementById("cl-import-add-btn");
+    if (importAddBtn) {
+      importAddBtn.addEventListener("click", function () {
+        if (customList.levels.length >= MAX_LEVELS) {
+          setStatus("Maximum of " + MAX_LEVELS + " levels reached.", true);
+          return;
+        }
+        const selectEl = document.getElementById("cl-import-select");
+        const id = selectEl ? selectEl.value : "";
+        const demons = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+        const found = demons.find(function (d) {
+          return String(d.id) === String(id);
+        });
+        if (!found) return;
+        const converted = convertOfficialDemonToCustom(found);
+        if (converted) {
+          customList.levels.push(converted);
+          refreshAllCustomViews();
+          setStatus('Added "' + converted.name + '" to custom list.');
+        }
+      });
+    }
+
+    const importAllBtn = document.getElementById("cl-import-all-btn");
+    if (importAllBtn) {
+      importAllBtn.addEventListener("click", function () {
+        const demons = (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons)
+          .filter(function (d) {
+            return !d.cosmetic;
+          })
+          .slice(0, MAX_LEVELS);
+        customList.levels = demons.map(convertOfficialDemonToCustom).filter(Boolean);
+        refreshAllCustomViews();
+        setStatus("Imported " + customList.levels.length + " levels.");
+      });
+    }
+
+    const shuffleBtn = document.getElementById("cl-shuffle-btn");
+    if (shuffleBtn) {
+      shuffleBtn.addEventListener("click", function () {
+        if (customList.levels.length < 2) {
+          setStatus("Add at least 2 levels to shuffle.", true);
+          return;
+        }
+        for (let i = customList.levels.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = customList.levels[i];
+          customList.levels[i] = customList.levels[j];
+          customList.levels[j] = temp;
+        }
+        refreshAllCustomViews();
+        setStatus("List order shuffled!");
+      });
+    }
+
+    const addCustomBtn = document.getElementById("cl-add-custom-btn");
+    if (addCustomBtn) {
+      addCustomBtn.addEventListener("click", function () {
+        if (customList.levels.length >= MAX_LEVELS) {
+          setStatus("Maximum of " + MAX_LEVELS + " levels reached.", true);
+          return;
+        }
+        const nameInput = document.getElementById("cl-new-name");
+        const verifierInput = document.getElementById("cl-new-verifier");
+        const verifUrlInput = document.getElementById("cl-new-verification");
+        const thumbInput = document.getElementById("cl-new-thumb");
+        const recordsInput = document.getElementById("cl-new-records");
+
+        const lvl = sanitizeLevel({
+          name: nameInput.value,
+          verifier: verifierInput.value,
+          verification: verifUrlInput.value,
+          thumbnail: thumbInput.value,
+          records: parseRecordsTextarea(recordsInput.value)
+        });
+
+        if (!lvl) {
+          setStatus("Enter a valid Level Name, Verifier, and http(s) Verification URL.", true);
+          return;
+        }
+
+        customList.levels.push(lvl);
+        nameInput.value = "";
+        verifierInput.value = "";
+        verifUrlInput.value = "";
+        thumbInput.value = "";
+        recordsInput.value = "";
+
+        refreshAllCustomViews();
+        setStatus('Created "' + lvl.name + '"!');
+      });
+    }
+
+    const copyCodeBtn = document.getElementById("cl-copy-code-btn");
+    if (copyCodeBtn) {
+      copyCodeBtn.addEventListener("click", function () {
+        if (customList.levels.length === 0) {
+          setStatus("Add at least one level before generating a save code.", true);
+          return;
+        }
+        const code = encodeCustomList(customList);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(function () {
+            setStatus("Custom list save code copied to clipboard!");
+          }).catch(function () {
+            prompt("Copy your custom list save code:", code);
+          });
+        } else {
+          prompt("Copy your custom list save code:", code);
+        }
+      });
+    }
+
+    const toggleLoadBtn = document.getElementById("cl-toggle-load-btn");
+    if (toggleLoadBtn) {
+      toggleLoadBtn.addEventListener("click", function () {
+        const drawer = document.getElementById("cl-load-drawer");
+        if (!drawer) return;
+        drawer.style.display = drawer.style.display === "none" ? "flex" : "none";
+      });
+    }
+
+    const confirmLoadBtn = document.getElementById("cl-confirm-load-btn");
+    if (confirmLoadBtn) {
+      confirmLoadBtn.addEventListener("click", function () {
+        const input = document.getElementById("cl-load-input");
+        if (!input || !input.value.trim()) return;
+        try {
+          const decoded = decodeCustomList(input.value);
+          if (!decoded) {
+            setStatus("Invalid or unsafe custom list code.", true);
+            return;
+          }
+          customList = decoded;
+          const titleInput = document.getElementById("cl-list-name-input");
+          if (titleInput) titleInput.value = customList.title;
+          input.value = "";
+          document.getElementById("cl-load-drawer").style.display = "none";
+          refreshAllCustomViews();
+          setStatus('Loaded "' + customList.title + '" (' + customList.levels.length + ' levels).');
+        } catch {
+          setStatus("Failed to decode custom list code.", true);
+        }
+      });
+    }
+
+    const resetBtn = document.getElementById("cl-reset-btn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        customList = { title: "Untitled Custom List", levels: [] };
+        const titleInput = document.getElementById("cl-list-name-input");
+        if (titleInput) titleInput.value = "";
+        refreshAllCustomViews();
+        setStatus("Custom list cleared.");
+      });
+    }
+
+    const customListsTabBtn = document.querySelector('.extras-menu-item[data-tab="custom-lists"]');
+    if (customListsTabBtn) {
+      customListsTabBtn.addEventListener("click", function () {
+        populateExistingSelect();
+        refreshAllCustomViews();
+      });
+    }
+
+    const pollDemons = setInterval(function () {
+      if (globalDemons && globalDemons.length > 0) {
+        clearInterval(pollDemons);
+        populateExistingSelect();
+        refreshAllCustomViews();
+      }
+    }, 150);
+    setTimeout(function () {
+      clearInterval(pollDemons);
+    }, 8000);
+  });
+})();
+
