@@ -2345,3 +2345,46 @@ if (document.readyState === "loading") {
   applyBeyondAndExtendedRanges();
 }
 
+function forceMegaMenuVerifierOnly() {
+  const grid = document.getElementById("megamenu-grid");
+  if (!grid) return;
+
+  const replaceWithVerifier = () => {
+    const visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    const demonByPosition = new Map();
+
+    visible.forEach(d => {
+      if (!d.cosmetic && d.position) {
+        demonByPosition.set(Number(d.position), d);
+      }
+    });
+
+    grid.querySelectorAll(".megamenu-item").forEach(item => {
+      const pos = Number(item.dataset.pos);
+      const demon = demonByPosition.get(pos);
+      const subtitleEl = item.querySelector(".megamenu-item-creator");
+      if (!demon || !subtitleEl) return;
+
+      const rawVerifier = demon.verifier || "Unknown";
+      const cleanVerifier = typeof cleanDisplayName === "function"
+        ? cleanDisplayName(rawVerifier)
+        : rawVerifier.replace(/\[c\]/gi, "").trim();
+
+      if (subtitleEl.textContent !== cleanVerifier) {
+        subtitleEl.textContent = cleanVerifier;
+      }
+    });
+  };
+
+  replaceWithVerifier();
+
+  const observer = new MutationObserver(replaceWithVerifier);
+  observer.observe(grid, { childList: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", forceMegaMenuVerifierOnly);
+} else {
+  forceMegaMenuVerifierOnly();
+}
+
