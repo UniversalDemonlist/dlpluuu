@@ -731,48 +731,86 @@ function renderDemonCards(listOverride) {
   }, 500);
 }
 
-function populateDropdowns() {
-  const mainSelect = document.getElementById("select-main");
-  const extSelect = document.getElementById("select-extended");
-  const legacySelect = document.getElementById("select-legacy");
+const LIST_DESCRIPTIONS = {
+  main: "The main section of the Demonlist. These demons are the hardest levels in the game. Records are accepted above a given threshold and award a large amount of points!",
+  extended: "The extended section of the Demonlist (ranks 76–150). Records are still accepted and award points toward the leaderboard.",
+  legacy: "The beyond section of the Demonlist (ranks 151+). These levels award list points, and might be accessible."
+};
 
-  function fill(select, list) {
-    if (!select) return;
-    select.innerHTML = '<option value="">Select a demon</option>';
-    list.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d.position;
-      opt.textContent = `#${d.position} — ${d.name}`;
-      select.appendChild(opt);
+let activeMenuCategory = null;
+
+function initMegaMenu() {
+  const wrapper = document.getElementById("demon-megamenu");
+  const panel = document.getElementById("megamenu-panel");
+  const tabs = document.querySelectorAll(".megamenu-tab");
+
+  if (!wrapper || !panel) return;
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const category = tab.dataset.list;
+
+      if (activeMenuCategory === category && panel.classList.contains("open")) {
+        closeMegaMenu();
+        return;
+      }
+
+      activeMenuCategory = category;
+      tabs.forEach(t => t.classList.toggle("active", t === tab));
+      panel.classList.add("open");
+      renderMegaMenuGrid();
     });
-  }
+  });
 
-  fill(mainSelect, mainList);
-  fill(extSelect, extendedList);
-  fill(legacySelect, legacyList);
+  document.addEventListener("click", (e) => {
+    if (!wrapper.contains(e.target)) closeMegaMenu();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMegaMenu();
+  });
 }
 
-function setupDropdownSelects() {
-  function attach(select, list) {
-    if (!select) return;
-    select.addEventListener("change", () => {
+function closeMegaMenu() {
+  const panel = document.getElementById("megamenu-panel");
+  if (panel) panel.classList.remove("open");
+  document.querySelectorAll(".megamenu-tab").forEach(t => t.classList.remove("active"));
+  activeMenuCategory = null;
+}
+
+function renderMegaMenuGrid() {
+  const grid = document.getElementById("megamenu-grid");
+  const desc = document.getElementById("megamenu-desc");
+  if (!grid || !activeMenuCategory) return;
+
+  const sourceMap = {
+    main: mainList,
+    extended: extendedList,
+    legacy: legacyList
+  };
+
+  const currentList = sourceMap[activeMenuCategory] || [];
+  desc.textContent = LIST_DESCRIPTIONS[activeMenuCategory] || "";
+
+  grid.innerHTML = currentList
+    .map(d => `
+      <div class="megamenu-item" data-pos="${d.position}">
+        <div class="megamenu-item-title">#${d.position} - ${d.name}</div>
+        <div class="megamenu-item-creator">${d.creator || d.verifier || ""}</div>
+      </div>
+    `)
+    .join("");
+
+  grid.querySelectorAll(".megamenu-item").forEach(item => {
+    item.addEventListener("click", () => {
       stopAllVideos();
-      const pos = Number(select.value);
-      if (!pos) return;
-      const demon = list.find(d => d.position === pos);
+      const pos = Number(item.dataset.pos);
+      const demon = currentList.find(d => d.position === pos);
+      closeMegaMenu();
       if (demon) openDemonPage(demon);
-      select.value = "";
     });
-  }
-
-  attach(document.getElementById("select-main"), mainList);
-  attach(document.getElementById("select-extended"), extendedList);
-  attach(document.getElementById("select-legacy"), legacyList);
-}
-function getYoutubeId(url) {
-  if (!url || typeof url !== "string") return "";
-  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  return match ? match.at(1) : "";
+  });
 }
 
 
