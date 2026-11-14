@@ -1917,4 +1917,118 @@ setHomeStatsLoading();
   wireDropdown("select-legacy");
 })();
 
+(function setupNavigationQoL() {
+  window.jumpToPlayerProfile = function (rawName) {
+    const key = normalizeName(rawName);
+    if (!key) return;
+
+    stopAllVideos();
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+    const lbBtn = document.querySelector('[data-tab="leaderboard"]');
+    const lbTab = document.getElementById("leaderboard");
+    if (lbBtn) lbBtn.classList.add("active");
+    if (lbTab) lbTab.classList.add("active");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (window._leaderboardScores && Object.keys(window._leaderboardScores).length > 0) {
+      openPlayerPage(key, window._leaderboardScores);
+    } else {
+      loadLeaderboard();
+      setTimeout(() => {
+        if (window._leaderboardScores) {
+          openPlayerPage(key, window._leaderboardScores);
+        }
+      }, 550);
+    }
+  };
+
+  window.jumpToDemonByName = function (demonName) {
+    const target = demonName.trim().toLowerCase();
+    const demon = getVisibleDemons().find(d => d.name.trim().toLowerCase() === target);
+    if (demon) {
+      openDemonPage(demon);
+    }
+  };
+
+  const origOpenDemonPage = window.openDemonPage;
+  window.openDemonPage = function (demon) {
+    origOpenDemonPage(demon);
+    const container = document.getElementById("demon-page-container");
+    if (!container) return;
+
+    const backBtn = document.createElement("button");
+    backBtn.className = "dp-back-btn";
+    backBtn.innerHTML = "← Back to Demonlist";
+    backBtn.addEventListener("click", () => {
+      stopAllVideos();
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      document.querySelector('[data-tab="demonlist"]')?.classList.add("active");
+      document.getElementById("demonlist")?.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    container.prepend(backBtn);
+
+    const verifierEl = container.querySelector(".dp-verifier-name");
+    if (verifierEl && demon.verifier && demon.verifier !== "Unknown") {
+      verifierEl.classList.add("dp-player-link");
+      verifierEl.title = `View ${cleanDisplayName(demon.verifier)}'s profile`;
+      verifierEl.addEventListener("click", () => jumpToPlayerProfile(demon.verifier));
+    }
+
+    container.querySelectorAll(".dp-record-user").forEach(userEl => {
+      const playerName = userEl.textContent.trim();
+      if (!playerName) return;
+      userEl.classList.add("dp-player-link");
+      userEl.title = `View ${playerName}'s profile`;
+      userEl.addEventListener("click", () => jumpToPlayerProfile(playerName));
+    });
+  };
+
+  const origOpenPlayerPage = window.openPlayerPage;
+  window.openPlayerPage = function (key, scores) {
+    origOpenPlayerPage(key, scores);
+    const profileContainer = document.getElementById("leaderboard-profile-view");
+    if (!profileContainer) return;
+
+    profileContainer.querySelectorAll(".completed-card").forEach(card => {
+      const titleEl = card.querySelector("h3");
+      if (!titleEl) return;
+      const demonName = titleEl.textContent.trim();
+
+      const existsOnList = getVisibleDemons().some(
+        d => !d.cosmetic && d.name.trim().toLowerCase() === demonName.toLowerCase()
+      );
+
+      if (existsOnList) {
+        card.title = `Open ${demonName}`;
+        card.addEventListener("click", () => jumpToDemonByName(demonName));
+      } else {
+        card.style.cursor = "default";
+      }
+    });
+  };
+
+  const topBtn = document.createElement("button");
+  topBtn.id = "back-to-top-btn";
+  topBtn.title = "Back to Top";
+  topBtn.innerHTML = "↑";
+  document.body.appendChild(topBtn);
+
+  topBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 320) {
+      topBtn.classList.add("visible");
+    } else {
+      topBtn.classList.remove("visible");
+    }
+  });
+})();
+
 
