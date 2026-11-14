@@ -4609,3 +4609,63 @@ window.exitCustomList = function () {
     setTimeout(function () { clearInterval(poll); }, 8000);
   });
 })();
+
+(function fixDuplicateExtrasListeners() {
+  function bindCleanDropdown() {
+    const oldDropdown = document.getElementById("extras-dropdown");
+    if (!oldDropdown) return;
+
+    const cleanDropdown = oldDropdown.cloneNode(true);
+    oldDropdown.parentNode.replaceChild(cleanDropdown, oldDropdown);
+
+    const toggleBtn = cleanDropdown.querySelector("#extras-dropdown-toggle");
+    const menuItems = cleanDropdown.querySelectorAll(".extras-menu-item");
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        cleanDropdown.classList.toggle("open");
+      });
+    }
+
+    menuItems.forEach(function (item) {
+      item.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const tabId = item.getAttribute("data-tab");
+
+        document.querySelectorAll(".tab-btn").forEach(function (b) {
+          b.classList.remove("active");
+        });
+        document.querySelectorAll(".tab-content").forEach(function (c) {
+          c.classList.remove("active");
+        });
+
+        item.classList.add("active");
+        if (toggleBtn) toggleBtn.classList.add("active");
+
+        const target = document.getElementById(tabId);
+        if (target) {
+          target.classList.add("active");
+          window.location.hash = tabId;
+        }
+
+        cleanDropdown.classList.remove("open");
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!cleanDropdown.contains(e.target)) {
+        cleanDropdown.classList.remove("open");
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(bindCleanDropdown, 50);
+    });
+  } else {
+    setTimeout(bindCleanDropdown, 50);
+  }
+})();
