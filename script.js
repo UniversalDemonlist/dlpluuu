@@ -2186,5 +2186,79 @@ setHomeStatsLoading();
   };
 })();
 
+function fixMegaMenuLayering() {
+  const panel = document.querySelector("#demonlist .panel");
+  const wrapper = document.getElementById("demon-megamenu");
+  const menu = document.getElementById("megamenu-panel");
+
+  if (panel) {
+    panel.style.overflow = "visible";
+    panel.style.position = "relative";
+    panel.style.zIndex = "500";
+  }
+
+  if (wrapper) {
+    wrapper.style.position = "relative";
+    wrapper.style.zIndex = "9998";
+  }
+
+  if (menu) {
+    menu.style.zIndex = "9999";
+  }
+}
+
+function getCleanMegaMenuList(category) {
+  let visible = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+  visible = visible.filter(d => !d.cosmetic && d.position);
+
+  if (typeof disableSpaceUK !== "undefined" && disableSpaceUK) {
+    visible = visible.filter(d => {
+      const verifier = String(d.verifier || "").toLowerCase();
+      const hasLegitRecord = (d.records || []).some(r => {
+        const u = typeof r === "string" ? r : (r.user || "");
+        return u && !u.toLowerCase().includes("[c]");
+      });
+      return !verifier.includes("[c]") || hasLegitRecord;
+    });
+  }
+
+  if (typeof hideCheated !== "undefined" && hideCheated && Array.isArray(cheatedList)) {
+    visible = visible.filter(d => !cheatedList.includes(String(d.id).toLowerCase()));
+  }
+
+  if (category === "main") return visible.filter(d => d.position <= 75);
+  if (category === "extended") return visible.filter(d => d.position > 75 && d.position <= 150);
+  if (category === "legacy") return visible.filter(d => d.position > 150);
+  return [];
+}
+
+function syncMegaMenuWithSpaceUK() {
+  fixMegaMenuLayering();
+
+  const spaceBtn = document.getElementById("spaceuk-toggle");
+  if (spaceBtn && !spaceBtn.dataset.megaBound) {
+    spaceBtn.dataset.megaBound = "1";
+    spaceBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        if (typeof renderMegaMenuGrid === "function") renderMegaMenuGrid();
+        if (typeof updateMegaMenuContent === "function") updateMegaMenuContent();
+      }, 0);
+    });
+  }
+
+  const tabs = document.querySelectorAll(".megamenu-tab");
+  tabs.forEach(tab => {
+    if (!tab.dataset.layerBound) {
+      tab.dataset.layerBound = "1";
+      tab.addEventListener("click", fixMegaMenuLayering);
+    }
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", syncMegaMenuWithSpaceUK);
+} else {
+  syncMegaMenuWithSpaceUK();
+}
 
 
