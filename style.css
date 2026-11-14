@@ -3102,3 +3102,4 @@ html body:not(.dark):has(#custom-lists.active):not(:has(#old-bg-toggle:checked))
   border: 1px solid var(--border-subtle);
   font-weight: 700;
 }
+
