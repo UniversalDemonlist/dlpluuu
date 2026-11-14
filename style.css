@@ -5475,3 +5475,31 @@ body:has(#demonlist.active) #demonlist {
   position: relative;
   z-index: 1;
 }
+
+html,
+body,
+* {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: initial !important;
+  height: initial !important;
+}
+
+.demon-card,
+.player-card {
+  content-visibility: visible !important;
+  contain: none !important;
+  will-change: auto !important;
+}
+
+body:has(#leaderboard.active),
+body:has(#demonlist.active),
+body:has(#demonlist.active):not(:has(#old-bg-toggle:checked)) {
+  background-attachment: scroll !important;
+  animation: none !important;
+}
