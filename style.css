@@ -1910,3 +1910,40 @@ html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
   background-repeat: repeat !important;
   animation: leaderboardPureChecker 14s linear infinite !important;
 }
+
+@keyframes leaderboardPureChecker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(160px, -160px, 0);
+  }
+}
+
+html body.dark:has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #090b11 !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body:not(.dark):has(#leaderboard.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: #f1f5f9 !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed !important;
+  inset: -160px !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.14 !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='160' height='160' viewBox='0 0 160 160'><image href='leaderboard.png' x='12' y='12' width='56' height='56'/><image href='leaderboard.png' x='92' y='92' width='56' height='56'/></svg>") !important;
+  background-size: 160px 160px !important;
+  background-position: 0 0 !important;
+  background-repeat: repeat !important;
+  animation: leaderboardPureChecker 16s linear infinite !important;
+}
+
