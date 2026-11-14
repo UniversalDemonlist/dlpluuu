@@ -513,6 +513,96 @@
   <div id="rl-history-area" class="roulette-history"></div>
 </div>
 
+    <div id="custom-lists" class="tab-content">
+  <div class="cl-topbar">
+    <h1>Custom Lists</h1>
+    <div class="cl-mode-tabs">
+      <button type="button" class="cl-view-btn active" data-clview="list">List</button>
+      <button type="button" class="cl-view-btn" data-clview="leaderboard">Leaderboard</button>
+      <button type="button" class="cl-view-btn" data-clview="maker">List Maker</button>
+    </div>
+  </div>
+
+  <div class="panel cl-io-bar">
+    <div class="cl-io-left">
+      <span id="cl-active-title" class="cl-active-badge">Active List: Untitled Custom List (0 levels)</span>
+    </div>
+    <div class="cl-io-actions">
+      <button type="button" id="cl-copy-code-btn" class="sidebar-action-btn">Copy Save Code</button>
+      <button type="button" id="cl-toggle-load-btn" class="dp-back-btn">Load Code</button>
+      <button type="button" id="cl-reset-btn" class="rl-giveup-btn">Clear List</button>
+    </div>
+    <div id="cl-load-drawer" class="cl-load-drawer" style="display:none;">
+      <input type="text" id="cl-load-input" placeholder="Paste GDCL1-... save code here">
+      <button type="button" id="cl-confirm-load-btn" class="sidebar-action-btn">Load List</button>
+    </div>
+    <p id="cl-status-msg" class="roulette-status"></p>
+  </div>
+
+  <div id="cl-pane-list" class="cl-pane active">
+    <div id="cl-levels-container"></div>
+  </div>
+
+  <div id="cl-pane-leaderboard" class="cl-pane" style="display:none;">
+    <div id="cl-leaderboard-container"></div>
+  </div>
+
+  <div id="cl-pane-maker" class="cl-pane" style="display:none;">
+    <div class="cl-maker-grid">
+      <div class="panel">
+        <h2 class="cl-section-title">1. List Settings & Import Existing</h2>
+        <div class="cl-field">
+          <label for="cl-list-name-input">Custom List Name</label>
+          <input type="text" id="cl-list-name-input" maxlength="60" placeholder="My Custom Demonlist">
+        </div>
+
+        <div class="cl-field">
+          <label for="cl-import-select">Add Existing Level from Official List</label>
+          <div class="cl-inline-row">
+            <select id="cl-import-select"></select>
+            <button type="button" id="cl-import-add-btn" class="sidebar-action-btn">Add</button>
+          </div>
+        </div>
+
+        <div class="cl-inline-row" style="margin-top:10px;">
+          <button type="button" id="cl-import-all-btn" class="dp-back-btn">Import All Official Levels</button>
+          <button type="button" id="cl-shuffle-btn" class="dp-back-btn">Shuffle Order</button>
+        </div>
+
+        <hr class="cl-divider">
+
+        <h2 class="cl-section-title">2. Create New Custom Level</h2>
+        <div class="cl-field">
+          <label for="cl-new-name">Level Name *</label>
+          <input type="text" id="cl-new-name" maxlength="60" placeholder="e.g. Acheron">
+        </div>
+        <div class="cl-field">
+          <label for="cl-new-verifier">Verifier *</label>
+          <input type="text" id="cl-new-verifier" maxlength="40" placeholder="e.g. Zoink">
+        </div>
+        <div class="cl-field">
+          <label for="cl-new-verification">Verification Video URL *</label>
+          <input type="url" id="cl-new-verification" maxlength="200" placeholder="https://youtube.com...">
+        </div>
+        <div class="cl-field">
+          <label for="cl-new-thumb">Thumbnail URL (Optional)</label>
+          <input type="url" id="cl-new-thumb" maxlength="200" placeholder="https://...">
+        </div>
+        <div class="cl-field">
+          <label for="cl-new-records">Records (Optional — one per line: Player, Percent, VideoURL)</label>
+          <textarea id="cl-new-records" rows="4" maxlength="4000" placeholder="PlayerOne, 100, https://youtube.com, 84"></textarea>
+        </div>
+        <button type="button" id="cl-add-custom-btn" class="sidebar-action-btn">Add Custom Level</button>
+      </div>
+
+      <div class="panel">
+        <h2 class="cl-section-title">3. Current List Order (Move / Edit Records / Remove)</h2>
+        <div id="cl-maker-order-list" class="cl-maker-order-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
     
     <footer class="site-footer">
   <div class="footer-inner">
