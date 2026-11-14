@@ -2923,14 +2923,14 @@ let customList = {
 title: "Untitled Custom List",
 levels: []
 };
-function escapeHtml(str) {
-return String(str ?? "")
-.replace(/&/g, "&")
-.replace(/</g, "<")
-.replace(/>/g, ">")
-.replace(/"/g, """)
-.replace(/'/g, "'");
-}
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&#34;")
+      .replace(/'/g, "&#39;");
+  }
 function cleanText(str, maxLen) {
 if (typeof str !== "string") return "";
 return str.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, maxLen);
