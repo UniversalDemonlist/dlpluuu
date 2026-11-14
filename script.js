@@ -3978,4 +3978,186 @@ window.exitCustomList = function () {
     detailEl.appendChild(recCard);
   }
 
- 
+   function renderCustomListCards() {
+    const listEl = document.getElementById("cl-levels-container");
+    const detailEl = document.getElementById("cl-demon-detail");
+    if (!listEl) return;
+
+    if (detailEl) detailEl.style.display = "none";
+    listEl.style.display = "flex";
+    listEl.innerHTML = "";
+
+    if (customList.levels.length === 0) {
+      listEl.innerHTML = '<div class="panel"><p>No levels in this custom list yet. Open <strong>List Maker</strong> or load a save code.</p></div>';
+      return;
+    }
+
+    customList.levels.forEach(function (lvl, idx) {
+      const pos = idx + 1;
+      const pts = (5500 / Math.sqrt(pos)).toFixed(2);
+
+      const card = document.createElement("div");
+      card.className = "demon-card";
+
+      const img = document.createElement("img");
+      img.src = getThumb(lvl);
+      img.alt = lvl.name;
+
+      const info = document.createElement("div");
+      info.className = "demon-info";
+
+      const h2 = document.createElement("h2");
+      const rankSpan = document.createElement("span");
+      rankSpan.className = "demon-rank";
+      rankSpan.textContent = "#" + pos;
+      h2.append(rankSpan, document.createTextNode(" — " + lvl.name));
+
+      const meta = document.createElement("p");
+      meta.className = "demon-meta-line";
+      meta.textContent = "Verified by " + lvl.verifier + " • " + pts + " pts";
+
+      info.append(h2, meta);
+      card.append(img, info);
+
+      card.addEventListener("click", function () {
+        openCustomDemonDetail(lvl, pos);
+      });
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function renderCustomLeaderboard() {
+    const container = document.getElementById("cl-leaderboard-container");
+    const profilePane = document.getElementById("cl-player-profile");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (customList.levels.length === 0) {
+      container.innerHTML = "<p>Add levels to your custom list to generate rankings.</p>";
+      if (profilePane) profilePane.innerHTML = '<p style="color:var(--text-muted);">No custom list loaded.</p>';
+      return;
+    }
+
+    const players = new Map();
+
+    function ensurePlayer(rawName) {
+      const key = rawName.toLowerCase();
+      if (!players.has(key)) {
+        players.set(key, {
+          name: rawName,
+          score: 0,
+          verified: [],
+          completed: []
+        });
+      }
+      return players.get(key);
+    }
+
+    customList.levels.forEach(function (lvl, idx) {
+      const pos = idx + 1;
+      const basePts = 5500 / Math.sqrt(pos);
+
+      const verPlayer = ensurePlayer(lvl.verifier);
+      verPlayer.score += basePts;
+      verPlayer.verified.push({ name: lvl.name, position: pos, pts: basePts });
+
+      const seen = new Set([lvl.verifier.toLowerCase()]);
+      (lvl.records || []).forEach(function (r) {
+        const rKey = r.user.toLowerCase();
+        if (seen.has(rKey)) return;
+        seen.add(rKey);
+        const earned = r.percent >= 100 ? basePts : basePts * (r.percent / 100) * 0.5;
+        const pObj = ensurePlayer(r.user);
+        pObj.score += earned;
+        pObj.completed.push({ name: lvl.name, position: pos, percent: r.percent, pts: earned });
+      });
+    });
+
+    const query = (document.getElementById("cl-player-search")?.value || "").toLowerCase().trim();
+    const ranked = Array.from(players.values())
+      .filter(function (p) {
+        return !query || p.name.toLowerCase().includes(query);
+      })
+      .sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+    function showCustomPlayerProfile(playerObj, rankNum) {
+      if (!profilePane) return;
+      profilePane.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "player-profile-header";
+
+      const h1 = document.createElement("h1");
+      h1.textContent = "#" + rankNum + " — " + playerObj.name;
+
+      const ptsP = document.createElement("p");
+      ptsP.textContent = "Score: " + playerObj.score.toFixed(2) + " pts";
+
+      const rankTitle = typeof getPlayerRank === "function" ? getPlayerRank(playerObj.score) : "";
+      const rankP = document.createElement("p");
+      rankP.textContent = "Rank: " + (rankTitle || "Ranked");
+
+      header.append(h1, ptsP, rankP);
+      profilePane.appendChild(header);
+
+      if (playerObj.verified.length > 0) {
+        const vTitle = document.createElement("h3");
+        vTitle.textContent = "Verified (" + playerObj.verified.length + ")";
+        profilePane.appendChild(vTitle);
+
+        playerObj.verified.forEach(function (v) {
+          const item = document.createElement("div");
+          item.className = "dp-record-row";
+          item.style.marginBottom = "6px";
+          item.textContent = "#" + v.position + " — " + v.name + " (" + v.pts.toFixed(2) + " pts)";
+          profilePane.appendChild(item);
+        });
+      }
+
+      if (playerObj.completed.length > 0) {
+        const cTitle = document.createElement("h3");
+        cTitle.textContent = "Completed (" + playerObj.completed.length + ")";
+        profilePane.appendChild(cTitle);
+
+        playerObj.completed.forEach(function (c) {
+          const item = document.createElement("div");
+          item.className = "dp-record-row";
+          item.style.marginBottom = "6px";
+          item.textContent = "#" + c.position + " — " + c.name + " (" + c.percent + "% • " + c.pts.toFixed(2) + " pts)";
+          profilePane.appendChild(item);
+        });
+      }
+    }
+
+    ranked.forEach(function (p, i) {
+      const rankNum = i + 1;
+      const card = typeof createPlayerCard === "function"
+        ? createPlayerCard(p.name, p.score, rankNum)
+        : document.createElement("div");
+
+      if (typeof createPlayerCard !== "function") {
+        card.className = "player-card";
+        card.textContent = "#" + rankNum + " " + p.name + " — " + p.score.toFixed(2) + " pts";
+      }
+
+      const cleanCard = card.cloneNode(true);
+      cleanCard.addEventListener("click", function () {
+        container.querySelectorAll(".player-card").forEach(function (el) {
+          el.classList.remove("selected-player");
+        });
+        cleanCard.classList.add("selected-player");
+        showCustomPlayerProfile(p, rankNum);
+      });
+
+      container.appendChild(cleanCard);
+      if (i === 0) {
+        cleanCard.classList.add("selected-player");
+        showCustomPlayerProfile(p, rankNum);
+      }
+    });
+  }
+
