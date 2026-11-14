@@ -4790,6 +4790,154 @@ window.exitCustomList = function () {
       mainCard.appendChild(fallbackLink);
     }
 
+(function upgradeCustomListsFullParity() {
+  function isCheatedOrBanned(rawUser) {
+    if (!rawUser || typeof rawUser !== "string") return false;
+    if (typeof window.isPlayerBanned === "function" && window.isPlayerBanned(rawUser)) {
+      return true;
+    }
+    if (typeof disableSpaceUK !== "undefined" && disableSpaceUK && rawUser.toLowerCase().includes("[c]")) {
+      return true;
+    }
+    return false;
+  }
+
+  function extractYtId(url) {
+    if (!url || typeof url !== "string") return "";
+    const trimmed = url.trim();
+    const reg = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = trimmed.match(reg);
+    return match ? match.at(1) : "";
+  }
+
+  function formatPlayerDisplay(name) {
+    return typeof cleanDisplayName === "function" ? cleanDisplayName(name) : String(name || "").trim();
+  }
+
+  function getFilteredRecords(rawRecords) {
+    if (!Array.isArray(rawRecords)) return [];
+    return rawRecords
+      .map(function (r) {
+        if (typeof r === "string") {
+          return { user: r, percent: 100, link: "" };
+        }
+        return {
+          user: r.user || "",
+          percent: Number(r.percent) || 100,
+          link: r.link || ""
+        };
+      })
+      .filter(function (r) {
+        return r.user && !isCheatedOrBanned(r.user);
+      })
+      .map(function (r) {
+        return {
+          user: formatPlayerDisplay(r.user),
+          percent: r.percent,
+          link: r.link
+        };
+      });
+  }
+
+  function openExactDemonPage(demonObj, position) {
+    const demonPage = document.getElementById("demon-page");
+    if (!demonPage) return;
+
+    document.querySelectorAll(".tab-content").forEach(function (tab) {
+      tab.classList.remove("active");
+    });
+    demonPage.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const score = (5500 / Math.sqrt(position)).toFixed(2);
+    const ytId = extractYtId(demonObj.verification);
+    const cleanRecords = getFilteredRecords(demonObj.records);
+    const cleanVerifier = formatPlayerDisplay(demonObj.verifier);
+    const cleanCreator = formatPlayerDisplay(demonObj.creator || demonObj.verifier);
+
+    demonPage.innerHTML = "";
+
+    const backBtn = document.createElement("button");
+    backBtn.type = "button";
+    backBtn.className = "dp-back-btn";
+    backBtn.textContent = "← Back to Custom List";
+    backBtn.addEventListener("click", function () {
+      demonPage.innerHTML = "";
+      demonPage.classList.remove("active");
+      const clTab = document.getElementById("custom-lists");
+      if (clTab) clTab.classList.add("active");
+    });
+    demonPage.appendChild(backBtn);
+
+    const mainCard = document.createElement("div");
+    mainCard.className = "dp-main-card";
+
+    const header = document.createElement("div");
+    header.className = "dp-header";
+
+    const titleWrap = document.createElement("div");
+    const h1 = document.createElement("h1");
+    h1.className = "dp-title";
+    h1.textContent = demonObj.name;
+
+    const creatorsP = document.createElement("p");
+    creatorsP.className = "dp-creators";
+    creatorsP.textContent = "Published by " + cleanCreator + " • Verified by " + cleanVerifier;
+    titleWrap.append(h1, creatorsP);
+
+    const rankPill = document.createElement("span");
+    rankPill.className = "dp-rank-pill";
+    rankPill.textContent = "#" + position;
+
+    header.append(titleWrap, rankPill);
+    mainCard.appendChild(header);
+
+    if (ytId) {
+      const videoWrap = document.createElement("div");
+      videoWrap.className = "dp-video-wrap";
+
+      if (window.location.protocol === "file:") {
+        const notice = document.createElement("div");
+        notice.style.padding = "24px";
+        notice.style.textAlign = "center";
+        notice.style.background = "var(--bg-input)";
+        notice.style.borderRadius = "8px";
+        notice.innerHTML = '<p style="margin:0 0 12px 0;color:var(--text-muted);font-size:0.9rem;">YouTube blocks embedded players on local <code>file://</code> pages. Open on a local server or watch directly:</p>';
+        const ytBtn = document.createElement("a");
+        ytBtn.href = demonObj.verification;
+        ytBtn.target = "_blank";
+        ytBtn.rel = "noopener noreferrer nofollow";
+        ytBtn.className = "sidebar-action-btn";
+        ytBtn.style.display = "inline-block";
+        ytBtn.style.width = "auto";
+        ytBtn.textContent = "Watch Verification on YouTube ↗";
+        notice.appendChild(ytBtn);
+        videoWrap.appendChild(notice);
+      } else {
+        const iframe = document.createElement("iframe");
+        iframe.src = "https://youtube.com" + encodeURIComponent(ytId);
+        iframe.title = demonObj.name + " Verification";
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+        iframe.allowFullscreen = true;
+        videoWrap.appendChild(iframe);
+      }
+      mainCard.appendChild(videoWrap);
+    } else if (demonObj.verification) {
+      const linkBtn = document.createElement("a");
+      linkBtn.href = demonObj.verification;
+      linkBtn.target = "_blank";
+      linkBtn.rel = "noopener noreferrer nofollow";
+      linkBtn.className = "sidebar-action-btn";
+      linkBtn.style.display = "inline-block";
+      linkBtn.style.width = "auto";
+      linkBtn.style.marginBottom = "16px";
+      linkBtn.textContent = "Watch Verification Video ↗";
+      mainCard.appendChild(linkBtn);
+    }
+
+
+      
     const infoGrid = document.createElement("div");
     infoGrid.className = "dp-info-grid";
 
@@ -4916,4 +5064,158 @@ window.exitCustomList = function () {
 
     renderFullCustomDemonPage(demonData, position);
   }, true);
+})();
+
+
+
+    const infoGrid = document.createElement("div");
+    infoGrid.className = "dp-info-grid";
+
+    [
+      { label: "List Score (100%)", value: score + " pts" },
+      { label: "Verifier", value: cleanVerifier },
+      { label: "Password", value: demonObj.password || "Free Copy" }
+    ].forEach(function (item) {
+      const box = document.createElement("div");
+      box.className = "dp-info-box";
+      const lbl = document.createElement("span");
+      lbl.className = "dp-info-label";
+      lbl.textContent = item.label;
+      const val = document.createElement("span");
+      val.className = "dp-info-value";
+      val.textContent = item.value;
+      box.append(lbl, val);
+      infoGrid.appendChild(box);
+    });
+
+    mainCard.appendChild(infoGrid);
+    demonPage.appendChild(mainCard);
+
+    const recordsCard = document.createElement("div");
+    recordsCard.className = "dp-records-card";
+
+    const recH2 = document.createElement("h2");
+    recH2.textContent = "Records (" + cleanRecords.length + ")";
+    recordsCard.appendChild(recH2);
+
+    if (cleanRecords.length === 0) {
+      const emptyP = document.createElement("p");
+      emptyP.style.color = "var(--text-muted)";
+      emptyP.textContent = "No records submitted yet.";
+      recordsCard.appendChild(emptyP);
+    } else {
+      const recList = document.createElement("div");
+      recList.className = "dp-records-list";
+
+      cleanRecords.forEach(function (r) {
+        const row = document.createElement("div");
+        row.className = "dp-record-row";
+
+        const userSpan = document.createElement("span");
+        userSpan.className = "dp-record-user";
+        userSpan.textContent = r.user;
+
+        const rightDiv = document.createElement("div");
+        rightDiv.style.display = "flex";
+        rightDiv.style.alignItems = "center";
+        rightDiv.style.gap = "12px";
+
+        const pctSpan = document.createElement("span");
+        pctSpan.className = "dp-record-pct";
+        pctSpan.textContent = r.percent + "%";
+        rightDiv.appendChild(pctSpan);
+
+        if (r.link) {
+          const linkA = document.createElement("a");
+          linkA.href = r.link;
+          linkA.target = "_blank";
+          linkA.rel = "noopener noreferrer nofollow";
+          linkA.className = "dp-record-link";
+          linkA.textContent = "Video ↗";
+          rightDiv.appendChild(linkA);
+        }
+
+        row.append(userSpan, rightDiv);
+        recList.appendChild(row);
+      });
+
+      recordsCard.appendChild(recList);
+    }
+
+    demonPage.appendChild(recordsCard);
+  }
+
+  document.addEventListener("click", function (e) {
+    const card = e.target.closest("#cl-levels-container .demon-card");
+    if (!card) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const allCards = Array.from(document.querySelectorAll("#cl-levels-container .demon-card"));
+    const index = allCards.indexOf(card);
+    if (index === -1) return;
+
+    const position = index + 1;
+    const h2Text = card.querySelector("h2")?.textContent || "";
+    const levelName = h2Text.replace(/^#\d+\s*[—-]\s*/, "").trim() || "Custom Level";
+    const metaText = card.querySelector(".demon-meta-line")?.textContent || "";
+    const verifierMatch = metaText.match(/Verified by\s+(.+?)\s*•/);
+    const verifierName = verifierMatch ? verifierMatch.at(1).trim() : "Unknown";
+
+    const officialMatch = Array.isArray(globalDemons)
+      ? globalDemons.find(function (d) {
+          return formatPlayerDisplay(d.name).toLowerCase() === levelName.toLowerCase();
+        })
+      : null;
+
+    let savedVerification = card.dataset.verification || (officialMatch ? officialMatch.verification : "");
+    let savedRecords = [];
+    if (card.dataset.records) {
+      try {
+        savedRecords = JSON.parse(card.dataset.records);
+      } catch {}
+    } else if (officialMatch && Array.isArray(officialMatch.records)) {
+      savedRecords = officialMatch.records;
+    }
+
+    openExactDemonPage({
+      name: levelName,
+      verifier: verifierName,
+      creator: officialMatch ? (officialMatch.creator || verifierName) : verifierName,
+      password: officialMatch ? (officialMatch.password || "Free Copy") : "Free Copy",
+      verification: savedVerification,
+      records: savedRecords
+    }, position);
+  }, true);
+
+  const observer = new MutationObserver(function () {
+    const cards = document.querySelectorAll("#cl-levels-container .demon-card");
+    cards.forEach(function (card) {
+      if (card.dataset.synced) return;
+      card.dataset.synced = "1";
+      const h2Text = card.querySelector("h2")?.textContent || "";
+      const levelName = h2Text.replace(/^#\d+\s*[—-]\s*/, "").trim();
+      const inputUrl = document.getElementById("cl-new-verification")?.value || "";
+      if (inputUrl && !card.dataset.verification) {
+        card.dataset.verification = inputUrl;
+      }
+      if (Array.isArray(globalDemons)) {
+        const match = globalDemons.find(function (d) {
+          return formatPlayerDisplay(d.name).toLowerCase() === levelName.toLowerCase();
+        });
+        if (match) {
+          card.dataset.verification = match.verification || "";
+          card.dataset.records = JSON.stringify(getFilteredRecords(match.records || []));
+        }
+      }
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const target = document.getElementById("custom-lists");
+    if (target) {
+      observer.observe(target, { childList: true, subtree: true });
+    }
+  });
 })();
