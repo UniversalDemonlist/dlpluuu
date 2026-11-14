@@ -4927,3 +4927,27 @@ body:not(.dark):has(#leaderboard.active) {
 body:not(.dark):has(#leaderboard.active)::before {
   opacity: 0.08;
 }
+
+#demonlist #demon-container {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  margin-top: 24px !important;
+  padding-top: 12px !important;
+  top: 0 !important;
+  transform: none !important;
+}
+
+#demonlist .demon-card:first-child {
+  margin-top: 0 !important;
+  top: 0 !important;
+  transform: none !important;
+}
+
+#demonlist .panel {
+  padding-bottom: 24px !important;
+  margin-bottom: 20px !important;
+  height: auto !important;
+  max-height: none !important;
+}
