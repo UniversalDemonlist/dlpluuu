@@ -3103,3 +3103,8 @@ html body:not(.dark):has(#custom-lists.active):not(:has(#old-bg-toggle:checked))
   font-weight: 700;
 }
 
+#demon-page.active {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
