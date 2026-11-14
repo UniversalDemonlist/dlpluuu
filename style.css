@@ -4951,3 +4951,16 @@ body:not(.dark):has(#leaderboard.active)::before {
   height: auto !important;
   max-height: none !important;
 }
+
+body:has(#leaderboard.active) {
+  background-color: #070410 !important;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(225, 29, 72, 0.32) 0%, transparent 48%),
+    radial-gradient(circle at 50% -5%, rgba(124, 58, 237, 0.42) 0%, transparent 58%),
+    radial-gradient(circle at 85% 20%, rgba(217, 70, 239, 0.28) 0%, transparent 48%),
+    radial-gradient(circle at 50% 85%, rgba(49, 16, 102, 0.35) 0%, transparent 65%),
+    linear-gradient(rgba(167, 139, 250, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 121, 249, 0.04) 1px, transparent 1px) !important;
+  background-size: 160% 160%, 160% 160%, 160% 160%, 100% 100%, 44px 44px, 44px 44px !important;
+  background-attachment: fixed !important;
+}
