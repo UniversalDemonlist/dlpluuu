@@ -1947,3 +1947,281 @@ html body:has(#leaderboard.active):not(:has(#old-bg-toggle:checked))::before {
   animation: leaderboardPureChecker 16s linear infinite !important;
 }
 
+:root {
+  --bg-body: #090b11;
+  --bg-nav: #0d1018;
+  --bg-card: #131824;
+  --bg-card-hover: #1a2130;
+  --bg-panel: #10141e;
+  --bg-input: #0b0e15;
+  --border-subtle: #1f2738;
+  --border-accent: #3b82f6;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-blue: #3b82f6;
+  --accent-red: #ef4444;
+  --accent-green: #10b981;
+}
+
+body:not(.dark) {
+  --bg-body: #f1f5f9;
+  --bg-nav: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-input: #f8fafc;
+  --border-subtle: #cbd5e1;
+  --border-accent: #2563eb;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --accent-blue: #2563eb;
+  --accent-red: #dc2626;
+  --accent-green: #059669;
+}
+
+.tabs {
+  background: var(--bg-nav) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  box-shadow: none !important;
+}
+
+.tab-btn {
+  border-radius: 8px !important;
+}
+
+.tab-btn.active {
+  background: rgba(59, 130, 246, 0.14) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--accent-blue) !important;
+}
+
+#spaceuk-toggle {
+  background: var(--accent-red) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+#spaceuk-toggle:hover {
+  background: #dc2626 !important;
+}
+
+.bg-toggle-tab,
+#theme-toggle {
+  border-radius: 8px !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.tab-content > h1,
+.demonlist-main > h1,
+.rules-page-title {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+  margin: 0 0 16px 0 !important;
+  color: var(--text-main) !important;
+}
+
+.panel,
+.home-panel,
+.demon-card,
+.sidebar-box,
+.dp-main-card,
+.dp-info-box,
+.dp-records-card,
+.leaderboard-left,
+.leaderboard-right,
+.staff-card,
+.placeholder-card {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.demon-card,
+.sidebar-box,
+.dp-main-card,
+.dp-info-box,
+.dp-records-card,
+.staff-card {
+  background: var(--bg-card) !important;
+}
+
+.demon-card:hover {
+  transform: translateY(-2px) !important;
+  background: var(--bg-card-hover) !important;
+  border-color: var(--border-accent) !important;
+}
+
+.demon-card img:not(.rank-badge) {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.demon-rank,
+.dp-rank-pill,
+.home-panel h2 {
+  color: var(--accent-blue) !important;
+}
+
+.dp-rank-pill {
+  background: rgba(59, 130, 246, 0.12) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  border-radius: 6px !important;
+}
+
+.sidebar-action-btn,
+.dp-back-btn,
+.submit-btn {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.sidebar-action-btn {
+  background: var(--accent-blue) !important;
+}
+
+.sidebar-action-btn:hover {
+  background: #2563eb !important;
+  transform: none !important;
+}
+
+#search-bar,
+#player-search,
+#leaderboard-filter,
+.megamenu-tabs,
+.dp-record-row {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 8px !important;
+}
+
+.megamenu-panel {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-top: none !important;
+  border-radius: 0 0 10px 10px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45) !important;
+}
+
+.list-warning,
+.leaderboard-warning,
+.rules-callout {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.rules-sidebar {
+  background: var(--bg-panel) !important;
+  border-right: 1px solid var(--border-subtle) !important;
+}
+
+.rules-nav-item {
+  border-radius: 8px !important;
+}
+
+.rules-nav-item.active {
+  background: rgba(59, 130, 246, 0.14) !important;
+  color: var(--accent-blue) !important;
+}
+
+.rules-chevron {
+  display: none !important;
+}
+
+.callout-blue {
+  background: rgba(59, 130, 246, 0.08) !important;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  border-left: 4px solid var(--accent-blue) !important;
+}
+
+.callout-amber {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  border-left: 4px solid #f59e0b !important;
+}
+
+.callout-teal {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-left: 4px solid var(--accent-green) !important;
+}
+
+body:not(.dark) .callout-blue {
+  background: #eff6ff !important;
+}
+
+body:not(.dark) .callout-amber {
+  background: #fffbeb !important;
+}
+
+body:not(.dark) .callout-teal {
+  background: #ecfdf5 !important;
+}
+
+html body.dark:has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body.dark:has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: var(--bg-body) !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body:not(.dark):has(#demonlist.active):not(:has(#old-bg-toggle:checked)),
+html body:not(.dark):has(#demon-page.active):not(:has(#old-bg-toggle:checked)) {
+  background-color: var(--bg-body) !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+html body.dark:has(#home.active),
+html body.dark:has(#staff.active),
+html body.dark:has(#rules.active),
+html body.dark:has(#guidelines.active) {
+  background-color: var(--bg-body) !important;
+  background-image: url("OtherBackground.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  animation: none !important;
+}
+
+html body:not(.dark):has(#home.active),
+html body:not(.dark):has(#staff.active),
+html body:not(.dark):has(#rules.active),
+html body:not(.dark):has(#guidelines.active) {
+  background-color: var(--bg-body) !important;
+  background-image: url("Background.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  animation: none !important;
+}
+
+.site-footer {
+  background: var(--bg-nav) !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  color: var(--text-muted) !important;
+}
+
+.footer-brand {
+  color: var(--text-main) !important;
+}
+
+.footer-tagline,
+.footer-bottom {
+  color: var(--text-muted) !important;
+}
+
+.footer-divider {
+  background: var(--border-subtle) !important;
+}
+
+#back-to-top-btn {
+  background: var(--accent-blue) !important;
+  border: 1px solid var(--border-accent) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
