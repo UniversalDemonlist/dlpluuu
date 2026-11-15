@@ -6520,3 +6520,30 @@ window.exitCustomList = function () {
     obs.observe(activeArea, { childList: true });
   });
 })();
+
+(function syncExtrasActiveTabState() {
+  function updateExtrasHighlight() {
+    const toggleBtn = document.getElementById("extras-dropdown-toggle");
+    const menuItems = document.querySelectorAll("#extras-dropdown-menu .extras-menu-item");
+    if (!toggleBtn || menuItems.length === 0) return;
+
+    const isAnyExtraTabOpen = Array.from(menuItems).some(function (item) {
+      const tabId = item.getAttribute("data-tab");
+      const panel = tabId ? document.getElementById(tabId) : null;
+      const isOpen = Boolean(panel && panel.classList.contains("active"));
+      item.classList.toggle("active", isOpen);
+      return isOpen;
+    });
+
+    toggleBtn.classList.toggle("active", isAnyExtraTabOpen);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function () {
+      setTimeout(updateExtrasHighlight, 0);
+    });
+
+    window.addEventListener("hashchange", updateExtrasHighlight);
+    setTimeout(updateExtrasHighlight, 120);
+  });
+})();
