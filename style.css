@@ -3438,3 +3438,61 @@ body:not(.dark) .rl-wheel-caption {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+#gdl-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: var(--bg-body, #090b11);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+#gdl-loader-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gdl-loader-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  animation: gdlLoaderPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes gdlLoaderPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.07); opacity: 1; }
+}
+
+.gdl-loader-text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-main, #f8fafc);
+}
+
+.gdl-loader-bar-wrap {
+  width: 280px;
+  max-width: 80vw;
+  height: 8px;
+  background: var(--bg-input, #0b0e15);
+  border: 1px solid var(--border-subtle, #1f2738);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.gdl-loader-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue, #3b82f6), #38bdf8);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
