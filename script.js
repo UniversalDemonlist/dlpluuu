@@ -6602,3 +6602,59 @@ window.exitCustomList = function () {
     });
   });
 })();
+
+(function initGlobalLoadingScreen() {
+  const overlay = document.createElement("div");
+  overlay.id = "gdl-loader-overlay";
+  overlay.innerHTML =
+    '<img src="ne.png" class="gdl-loader-logo" alt="Loading">' +
+    '<div class="gdl-loader-text" id="gdl-loader-text">Loading...</div>' +
+    '<div class="gdl-loader-bar-wrap"><div class="gdl-loader-bar-fill" id="gdl-loader-bar"></div></div>';
+
+  document.body.appendChild(overlay);
+
+  const barEl = document.getElementById("gdl-loader-bar");
+  const textEl = document.getElementById("gdl-loader-text");
+  let progress = 8;
+  let finished = false;
+
+  if (barEl) barEl.style.width = progress + "%";
+
+  const creepInterval = setInterval(function () {
+    if (finished) return;
+    if (progress < 88) {
+      progress += (90 - progress) * 0.08;
+      if (barEl) barEl.style.width = progress.toFixed(1) + "%";
+    }
+  }, 120);
+
+  function finishLoading() {
+    if (finished) return;
+    finished = true;
+    clearInterval(creepInterval);
+    clearInterval(readyPoll);
+
+    if (barEl) barEl.style.width = "100%";
+    if (textEl) textEl.textContent = "Ready";
+
+    setTimeout(function () {
+      overlay.classList.add("fade-out");
+      setTimeout(function () {
+        overlay.remove();
+      }, 500);
+    }, 250);
+  }
+
+  const readyPoll = setInterval(function () {
+    const demonsLoaded = typeof globalDemons !== "undefined" && Array.isArray(globalDemons) && globalDemons.length > 0;
+    const scoresLoaded = window._leaderboardScores && Object.keys(window._leaderboardScores).length > 0;
+    const statsEl = document.getElementById("home-stat-levels");
+    const statsReady = statsEl && statsEl.textContent !== "Loading..." && statsEl.textContent !== "0";
+
+    if (demonsLoaded && scoresLoaded && statsReady) {
+      finishLoading();
+    }
+  }, 100);
+
+  setTimeout(finishLoading, 8000);
+})();
