@@ -3361,3 +3361,80 @@ body:not(.dark) .rl-wheel-caption {
   margin: 0 0 8px 0;
   color: var(--accent-red);
 }
+
+.rl-sphere-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  margin-bottom: 18px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rl-sphere-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rl-sphere-card {
+  position: absolute;
+  width: 148px;
+  height: 112px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+  will-change: transform, opacity, filter;
+  user-select: none;
+  pointer-events: none;
+}
+
+.rl-sphere-card.winner {
+  border: 2px solid var(--accent-green);
+  box-shadow: 0 0 28px rgba(16, 185, 129, 0.65);
+}
+
+.rl-sphere-card img {
+  width: 100%;
+  height: 74px;
+  object-fit: cover;
+  display: block;
+}
+
+.rl-sphere-card-info {
+  padding: 4px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  background: var(--bg-card);
+}
+
+.rl-sphere-card-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rl-sphere-card-sub {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
