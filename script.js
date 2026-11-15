@@ -6547,3 +6547,58 @@ window.exitCustomList = function () {
     setTimeout(updateExtrasHighlight, 120);
   });
 })();
+
+(function unifyTabClosing() {
+  function closeAllTabsExcept(activeTabId) {
+    document.querySelectorAll(".tab-content").forEach(function (panel) {
+      panel.style.display = "";
+      if (panel.id === activeTabId) {
+        panel.classList.add("active");
+      } else {
+        panel.classList.remove("active");
+      }
+    });
+
+    const toggleBtn = document.getElementById("extras-dropdown-toggle");
+    const extraItems = document.querySelectorAll("#extras-dropdown-menu .extras-menu-item");
+    let isExtraActive = false;
+
+    extraItems.forEach(function (item) {
+      const matches = item.getAttribute("data-tab") === activeTabId;
+      item.classList.toggle("active", matches);
+      if (matches) isExtraActive = true;
+    });
+
+    if (toggleBtn) {
+      toggleBtn.classList.toggle("active", isExtraActive);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function (e) {
+      const tabTrigger = e.target.closest("[data-tab]");
+      if (!tabTrigger) return;
+
+      const targetTabId = tabTrigger.getAttribute("data-tab");
+      if (!targetTabId || !document.getElementById(targetTabId)) return;
+
+      setTimeout(function () {
+        closeAllTabsExcept(targetTabId);
+      }, 0);
+    }, true);
+
+    const observer = new MutationObserver(function () {
+      const activeTabs = Array.from(document.querySelectorAll(".tab-content.active"));
+      if (activeTabs.length > 1) {
+        const latestTab = activeTabs[activeTabs.length - 1];
+        closeAllTabsExcept(latestTab.id);
+      }
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["class"]
+    });
+  });
+})();
