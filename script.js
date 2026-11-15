@@ -6306,3 +6306,217 @@ window.exitCustomList = function () {
     setTimeout(function () { clearInterval(poll); }, 8000);
   });
 })();
+
+(function overrideRouletteWith3DSphere() {
+  const SPHERE_RADIUS_X = 270;
+  const SPHERE_RADIUS_Y = 120;
+  const SPHERE_RADIUS_Z = 220;
+  const PERSPECTIVE = 650;
+
+  function getCardThumb(demon) {
+    if (!demon) return "extreme.png";
+    if (demon.thumbnail && demon.thumbnail.trim()) return demon.thumbnail.trim();
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(demon.verification);
+      if (yt) return yt;
+    }
+    return "https://prevter.me" + encodeURIComponent(demon.id);
+  }
+
+  function launchSphereAnimation(wheelStage, resultCard) {
+    const activeArea = document.getElementById("rl-active-area");
+    if (!activeArea || !resultCard || resultCard.dataset.sphereOverride) return;
+    resultCard.dataset.sphereOverride = "1";
+
+    if (wheelStage) wheelStage.remove();
+
+    const h2Text = resultCard.querySelector("h2")?.textContent || "Chosen Level";
+    const winnerName = h2Text.replace(/^#\d+\s*[—-]\s*/, "").trim();
+
+    const list = typeof getVisibleDemons === "function"
+      ? getVisibleDemons()
+      : (typeof globalDemons !== "undefined" ? globalDemons : []);
+    const pool = (list || []).filter(function (d) { return !d.cosmetic; });
+
+    const useMain = document.getElementById("rl-opt-main")?.checked;
+    const useExt = document.getElementById("rl-opt-ext")?.checked;
+    const useBeyond = document.getElementById("rl-opt-beyond")?.checked;
+
+    let sphereDemons = pool.filter(function (d) {
+      if (d.position <= 75 && useMain) return true;
+      if (d.position >= 76 && d.position <= 150 && useExt) return true;
+      if (d.position >= 151 && useBeyond) return true;
+      return false;
+    });
+
+    if (sphereDemons.length === 0) sphereDemons = pool.slice();
+    if (sphereDemons.length > 90) sphereDemons = sphereDemons.slice(0, 90);
+
+    let winnerIndex = sphereDemons.findIndex(function (d) {
+      return d.name.trim().toLowerCase() === winnerName.toLowerCase();
+    });
+
+    if (winnerIndex === -1) {
+      const found = pool.find(function (d) {
+        return d.name.trim().toLowerCase() === winnerName.toLowerCase();
+      }) || { name: winnerName, position: "?", verifier: "Unknown", id: "" };
+      sphereDemons.unshift(found);
+      winnerIndex = 0;
+    }
+
+    resultCard.style.display = "none";
+
+    const stage = document.createElement("div");
+    stage.className = "rl-sphere-stage";
+
+    const viewport = document.createElement("div");
+    viewport.className = "rl-sphere-viewport";
+
+    const count = sphereDemons.length;
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const nodes = [];
+
+    sphereDemons.forEach(function (demon, i) {
+      const card = document.createElement("div");
+      card.className = "rl-sphere-card";
+
+      const img = document.createElement("img");
+      img.src = getCardThumb(demon);
+      img.alt = demon.name;
+      img.onerror = function () {
+        if (!img.src.endsWith("extreme.png")) img.src = "extreme.png";
+      };
+
+      const info = document.createElement("div");
+      info.className = "rl-sphere-card-info";
+
+      const title = document.createElement("div");
+      title.className = "rl-sphere-card-title";
+      title.textContent = "#" + (demon.position || "?") + " — " + demon.name;
+
+      const sub = document.createElement("div");
+      sub.className = "rl-sphere-card-sub";
+      const ver = typeof cleanDisplayName === "function" ? cleanDisplayName(demon.verifier) : (demon.verifier || "");
+      sub.textContent = ver ? "By " + ver : "";
+
+      info.append(title, sub);
+      card.append(img, info);
+      viewport.appendChild(card);
+
+      let y = count > 1 ? 1 - (i / (count - 1)) * 2 : 0;
+      if (i === winnerIndex) y = 0;
+      const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = i === winnerIndex ? 0 : goldenAngle * i;
+
+      nodes.push({
+        el: card,
+        x: Math.cos(theta) * radiusAtY,
+        y: y,
+        z: Math.sin(theta) * radiusAtY,
+        isWinner: i === winnerIndex
+      });
+    });
+
+    const caption = document.createElement("p");
+    caption.className = "rl-wheel-caption";
+    caption.textContent = "Rolling level…";
+
+    stage.append(viewport, caption);
+    activeArea.insertBefore(stage, resultCard);
+
+    const winnerNode = nodes[winnerIndex];
+    const targetRotY = Math.atan2(winnerNode.x, winnerNode.z);
+    const totalRotY = targetRotY + Math.PI * 6;
+    const duration = 3400;
+    const startTime = performance.now();
+
+    function renderFrame(rotY, tiltX, zoomProgress) {
+      const cosY = Math.cos(rotY);
+      const sinY = Math.sin(rotY);
+      const cosX = Math.cos(tiltX);
+      const sinX = Math.sin(tiltX);
+
+      nodes.forEach(function (node) {
+        const rx = node.x * cosY - node.z * sinY;
+        const rz = node.z * cosY + node.x * sinY;
+
+        const ry = node.y * cosX - rz * sinX;
+        const fz = rz * cosX + node.y * sinX;
+
+        const px = rx * SPHERE_RADIUS_X;
+        const py = ry * SPHERE_RADIUS_Y;
+        const pz = fz * SPHERE_RADIUS_Z;
+
+        const scaleBase = PERSPECTIVE / (PERSPECTIVE - pz);
+        const depthNorm = (fz + 1) / 2;
+
+        if (node.isWinner && zoomProgress > 0) {
+          const finalX = px * (1 - zoomProgress);
+          const finalY = py * (1 - zoomProgress);
+          const finalScale = scaleBase + (1.45 - scaleBase) * zoomProgress;
+          node.el.style.transform = "translate3d(" + finalX.toFixed(1) + "px, " + finalY.toFixed(1) + "px, 0) scale(" + finalScale.toFixed(3) + ")";
+          node.el.style.zIndex = "500";
+          node.el.style.opacity = "1";
+          node.el.style.filter = "brightness(1)";
+        } else {
+          const fadeOthers = zoomProgress > 0 ? Math.max(0.15, 1 - zoomProgress * 0.85) : 1;
+          const opacity = (0.25 + depthNorm * 0.75) * fadeOthers;
+          const brightness = 0.35 + depthNorm * 0.65;
+          node.el.style.transform = "translate3d(" + px.toFixed(1) + "px, " + py.toFixed(1) + "px, 0) scale(" + (scaleBase * 0.88).toFixed(3) + ")";
+          node.el.style.zIndex = String(Math.round(depthNorm * 200));
+          node.el.style.opacity = opacity.toFixed(2);
+          node.el.style.filter = "brightness(" + brightness.toFixed(2) + ")";
+        }
+      });
+    }
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      if (progress < 0.82) {
+        const spinP = progress / 0.82;
+        const eased = 1 - Math.pow(1 - spinP, 4);
+        const currentY = totalRotY * eased;
+        const currentTilt = Math.sin(spinP * Math.PI) * 0.38;
+        renderFrame(currentY, currentTilt, 0);
+        requestAnimationFrame(animate);
+      } else {
+        const zoomP = (progress - 0.82) / 0.18;
+        const easedZoom = 1 - Math.pow(1 - zoomP, 3);
+        renderFrame(targetRotY, 0, easedZoom);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          winnerNode.el.classList.add("winner");
+          const winDemon = sphereDemons[winnerIndex];
+          caption.textContent = "Landed on: #" + (winDemon.position || "?") + " — " + winDemon.name;
+          caption.style.color = "var(--accent-green)";
+
+          setTimeout(function () {
+            stage.remove();
+            resultCard.style.display = "flex";
+          }, 950);
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const activeArea = document.getElementById("rl-active-area");
+    if (!activeArea) return;
+
+    const obs = new MutationObserver(function () {
+      const wheelStage = activeArea.querySelector(".rl-wheel-stage");
+      const resultCard = activeArea.querySelector(".rl-current-card");
+      if (wheelStage && resultCard) {
+        launchSphereAnimation(wheelStage, resultCard);
+      }
+    });
+
+    obs.observe(activeArea, { childList: true });
+  });
+})();
