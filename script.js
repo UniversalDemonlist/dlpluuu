@@ -7785,3 +7785,44 @@ window._gdlTcgCore = (function () {
     }
   });
 })();
+
+(function addHiddenTcgTestButtons() {
+  document.addEventListener("DOMContentLoaded", () => {
+    const actionsBar = document.querySelector("#tcg .cl-io-actions");
+    if (!actionsBar) return;
+
+    const mythicGoldHoloBtn = document.createElement("button");
+    mythicGoldHoloBtn.type = "button";
+    mythicGoldHoloBtn.id = "tcg-test-mythic-btn";
+    mythicGoldHoloBtn.className = "dp-back-btn tcg-debug-btn";
+    mythicGoldHoloBtn.textContent = "Get Mythic Gold Holo";
+
+    const thousandPtsBtn = document.createElement("button");
+    thousandPtsBtn.type = "button";
+    thousandPtsBtn.id = "tcg-test-points-btn";
+    thousandPtsBtn.className = "dp-back-btn tcg-debug-btn";
+    thousandPtsBtn.textContent = "Get 1000 Points";
+
+    actionsBar.append(mythicGoldHoloBtn, thousandPtsBtn);
+
+    function triggerRiggedPack(sequence) {
+      const openBtn = document.getElementById("tcg-buy-std");
+      if (!openBtn) return;
+      const origRandom = Math.random;
+      let i = 0;
+      Math.random = () => (i < sequence.length ? sequence[i++] : origRandom());
+      openBtn.click();
+      setTimeout(() => {
+        Math.random = origRandom;
+      }, 100);
+    }
+
+    mythicGoldHoloBtn.addEventListener("click", () => {
+      triggerRiggedPack([0.99, 0.99, 0.0001, 0.0, 0.001, 0.0001]);
+    });
+
+    thousandPtsBtn.addEventListener("click", () => {
+      triggerRiggedPack([0.99, 0.00001]);
+    });
+  });
+})();
