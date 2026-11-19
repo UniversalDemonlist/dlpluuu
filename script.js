@@ -7826,3 +7826,93 @@ window._gdlTcgCore = (function () {
     });
   });
 })();
+
+(function fixCinematicAndGoldExtreme() {
+  if (window._gdlTcgCore) {
+    window._gdlTcgCore.buildCardHtml = (function (origBuild) {
+      return function (item) {
+        if (item && item.isPointsCard) {
+          return `
+            <div class="tcg-card owned list-points-reward" data-tcg-upgraded="1">
+              <div class="tcg-gold-plated-demon">
+                <img src="extreme.png" alt="1000 List Points">
+              </div>
+            </div>
+          `;
+        }
+        return origBuild.apply(this, arguments);
+      };
+    })(window._gdlTcgCore.buildCardHtml);
+  }
+
+  function scanStageForRarePulls() {
+    const stage = document.querySelector("#tcg-pack-results .tcg-swipe-stage");
+    if (!stage || !window._gdlTcgCore) return;
+
+    const cards = Array.from(stage.querySelectorAll(".tcg-card:not(.swiped-out)"));
+    if (cards.length === 0) return;
+
+    const topCard = cards[cards.length - 1];
+    if (!topCard || topCard.dataset.cineShown) return;
+
+    const isPoints = topCard.classList.contains("list-points-reward");
+    const isGoldenHoloMythic =
+      topCard.classList.contains("rarity-mythic") &&
+      topCard.classList.contains("gold") &&
+      topCard.classList.contains("holo");
+
+    if (isPoints) {
+      topCard.dataset.cineShown = "1";
+      window._gdlTcgCore.triggerCinematic("points", topCard.outerHTML);
+    } else if (isGoldenHoloMythic) {
+      topCard.dataset.cineShown = "1";
+      window._gdlTcgCore.triggerCinematic("golden-holo-mythic", topCard.outerHTML);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const resultsBox = document.getElementById("tcg-pack-results");
+    if (resultsBox) {
+      new MutationObserver(() => {
+        setTimeout(scanStageForRarePulls, 20);
+      }).observe(resultsBox, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["class"]
+      });
+    }
+
+    const oldMythicBtn = document.getElementById("tcg-test-mythic-btn");
+    if (oldMythicBtn) {
+      const btn = oldMythicBtn.cloneNode(true);
+      oldMythicBtn.replaceWith(btn);
+      btn.addEventListener("click", () => {
+        const core = window._gdlTcgCore;
+        const pool = core ? core.getPool() : [];
+        const mythic = pool.find(d => d.position <= 10) || pool[0];
+        if (!mythic) return;
+        const html = core.buildCardHtml({
+          demon: mythic,
+          qty: 1,
+          isNew: true,
+          isHolo: true,
+          isGold: true
+        });
+        core.triggerCinematic("golden-holo-mythic", html);
+      });
+    }
+
+    const oldPtsBtn = document.getElementById("tcg-test-points-btn");
+    if (oldPtsBtn) {
+      const btn = oldPtsBtn.cloneNode(true);
+      oldPtsBtn.replaceWith(btn);
+      btn.addEventListener("click", () => {
+        const core = window._gdlTcgCore;
+        if (!core) return;
+        const html = core.buildCardHtml({ isPointsCard: true });
+        core.triggerCinematic("points", html);
+      });
+    }
+  });
+})();
