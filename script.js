@@ -8122,3 +8122,27 @@ window._gdlTcgCore = (function () {
     });
   };
 })();
+
+(function renamePointsToExtremeToken() {
+  if (!window._gdlTcgCore || typeof window._gdlTcgCore.triggerCinematic !== "function") return;
+
+  const origTrigger = window._gdlTcgCore.triggerCinematic;
+  window._gdlTcgCore.triggerCinematic = function (type, cardHtml) {
+    origTrigger.apply(this, arguments);
+
+    if (type === "points") {
+      const overlay = document.getElementById("tcg-cinematic-overlay");
+      if (!overlay) return;
+
+      const titleEl = overlay.querySelector(".tcg-cine-title");
+      if (titleEl) titleEl.textContent = "EXTREME TOKEN!";
+
+      const subEl = overlay.querySelector(".tcg-cine-sub");
+      if (subEl) {
+        subEl.innerHTML = subEl.innerHTML
+          .replace(/1,000 List Points/gi, "Extreme Token")
+          .replace(/1000 List Points/gi, "Extreme Token");
+      }
+    }
+  };
+})();
