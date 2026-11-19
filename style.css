@@ -4410,3 +4410,14 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   top: 50% !important;
 }
 
+.tcg-card.list-points-reward .tcg-gold-plated-demon,
+.tcg-card.list-points-reward > img,
+.tcg-cine-card-wrap .tcg-card.list-points-reward .tcg-gold-plated-demon,
+.tcg-cine-card-wrap .tcg-card.list-points-reward > img,
+.tcg-card.list-points-reward .tcg-gold-plated-demon img {
+  filter:
+    brightness(0) invert(1)
+    sepia(1) saturate(5.5) hue-rotate(6deg) brightness(1.06) contrast(1.12)
+    drop-shadow(0 0 6px rgba(250, 204, 21, 0.45))
+    drop-shadow(0 10px 16px rgba(0, 0, 0, 0.85)) !important;
+}
