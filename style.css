@@ -4334,3 +4334,79 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   animation: tcgRevealPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
 }
 
+.tcg-card.list-points-reward {
+  width: 245px !important;
+  height: 245px !important;
+  aspect-ratio: 1 / 1 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.tcg-card.list-points-reward .tcg-gold-plated-demon,
+.tcg-card.list-points-reward > img,
+.tcg-cine-card-wrap .tcg-card.list-points-reward .tcg-gold-plated-demon,
+.tcg-cine-card-wrap .tcg-card.list-points-reward > img {
+  width: 245px !important;
+  height: 245px !important;
+  max-width: none !important;
+  max-height: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.tcg-card.list-points-reward .tcg-gold-plated-demon img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  object-fit: contain !important;
+  filter:
+    brightness(0) invert(1)
+    sepia(1) saturate(6.5) hue-rotate(4deg) brightness(1.18) contrast(1.2)
+    drop-shadow(0 0 14px #facc15)
+    drop-shadow(0 0 32px #ca8a04)
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.9)) !important;
+}
+
+.tcg-tear-stage.button-tear {
+  height: auto !important;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tcg-tear-half.btn-clone-half {
+  border-radius: 8px !important;
+  background: var(--accent-blue) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 28px rgba(250, 204, 21, 0.85) !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.4px !important;
+  text-transform: none !important;
+  text-shadow: none !important;
+  padding: 10px 20px !important;
+}
+
+.tcg-tear-half.btn-clone-half.top {
+  clip-path: polygon(0 0, 100% 0, 100% 48%, 80% 54%, 60% 45%, 40% 55%, 20% 46%, 0 52%) !important;
+}
+
+.tcg-tear-half.btn-clone-half.bottom {
+  clip-path: polygon(0 52%, 20% 46%, 40% 55%, 60% 45%, 80% 54%, 100% 48%, 100% 100%, 0 100%) !important;
+}
+
+.tcg-tear-stage.button-tear .tcg-tear-seam {
+  top: 50% !important;
+}
+
