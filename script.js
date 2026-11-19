@@ -7199,3 +7199,161 @@ window.exitCustomList = function () {
     });
   });
 })();
+
+window._gdlTcgCore = (function () {
+  const SAVE_KEY = "gdl_tcg_binder_free_v1";
+  const HOLO_KEY = "gdl_tcg_holo_v1";
+  const GOLD_KEY = "gdl_tcg_gold_v1";
+
+  function readJson(key, fallback) {
+    try {
+      const val = JSON.parse(localStorage.getItem(key) || "null");
+      return val && typeof val === "object" ? val : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function writeJson(key, val) {
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch {}
+  }
+
+  function getPool() {
+    const list = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    return (list || []).filter(d => !d.cosmetic && d.position);
+  }
+
+  function getRarityInfo(pos) {
+    if (pos <= 10) return { label: "Mythic", cls: "rarity-mythic" };
+    if (pos <= 35) return { label: "Legendary", cls: "rarity-legendary" };
+    if (pos <= 75) return { label: "Epic", cls: "rarity-epic" };
+    if (pos <= 200) return { label: "Rare", cls: "rarity-rare" };
+    return { label: "Common", cls: "rarity-common" };
+  }
+
+  function getThumb(d) {
+    if (d.thumbnail && d.thumbnail.trim()) return d.thumbnail.trim();
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(d.verification);
+      if (yt) return yt;
+    }
+    return `https://prevter.me{d.id}`;
+  }
+
+  function pickWeightedDemon(pool, isGodPack) {
+    const top200 = pool.filter(d => d.position <= 200);
+    const beyond200 = pool.filter(d => d.position > 200);
+
+    if (isGodPack && top200.length > 0) {
+      const roll = Math.pow(Math.random(), 2.2);
+      return top200[Math.min(top200.length - 1, Math.floor(roll * top200.length))];
+    }
+
+    if (beyond200.length > 0 && (top200.length === 0 || Math.random() >= 0.12)) {
+      return beyond200[Math.floor(Math.random() * beyond200.length)];
+    }
+
+    const highRoll = Math.pow(Math.random(), 2.8);
+    const targetPool = top200.length > 0 ? top200 : pool;
+    return targetPool[Math.min(targetPool.length - 1, Math.floor(highRoll * targetPool.length))];
+  }
+
+  function triggerCinematic(type, cardHtml) {
+    document.getElementById("tcg-cinematic-overlay")?.remove();
+
+    const isJackpot = type === "points";
+    const overlay = document.createElement("div");
+    overlay.id = "tcg-cinematic-overlay";
+    if (isJackpot) overlay.classList.add("jackpot-mode");
+
+    const claimCode = "GDL-1000PTS-" + Math.random().toString(36).slice(2, 8).toUpperCase() + "-" + Date.now().toString(36).toUpperCase();
+
+    overlay.innerHTML = `
+      <div class="tcg-cine-rays"></div>
+      <div class="tcg-cine-content">
+        <h1 class="tcg-cine-title">${isJackpot ? "1,000 LIST POINTS!" : "GOLDEN HOLO MYTHIC!"}</h1>
+        <div class="tcg-cine-card-wrap">${cardHtml}</div>
+        <p class="tcg-cine-sub">${
+          isJackpot
+            ? `ULTRA RARE DROP! Share a video of you pulling this card (with code <strong>${claimCode}</strong>) in the official Discord server to receive <strong>1,000 List Points</strong>!`
+            : `INSANE PULL! You just pulled a <strong>Golden Holographic Mythic</strong> card!`
+        }</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          ${isJackpot ? `<a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="sidebar-action-btn" style="width:auto;">Open Discord ↗</a>` : ""}
+          <button type="button" id="tcg-cine-close-btn" class="dp-back-btn" style="margin:0;">Continue</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.getElementById("tcg-cine-close-btn")?.addEventListener("click", () => overlay.remove());
+  }
+
+  function buildCardHtml(item) {
+    if (item.isPointsCard) {
+      return `
+        <div class="tcg-card owned list-points-reward holo" data-tcg-upgraded="1">
+          <span class="tcg-new-badge">ULTRA RARE</span>
+          <div class="tcg-card-header">
+            <span>REWARD</span>
+            <span class="tcg-holo-tag">1000 PTS</span>
+            <span>#0</span>
+          </div>
+          <img src="ne.png" alt="1000 List Points" style="object-fit:contain;background:#06111a;padding:12px;">
+          <div class="tcg-card-body">
+            <div>
+              <h3 class="tcg-card-title">1,000 List Points</h3>
+              <span class="tcg-card-sub">Share pull video in Discord to claim!</span>
+            </div>
+            <div class="tcg-card-footer">
+              <span>GDL+ VOUCHER</span>
+              <span>+1000 PTS</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const { demon, qty, isNew, isHolo, isGold } = item;
+    const rarity = getRarityInfo(demon.position);
+    const pts = (5500 / Math.sqrt(demon.position)).toFixed(1);
+    const verifier = typeof cleanDisplayName === "function" ? cleanDisplayName(demon.verifier) : demon.verifier;
+
+    return `
+      <div class="tcg-card owned ${rarity.cls}${isHolo ? " holo" : ""}${isGold ? " gold" : ""}" data-tcg-upgraded="1">
+        ${isNew ? '<span class="tcg-new-badge">NEW!</span>' : ""}
+        <div class="tcg-card-header">
+          <span>${rarity.label}</span>
+          ${isGold ? '<span class="tcg-gold-tag">GOLD</span>' : ""}
+          ${isHolo ? '<span class="tcg-holo-tag">HOLO</span>' : ""}
+          <span>#${demon.position}${qty > 1 ? ` • x${qty}` : ""}</span>
+        </div>
+        <img src="${getThumb(demon)}" alt="${demon.name}" onerror="this.src='extreme.png'">
+        <div class="tcg-card-body">
+          <div>
+            <h3 class="tcg-card-title">${demon.name}</h3>
+            <span class="tcg-card-sub">Verified by ${verifier} • ${pts} pts</span>
+          </div>
+          <div class="tcg-card-footer">
+            <span>GDL+ TCG</span>
+            <span>${rarity.label}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return {
+    SAVE_KEY,
+    HOLO_KEY,
+    GOLD_KEY,
+    readJson,
+    writeJson,
+    getPool,
+    pickWeightedDemon,
+    triggerCinematic,
+    buildCardHtml
+  };
+})();
