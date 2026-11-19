@@ -4421,3 +4421,15 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
     drop-shadow(0 0 6px rgba(250, 204, 21, 0.45))
     drop-shadow(0 10px 16px rgba(0, 0, 0, 0.85)) !important;
 }
+
+.tcg-button-tear-clone {
+  position: fixed !important;
+  z-index: 99999998 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  animation: tcgPackViolentShake 0.75s ease-in-out forwards;
+}
+
+.tcg-button-tear-clone .tcg-tear-half {
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.75) !important;
+}
