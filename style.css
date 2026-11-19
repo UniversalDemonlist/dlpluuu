@@ -3956,3 +3956,154 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
 .tcg-card.rarity-epic .tcg-card-header span:first-child::before {
   content: "◆ ";
 }
+
+.tcg-card.gold {
+  border: 6px solid transparent !important;
+  background:
+    linear-gradient(160deg, #291c05 0%, #120b02 100%) padding-box,
+    linear-gradient(135deg, #ca8a04, #fef08a, #f59e0b, #fffbeb, #ca8a04) border-box !important;
+  background-size: 100% 100%, 240% 240% !important;
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.55), inset 0 0 18px rgba(254, 240, 138, 0.3) !important;
+  animation: tcgMythicFrameShift 3.5s linear infinite !important;
+}
+
+.tcg-card.gold .tcg-card-header {
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.35), rgba(254, 240, 138, 0.22)) !important;
+  color: #fef08a !important;
+}
+
+.tcg-gold-tag {
+  background: linear-gradient(90deg, #f59e0b, #fef08a, #f59e0b);
+  color: #090b11;
+  font-weight: 900;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.6px;
+}
+
+.tcg-card.gold.holo {
+  box-shadow: 0 0 30px rgba(250, 204, 21, 0.75), 0 0 50px rgba(56, 189, 248, 0.55) !important;
+}
+
+.tcg-card.list-points-reward {
+  border: 6px solid transparent !important;
+  background:
+    linear-gradient(160deg, #071921 0%, #030a12 100%) padding-box,
+    linear-gradient(135deg, #00ffcc, #38bdf8, #a855f7, #f43f5e, #00ffcc) border-box !important;
+  background-size: 100% 100%, 300% 300% !important;
+  box-shadow: 0 0 36px rgba(0, 255, 204, 0.75), 0 0 64px rgba(56, 189, 248, 0.5) !important;
+  animation: tcgMythicFrameShift 2.5s linear infinite !important;
+}
+
+#tcg-cinematic-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  background: radial-gradient(circle at center, rgba(250, 204, 21, 0.32) 0%, rgba(12, 6, 20, 0.96) 65%, #000000 100%);
+  backdrop-filter: blur(8px);
+  animation: tcgCineFadeIn 0.35s ease forwards;
+}
+
+#tcg-cinematic-overlay.jackpot-mode {
+  background: radial-gradient(circle at center, rgba(0, 255, 204, 0.38) 0%, rgba(16, 10, 38, 0.97) 65%, #000000 100%);
+}
+
+@keyframes tcgCineFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tcgCineShake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-6px, 4px) rotate(-1deg); }
+  40% { transform: translate(6px, -4px) rotate(1deg); }
+  60% { transform: translate(-4px, -3px) rotate(-0.5deg); }
+  80% { transform: translate(4px, 3px) rotate(0.5deg); }
+}
+
+@keyframes tcgCineRays {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tcg-cine-rays {
+  position: absolute;
+  width: 140vmax;
+  height: 140vmax;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(254, 240, 138, 0.14) 0deg 10deg,
+    transparent 10deg 20deg
+  );
+  animation: tcgCineRays 14s linear infinite;
+  pointer-events: none;
+}
+
+#tcg-cinematic-overlay.jackpot-mode .tcg-cine-rays {
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(0, 255, 204, 0.18) 0deg 10deg,
+    transparent 10deg 20deg
+  );
+}
+
+.tcg-cine-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 520px;
+  animation: tcgCineShake 0.45s ease-out;
+}
+
+.tcg-cine-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #fef08a, #f59e0b, #ffffff, #fef08a);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(250, 204, 21, 0.8));
+  animation: tcgMythicFrameShift 2.5s linear infinite;
+}
+
+#tcg-cinematic-overlay.jackpot-mode .tcg-cine-title {
+  background: linear-gradient(90deg, #00ffcc, #38bdf8, #ffffff, #00ffcc);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px rgba(0, 255, 204, 0.85));
+}
+
+.tcg-cine-sub {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.5;
+  background: rgba(13, 18, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 12px 18px;
+  border-radius: 10px;
+}
+
+.tcg-cine-card-wrap .tcg-card {
+  width: 255px;
+  margin: 0 auto;
+  transform: scale(1.04);
+}
