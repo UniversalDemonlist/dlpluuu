@@ -4108,3 +4108,73 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   transform: scale(1.04);
 }
 
+.tcg-card.list-points-reward {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.tcg-card.list-points-reward::after,
+.tcg-card.list-points-reward .tcg-card-header,
+.tcg-card.list-points-reward .tcg-card-body,
+.tcg-card.list-points-reward .tcg-new-badge,
+.tcg-card.list-points-reward .tcg-gold-plated-label {
+  display: none !important;
+}
+
+.tcg-card.list-points-reward .tcg-gold-plated-demon,
+.tcg-card.list-points-reward > img {
+  width: 190px !important;
+  height: 190px !important;
+  max-width: 190px !important;
+  aspect-ratio: 1 / 1 !important;
+  object-fit: contain !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  filter:
+    brightness(0) invert(1)
+    sepia(1) saturate(6.5) hue-rotate(4deg) brightness(1.18) contrast(1.2)
+    drop-shadow(0 0 3px #fffbeb)
+    drop-shadow(0 0 12px #facc15)
+    drop-shadow(0 0 28px #ca8a04)
+    drop-shadow(0 12px 20px rgba(0, 0, 0, 0.9)) !important;
+  animation: tcgGoldPlateFloat 2.6s ease-in-out infinite !important;
+}
+
+@keyframes tcgGoldPlateFloat {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-7px) scale(1.05); }
+}
+
+#tcg-cinematic-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 18px !important;
+  padding: 24px !important;
+  text-align: center !important;
+  background: radial-gradient(circle at center, rgba(250, 204, 21, 0.34) 0%, rgba(12, 6, 20, 0.97) 65%, #000000 100%) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+#tcg-cinematic-overlay.jackpot-mode {
+  background: radial-gradient(circle at center, rgba(0, 255, 204, 0.36) 0%, rgba(16, 10, 38, 0.97) 65%, #000000 100%) !important;
+}
+
+.tcg-cine-card-wrap .tcg-card.list-points-reward {
+  width: 220px !important;
+  height: 220px !important;
+}
+
