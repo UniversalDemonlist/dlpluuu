@@ -4107,3 +4107,23 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   margin: 0 auto;
   transform: scale(1.04);
 }
+
+(function overrideListPointsGoldPlatedEmblem() {
+  if (!window._gdlTcgCore) return;
+
+  window._gdlTcgCore.buildCardHtml = (function (origBuild) {
+    return function (item) {
+      if (item && item.isPointsCard) {
+        return `
+          <div class="tcg-card owned list-points-reward" data-tcg-upgraded="1">
+            <div class="tcg-gold-plated-demon">
+              <img src="extreme.png" alt="1000 List Points">
+            </div>
+            <div class="tcg-gold-plated-label">+1000 List Points</div>
+          </div>
+        `;
+      }
+      return origBuild.apply(this, arguments);
+    };
+  })(window._gdlTcgCore.buildCardHtml);
+})();
