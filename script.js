@@ -7916,3 +7916,55 @@ window._gdlTcgCore = (function () {
     }
   });
 })();
+
+(function upgradePackTearCinematic() {
+  if (!window._gdlTcgCore) return;
+
+  window._gdlTcgCore.triggerCinematic = function (type, cardHtml) {
+    document.getElementById("tcg-cinematic-overlay")?.remove();
+    document.querySelector(".tcg-gold-screen-flash")?.remove();
+
+    const isJackpot = type === "points";
+    const overlay = document.createElement("div");
+    overlay.id = "tcg-cinematic-overlay";
+    if (isJackpot) overlay.classList.add("jackpot-mode");
+
+    const claimCode = "GDL-1000PTS-" + Math.random().toString(36).slice(2, 8).toUpperCase() + "-" + Date.now().toString(36).toUpperCase();
+
+    overlay.innerHTML = `
+      <div class="tcg-tear-stage" id="tcg-tear-stage">
+        <div class="tcg-tear-half top">GDL+ PACK</div>
+        <div class="tcg-tear-seam"></div>
+        <div class="tcg-tear-half bottom">ULTRA PULL</div>
+      </div>
+      <div class="tcg-cine-content delayed-reveal">
+        <h1 class="tcg-cine-title">${isJackpot ? "1,000 LIST POINTS!" : "GOLDEN HOLO MYTHIC!"}</h1>
+        <div class="tcg-cine-card-wrap">${cardHtml}</div>
+        <p class="tcg-cine-sub">${
+          isJackpot
+            ? `ULTRA RARE DROP! Share a video of you pulling this (with code <strong>${claimCode}</strong>) in the Discord server to get <strong>1,000 List Points</strong>!`
+            : `INSANE PULL! You just pulled a <strong>Golden Holographic Mythic</strong> card!`
+        }</p>
+        <button type="button" id="tcg-cine-close-btn" class="dp-back-btn" style="margin:0;">Continue</button>
+      </div>
+    `;
+
+    const flash = document.createElement("div");
+    flash.className = "tcg-gold-screen-flash";
+
+    document.body.append(overlay, flash);
+
+    setTimeout(() => {
+      document.getElementById("tcg-tear-stage")?.remove();
+    }, 1150);
+
+    setTimeout(() => {
+      flash.remove();
+    }, 1650);
+
+    document.getElementById("tcg-cine-close-btn")?.addEventListener("click", () => {
+      overlay.remove();
+      flash.remove();
+    });
+  };
+})();
