@@ -4489,3 +4489,7 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   opacity: 0;
   animation: tcgRevealPop 0.55s cubic-bezier(0.22, 1, 0.36, 1) 1.95s forwards !important;
 }
+
+.tcg-debug-btn {
+  display: none !important;
+}
