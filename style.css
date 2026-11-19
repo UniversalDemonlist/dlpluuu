@@ -3790,3 +3790,62 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   border-radius: 4px;
   letter-spacing: 0.6px;
 }
+
+#tcg-pack-results.tcg-swipe-mode {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 440px;
+  gap: 14px;
+}
+
+.tcg-swipe-stage {
+  position: relative;
+  width: 265px;
+  aspect-ratio: 5 / 7;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tcg-swipe-stage .tcg-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease !important;
+}
+
+.tcg-swipe-stage .tcg-card.swiped-out {
+  transform: translateX(135%) rotate(18deg) scale(0.92) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.tcg-swipe-counter {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.tcg-godpack-banner {
+  background: linear-gradient(90deg, #f43f5e, #eab308, #a855f7, #38bdf8);
+  background-size: 200% auto;
+  color: #090b11;
+  font-weight: 900;
+  font-size: 0.95rem;
+  padding: 6px 18px;
+  border-radius: 999px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(234, 179, 8, 0.55);
+  animation: tcgGodpackPulse 1.5s linear infinite;
+}
+
+@keyframes tcgGodpackPulse {
+  0% { background-position: 0% 50%; transform: scale(1); }
+  50% { background-position: 100% 50%; transform: scale(1.05); }
+  100% { background-position: 0% 50%; transform: scale(1); }
+}
