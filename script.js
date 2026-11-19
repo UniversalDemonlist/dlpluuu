@@ -6987,3 +6987,215 @@ window.exitCustomList = function () {
     }
   });
 })();
+
+(function upgradeTcgTenCardSwipeAndGodpacks() {
+  const SAVE_KEY = "gdl_tcg_binder_free_v1";
+  const HOLO_KEY = "gdl_tcg_holo_v1";
+  const PACK_SIZE = 10;
+  const GODPACK_CHANCE = 0.03;
+
+  function readCards() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}");
+      return parsed && typeof parsed.cards === "object" ? parsed.cards : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function writeCards(cards) {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ cards }));
+    } catch {}
+  }
+
+  function readHolos() {
+    try {
+      return JSON.parse(localStorage.getItem(HOLO_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function writeHolos(holos) {
+    try {
+      localStorage.setItem(HOLO_KEY, JSON.stringify(holos));
+    } catch {}
+  }
+
+  function getPool() {
+    const list = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    return (list || []).filter(d => !d.cosmetic && d.position);
+  }
+
+  function getRarityInfo(pos) {
+    if (pos <= 10) return { label: "Mythic", cls: "rarity-mythic" };
+    if (pos <= 35) return { label: "Legendary", cls: "rarity-legendary" };
+    if (pos <= 75) return { label: "Epic", cls: "rarity-epic" };
+    if (pos <= 200) return { label: "Rare", cls: "rarity-rare" };
+    return { label: "Common", cls: "rarity-common" };
+  }
+
+  function getThumb(d) {
+    if (d.thumbnail && d.thumbnail.trim()) return d.thumbnail.trim();
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(d.verification);
+      if (yt) return yt;
+    }
+    return `https://prevter.me{d.id}`;
+  }
+
+  function pickWeightedDemon(pool, isGodPack) {
+    const top200 = pool.filter(d => d.position <= 200);
+    const beyond200 = pool.filter(d => d.position > 200);
+
+    if (isGodPack && top200.length > 0) {
+      const roll = Math.pow(Math.random(), 2.2);
+      return top200[Math.min(top200.length - 1, Math.floor(roll * top200.length))];
+    }
+
+    if (beyond200.length > 0 && (top200.length === 0 || Math.random() >= 0.12)) {
+      return beyond200[Math.floor(Math.random() * beyond200.length)];
+    }
+
+    const highRoll = Math.pow(Math.random(), 2.8);
+    const targetPool = top200.length > 0 ? top200 : pool;
+    return targetPool[Math.min(targetPool.length - 1, Math.floor(highRoll * targetPool.length))];
+  }
+
+  function buildSwipeCard(demon, qty, isNew, isHolo) {
+    const rarity = getRarityInfo(demon.position);
+    const card = document.createElement("div");
+    card.className = `tcg-card owned ${rarity.cls}${isHolo ? " holo" : ""}`;
+    card.dataset.tcgUpgraded = "1";
+
+    const pts = (5500 / Math.sqrt(demon.position)).toFixed(1);
+    const verifier = typeof cleanDisplayName === "function" ? cleanDisplayName(demon.verifier) : demon.verifier;
+
+    card.innerHTML = `
+      ${isNew ? '<span class="tcg-new-badge">NEW!</span>' : ""}
+      <div class="tcg-card-header">
+        <span>${rarity.label}</span>
+        ${isHolo ? '<span class="tcg-holo-tag">HOLO</span>' : ""}
+        <span>#${demon.position}${qty > 1 ? ` • x${qty}` : ""}</span>
+      </div>
+      <img src="${getThumb(demon)}" alt="${demon.name}" onerror="this.src='extreme.png'">
+      <div class="tcg-card-body">
+        <div>
+          <h3 class="tcg-card-title">${demon.name}</h3>
+          <span class="tcg-card-sub">Verified by ${verifier} • ${pts} pts</span>
+        </div>
+        <div class="tcg-card-footer">
+          <span>GDL+ TCG</span>
+          <span>${rarity.label}</span>
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  function refreshCounters(pool, cards) {
+    const uniqueEl = document.getElementById("tcg-unique");
+    const totalPoolEl = document.getElementById("tcg-total-pool");
+    const totalCardsEl = document.getElementById("tcg-total-cards");
+
+    if (totalPoolEl) totalPoolEl.textContent = pool.length;
+    if (uniqueEl) uniqueEl.textContent = pool.filter(d => (cards[String(d.id)] || 0) > 0).length;
+    if (totalCardsEl) totalCardsEl.textContent = Object.values(cards).reduce((a, b) => a + (Number(b) || 0), 0).toLocaleString();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const openBtn = document.getElementById("tcg-buy-std");
+    const packBox = openBtn?.closest(".tcg-pack-box");
+    const resultsBox = document.getElementById("tcg-pack-results");
+    if (!openBtn || !resultsBox) return;
+
+    const descEl = packBox?.querySelector("p");
+    if (descEl) descEl.textContent = "10 cards per pack. Tap each card to swipe through your pulls!";
+
+    const freshBtn = openBtn.cloneNode(true);
+    openBtn.replaceWith(freshBtn);
+
+    freshBtn.addEventListener("click", () => {
+      const pool = getPool();
+      if (pool.length === 0) return;
+
+      const cards = readCards();
+      const holos = readHolos();
+      const isGodPack = Math.random() < GODPACK_CHANCE;
+
+      const pulled = [];
+      for (let i = 0; i < PACK_SIZE; i++) {
+        const demon = pickWeightedDemon(pool, isGodPack);
+        const id = String(demon.id);
+        const prev = cards[id] || 0;
+        cards[id] = prev + 1;
+
+        const rolledHolo = Math.random() < (isGodPack ? 0.65 : 0.15);
+        if (rolledHolo) holos[demon.name] = true;
+
+        pulled.push({
+          demon,
+          qty: cards[id],
+          isNew: prev === 0,
+          isHolo: Boolean(holos[demon.name])
+        });
+      }
+
+      writeCards(cards);
+      writeHolos(holos);
+      refreshCounters(pool, cards);
+
+      if (packBox) packBox.style.display = "none";
+
+      resultsBox.className = "tcg-swipe-mode";
+      resultsBox.innerHTML = "";
+
+      if (isGodPack) {
+        const banner = document.createElement("div");
+        banner.className = "tcg-godpack-banner";
+        banner.textContent = "★ GOD PACK! ★";
+        resultsBox.appendChild(banner);
+      }
+
+      const counter = document.createElement("div");
+      counter.className = "tcg-swipe-counter";
+      counter.textContent = `Card 1 / ${PACK_SIZE} — Click card to swipe`;
+
+      const stage = document.createElement("div");
+      stage.className = "tcg-swipe-stage";
+
+      const cardEls = pulled.map((item, idx) => {
+        const el = buildSwipeCard(item.demon, item.qty, item.isNew, item.isHolo);
+        el.style.zIndex = String(PACK_SIZE - idx);
+        el.style.transform = idx === 0 ? "" : `scale(${Math.max(0.9, 1 - idx * 0.015)}) translateY(${Math.min(12, idx * 2)}px)`;
+        return el;
+      });
+
+      for (let i = cardEls.length - 1; i >= 0; i--) {
+        stage.appendChild(cardEls[i]);
+      }
+
+      let currentIndex = 0;
+      stage.addEventListener("click", () => {
+        if (currentIndex >= cardEls.length) return;
+
+        cardEls[currentIndex].classList.add("swiped-out");
+        currentIndex++;
+
+        if (currentIndex < cardEls.length) {
+          cardEls[currentIndex].style.transform = "";
+          counter.textContent = `Card ${currentIndex + 1} / ${PACK_SIZE} — Click card to swipe`;
+        } else {
+          setTimeout(() => {
+            resultsBox.className = "tcg-grid";
+            resultsBox.innerHTML = "";
+            if (packBox) packBox.style.display = "";
+          }, 340);
+        }
+      });
+
+      resultsBox.append(counter, stage);
+    });
+  });
+})();
