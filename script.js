@@ -7687,3 +7687,101 @@ window._gdlTcgCore = (function () {
     });
   });
 })();
+
+(function patchTcgBugs() {
+  const SAVE_KEY = "gdl_tcg_binder_free_v1";
+  const HOLO_KEY = "gdl_tcg_holo_v1";
+  const GOLD_KEY = "gdl_tcg_gold_v1";
+
+  if (window._gdlTcgCore && typeof window._gdlTcgCore.triggerCinematic === "function") {
+    const origCine = window._gdlTcgCore.triggerCinematic;
+    window._gdlTcgCore.triggerCinematic = function (...args) {
+      origCine.apply(this, args);
+      document.querySelector("#tcg-cinematic-overlay a[href*='discord.gg']")?.remove();
+    };
+  }
+
+  function fixBrokenPrevterImgs(root) {
+    (root || document).querySelectorAll(".tcg-card img").forEach(img => {
+      const src = img.getAttribute("src") || "";
+      if (src.startsWith("https://prevter.me") && !src.includes("levelthumbs.prevter.me")) {
+        const id = src.replace("https://prevter.me", "");
+        img.src = `https://prevter.me{id}`;
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const tcgTab = document.getElementById("tcg");
+    if (tcgTab) {
+      new MutationObserver(() => fixBrokenPrevterImgs(tcgTab)).observe(tcgTab, { childList: true, subtree: true });
+    }
+
+    document.getElementById("tcg-reset-btn")?.addEventListener("click", () => {
+      setTimeout(() => {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (!raw || raw === '{"cards":{}}') {
+          localStorage.removeItem(GOLD_KEY);
+        }
+      }, 60);
+    });
+
+    const actionsBar = document.querySelector("#tcg .cl-io-actions");
+    if (!actionsBar) return;
+
+    const buttons = Array.from(actionsBar.querySelectorAll("button"));
+    const oldCopy = buttons.find(b => b.textContent.includes("Copy Save Code"));
+    const oldLoad = buttons.find(b => b.textContent.includes("Load Code"));
+
+    if (oldCopy) {
+      const newCopy = oldCopy.cloneNode(true);
+      oldCopy.replaceWith(newCopy);
+      newCopy.addEventListener("click", () => {
+        const cards = JSON.parse(localStorage.getItem(SAVE_KEY) || '{"cards":{}}').cards || {};
+        if (Object.keys(cards).length === 0) return alert("Open a pack first!");
+        const payload = {
+          cards,
+          holos: JSON.parse(localStorage.getItem(HOLO_KEY) || "{}"),
+          golds: JSON.parse(localStorage.getItem(GOLD_KEY) || "{}")
+        };
+        const code = "GDTC2-" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+        navigator.clipboard?.writeText(code)
+          .then(() => alert("Full Binder save code (including Holos & Golds) copied!"))
+          .catch(() => prompt("Copy your save code:", code));
+      });
+    }
+
+    if (oldLoad) {
+      const newLoad = oldLoad.cloneNode(true);
+      oldLoad.replaceWith(newLoad);
+      newLoad.addEventListener("click", () => {
+        const code = prompt("Paste your GDTC1-... or GDTC2-... save code:");
+        if (!code) return;
+        const trimmed = code.trim();
+        try {
+          if (trimmed.startsWith("GDTC2-")) {
+            const parsed = JSON.parse(decodeURIComponent(escape(atob(trimmed.slice(6)))));
+            if (parsed && typeof parsed.cards === "object") {
+              localStorage.setItem(SAVE_KEY, JSON.stringify({ cards: parsed.cards }));
+              localStorage.setItem(HOLO_KEY, JSON.stringify(parsed.holos || {}));
+              localStorage.setItem(GOLD_KEY, JSON.stringify(parsed.golds || {}));
+              window.location.hash = "tcg";
+              window.location.reload();
+            }
+          } else if (trimmed.startsWith("GDTC1-")) {
+            const parsed = JSON.parse(decodeURIComponent(escape(atob(trimmed.slice(6)))));
+            if (parsed && typeof parsed.cards === "object") {
+              localStorage.setItem(SAVE_KEY, JSON.stringify({ cards: parsed.cards }));
+              window.location.hash = "tcg";
+              window.location.reload();
+            }
+          } else {
+            alert("Invalid save code.");
+          }
+        } catch {
+          alert("Invalid save code.");
+        }
+      });
+    }
+  });
+})();
