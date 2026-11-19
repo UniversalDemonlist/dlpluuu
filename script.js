@@ -6905,3 +6905,85 @@ window.exitCustomList = function () {
     });
   });
 })();
+
+(function upgradeTcgCardsAndHolo() {
+  const HOLO_KEY = "gdl_tcg_holo_v1";
+  const HOLO_CHANCE = 0.18;
+
+  function getHolos() {
+    try {
+      return JSON.parse(localStorage.getItem(HOLO_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function saveHolos(map) {
+    try {
+      localStorage.setItem(HOLO_KEY, JSON.stringify(map));
+    } catch {}
+  }
+
+  function enhanceCard(card, forceHoloRoll) {
+    if (!card || card.dataset.tcgUpgraded) return;
+    card.dataset.tcgUpgraded = "1";
+
+    const title = card.querySelector(".tcg-card-title")?.textContent?.trim() || "";
+    const header = card.querySelector(".tcg-card-header");
+    const body = card.querySelector(".tcg-card-body");
+    const isMissing = card.classList.contains("missing");
+
+    if (!isMissing && title && title !== "???") {
+      const holos = getHolos();
+      if (forceHoloRoll && Math.random() < HOLO_CHANCE) {
+        holos[title] = true;
+        saveHolos(holos);
+      }
+
+      if (holos[title]) {
+        card.classList.add("holo");
+        if (header) {
+          const tag = document.createElement("span");
+          tag.className = "tcg-holo-tag";
+          tag.textContent = "HOLO";
+          header.insertBefore(tag, header.lastElementChild);
+        }
+      }
+    }
+
+    if (body && !body.querySelector(".tcg-card-footer")) {
+      const rarityText = header?.firstElementChild?.textContent?.trim() || "CARD";
+      const footer = document.createElement("div");
+      footer.className = "tcg-card-footer";
+      footer.innerHTML = `<span>GDL+ TCG</span><span>${isMissing ? "LOCKED" : rarityText}</span>`;
+      body.appendChild(footer);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("tcg-buy-main")?.remove();
+
+    document.getElementById("tcg-reset-btn")?.addEventListener("click", () => {
+      setTimeout(() => {
+        const raw = localStorage.getItem("gdl_tcg_binder_free_v1");
+        if (!raw || raw === '{"cards":{}}') {
+          localStorage.removeItem(HOLO_KEY);
+        }
+      }, 50);
+    });
+
+    const packResults = document.getElementById("tcg-pack-results");
+    if (packResults) {
+      new MutationObserver(() => {
+        packResults.querySelectorAll(".tcg-card").forEach(c => enhanceCard(c, true));
+      }).observe(packResults, { childList: true });
+    }
+
+    const binderGrid = document.getElementById("tcg-binder-grid");
+    if (binderGrid) {
+      new MutationObserver(() => {
+        binderGrid.querySelectorAll(".tcg-card").forEach(c => enhanceCard(c, false));
+      }).observe(binderGrid, { childList: true });
+    }
+  });
+})();
