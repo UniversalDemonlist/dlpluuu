@@ -6658,3 +6658,204 @@ window.exitCustomList = function () {
 
   setTimeout(finishLoading, 8000);
 })();
+
+(function initDemonCardCollector() {
+  const SAVE_KEY = "gdl_tcg_binder_free_v1";
+  let state = { cards: {} };
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.cards === "object") state = parsed;
+      }
+    } catch {}
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    } catch {}
+    updateHUD();
+  }
+
+  function showStatus(msg, isErr = false) {
+    const el = document.getElementById("tcg-status-msg");
+    if (!el) return;
+    el.style.color = isErr ? "#ef4444" : "var(--accent-green)";
+    el.textContent = msg;
+    setTimeout(() => {
+      if (el.textContent === msg) el.textContent = "";
+    }, 3000);
+  }
+
+  function getPool() {
+    const list = typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons;
+    return (list || []).filter(d => !d.cosmetic && d.position);
+  }
+
+  function updateHUD() {
+    const pool = getPool();
+    const uniqueEl = document.getElementById("tcg-unique");
+    const totalPoolEl = document.getElementById("tcg-total-pool");
+    const totalCardsEl = document.getElementById("tcg-total-cards");
+
+    if (totalPoolEl) totalPoolEl.textContent = pool.length;
+    if (uniqueEl) {
+      const ownedUnique = pool.filter(d => (state.cards[String(d.id)] || 0) > 0).length;
+      uniqueEl.textContent = ownedUnique;
+    }
+    if (totalCardsEl) {
+      const sum = Object.values(state.cards).reduce((acc, val) => acc + (Number(val) || 0), 0);
+      totalCardsEl.textContent = sum.toLocaleString();
+    }
+  }
+
+  function getRarityInfo(position) {
+    if (position <= 10) return { label: "Mythic", cls: "rarity-mythic" };
+    if (position <= 35) return { label: "Legendary", cls: "rarity-legendary" };
+    if (position <= 75) return { label: "Epic", cls: "rarity-epic" };
+    if (position <= 150) return { label: "Rare", cls: "rarity-rare" };
+    return { label: "Common", cls: "rarity-common" };
+  }
+
+  function getThumb(demon) {
+    if (demon.thumbnail && demon.thumbnail.trim()) return demon.thumbnail.trim();
+    if (typeof getYoutubeThumbnail === "function") {
+      const yt = getYoutubeThumbnail(demon.verification);
+      if (yt) return yt;
+    }
+    return `https://prevter.me{demon.id}`;
+  }
+
+  function createCardElement(demon, qty, isNew = false, isMissing = false) {
+    const rarity = getRarityInfo(demon.position);
+    const card = document.createElement("div");
+    card.className = `tcg-card ${isMissing ? "missing" : `owned ${rarity.cls}`}`;
+
+    const pts = (5500 / Math.sqrt(demon.position)).toFixed(1);
+    const verifier = typeof cleanDisplayName === "function" ? cleanDisplayName(demon.verifier) : demon.verifier;
+
+    card.innerHTML = `
+      ${isNew ? '<span class="tcg-new-badge">NEW!</span>' : ""}
+      <div class="tcg-card-header">
+        <span>${isMissing ? "Locked" : rarity.label}</span>
+        <span>#${demon.position}${!isMissing && qty > 1 ? ` • x${qty}` : ""}</span>
+      </div>
+      <img src="${getThumb(demon)}" alt="${demon.name}" onerror="this.src='extreme.png'">
+      <div class="tcg-card-body">
+        <h3 class="tcg-card-title">${isMissing ? "???" : demon.name}</h3>
+        <span class="tcg-card-sub">${isMissing ? "Open packs to unlock" : `Verified by ${verifier} • ${pts} pts`}</span>
+      </div>
+    `;
+
+    if (!isMissing && typeof openDemonPage === "function") {
+      card.title = `Open ${demon.name} page`;
+      card.addEventListener("click", () => openDemonPage(demon));
+    }
+
+    return card;
+  }
+
+  function openPack(mainListOnly) {
+    let pool = getPool();
+    if (mainListOnly) pool = pool.filter(d => d.position <= 75);
+    if (pool.length === 0) return;
+
+    const resultsBox = document.getElementById("tcg-pack-results");
+    if (resultsBox) resultsBox.innerHTML = "";
+
+    for (let i = 0; i < 3; i++) {
+      const roll = Math.pow(Math.random(), 1.55);
+      const idx = Math.min(pool.length - 1, Math.floor(roll * pool.length));
+      const picked = pool[idx];
+      const id = String(picked.id);
+
+      const prevCount = state.cards[id] || 0;
+      state.cards[id] = prevCount + 1;
+
+      if (resultsBox) {
+        resultsBox.appendChild(createCardElement(picked, state.cards[id], prevCount === 0, false));
+      }
+    }
+
+    saveState();
+  }
+
+  function renderBinder() {
+    const grid = document.getElementById("tcg-binder-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    const query = (document.getElementById("tcg-search")?.value || "").toLowerCase().trim();
+    const filter = document.getElementById("tcg-filter")?.value || "all";
+    const pool = getPool();
+
+    const filtered = pool.filter(d => {
+      const owned = (state.cards[String(d.id)] || 0) > 0;
+      if (filter === "owned" && !owned) return false;
+      if (filter === "missing" && owned) return false;
+      if (query) {
+        return d.name.toLowerCase().includes(query) || String(d.position).includes(query);
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<p style="color:var(--text-muted);">No matching cards found.</p>`;
+      return;
+    }
+
+    filtered.forEach(d => {
+      const qty = state.cards[String(d.id)] || 0;
+      grid.appendChild(createCardElement(d, qty, false, qty === 0));
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadState();
+
+    document.getElementById("tcg-buy-std")?.addEventListener("click", () => openPack(false));
+    document.getElementById("tcg-buy-main")?.addEventListener("click", () => openPack(true));
+
+    document.getElementById("tcg-reset-btn")?.addEventListener("click", () => {
+      if (!confirm("Reset your entire Demon Binder?")) return;
+      state = { cards: {} };
+      saveState();
+      const resultsBox = document.getElementById("tcg-pack-results");
+      if (resultsBox) resultsBox.innerHTML = "";
+      renderBinder();
+      showStatus("Binder reset.");
+    });
+
+    document.getElementById("tcg-search")?.addEventListener("input", renderBinder);
+    document.getElementById("tcg-filter")?.addEventListener("change", renderBinder);
+
+    document.querySelectorAll(".tcg-view-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tcg-view-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const view = btn.dataset.tcgview;
+        document.getElementById("tcg-pane-packs").style.display = view === "packs" ? "block" : "none";
+        document.getElementById("tcg-pane-binder").style.display = view === "binder" ? "block" : "none";
+        if (view === "binder") renderBinder();
+      });
+    });
+
+    document.querySelector('.extras-menu-item[data-tab="tcg"]')?.addEventListener("click", () => {
+      updateHUD();
+      if (document.getElementById("tcg-pane-binder")?.style.display !== "none") {
+        renderBinder();
+      }
+    });
+
+    const poll = setInterval(() => {
+      if (getPool().length > 0) {
+        clearInterval(poll);
+        updateHUD();
+      }
+    }, 150);
+    setTimeout(() => clearInterval(poll), 8000);
+  });
+})();
