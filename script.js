@@ -6859,3 +6859,49 @@ window.exitCustomList = function () {
     setTimeout(() => clearInterval(poll), 8000);
   });
 })();
+
+(function addTcgSaveButtons() {
+  const SAVE_KEY = "gdl_tcg_binder_free_v1";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const actionsBar = document.querySelector("#tcg .cl-io-actions");
+    if (!actionsBar) return;
+
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "sidebar-action-btn";
+    copyBtn.textContent = "Copy Save Code";
+
+    const loadBtn = document.createElement("button");
+    loadBtn.type = "button";
+    loadBtn.className = "dp-back-btn";
+    loadBtn.textContent = "Load Code";
+
+    actionsBar.prepend(copyBtn, loadBtn);
+
+    copyBtn.addEventListener("click", () => {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw || raw === '{"cards":{}}') return alert("Open a pack first!");
+      const code = "GDTC1-" + btoa(unescape(encodeURIComponent(raw)));
+      navigator.clipboard?.writeText(code)
+        .then(() => alert("Save code copied!"))
+        .catch(() => prompt("Copy your save code:", code));
+    });
+
+    loadBtn.addEventListener("click", () => {
+      const code = prompt("Paste your GDTC1-... save code:");
+      if (!code || !code.trim().startsWith("GDTC1-")) return;
+      try {
+        const json = decodeURIComponent(escape(atob(code.trim().slice(6))));
+        const parsed = JSON.parse(json);
+        if (parsed && typeof parsed.cards === "object") {
+          localStorage.setItem(SAVE_KEY, JSON.stringify({ cards: parsed.cards }));
+          window.location.hash = "tcg";
+          window.location.reload();
+        }
+      } catch {
+        alert("Invalid save code.");
+      }
+    });
+  });
+})();
