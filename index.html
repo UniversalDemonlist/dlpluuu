@@ -623,6 +623,55 @@
   </div>
 </div>
 
+    <div id="tcg" class="tab-content">
+  <div class="cl-topbar">
+    <h1>Demon Cards</h1>
+    <div class="hl-score-pills">
+      <div class="hl-pill">Collected: <span id="tcg-unique">0</span> / <span id="tcg-total-pool">0</span></div>
+      <div class="hl-pill">Total Cards: <span id="tcg-total-cards">0</span></div>
+    </div>
+  </div>
+
+  <div class="panel cl-io-bar">
+    <div class="cl-mode-tabs">
+      <button type="button" class="tcg-view-btn active" data-tcgview="packs">Open Packs</button>
+      <button type="button" class="tcg-view-btn" data-tcgview="binder">Demon Binder</button>
+    </div>
+    <div class="cl-io-actions">
+      <button type="button" id="tcg-reset-btn" class="rl-giveup-btn">Reset Binder</button>
+    </div>
+    <p id="tcg-status-msg" class="roulette-status"></p>
+  </div>
+
+  <div id="tcg-pane-packs" class="tcg-pane">
+    <div class="tcg-pack-grid">
+      <div class="tcg-pack-box panel">
+        <h2>Standard Demon Pack</h2>
+        <p style="color:var(--text-muted);font-size:0.86rem;">3 random cards from the entire Demonlist.</p>
+        <button type="button" id="tcg-buy-std" class="sidebar-action-btn" style="width:auto;margin:12px auto 0;">Open Pack</button>
+      </div>
+      <div class="tcg-pack-box panel">
+        <h2>Main List Pack</h2>
+        <p style="color:var(--text-muted);font-size:0.86rem;">3 guaranteed Top 75 cards (higher Mythic &amp; Legendary odds).</p>
+        <button type="button" id="tcg-buy-main" class="sidebar-action-btn" style="width:auto;margin:12px auto 0;">Open Main Pack</button>
+      </div>
+    </div>
+    <div id="tcg-pack-results" class="tcg-grid"></div>
+  </div>
+
+  <div id="tcg-pane-binder" class="tcg-pane" style="display:none;">
+    <div class="panel" style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" id="tcg-search" placeholder="Search binder by demon name or #rank..." style="flex:1;min-width:200px;padding:9px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-input);color:var(--text-main);font-family:inherit;">
+      <select id="tcg-filter" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-input);color:var(--text-main);font-family:inherit;">
+        <option value="all">All Cards</option>
+        <option value="owned">Owned Only</option>
+        <option value="missing">Missing Only</option>
+      </select>
+    </div>
+    <div id="tcg-binder-grid" class="tcg-grid"></div>
+  </div>
+</div>
+
     
     <footer class="site-footer">
   <div class="footer-inner">
