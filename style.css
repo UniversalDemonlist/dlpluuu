@@ -3849,3 +3849,110 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   50% { background-position: 100% 50%; transform: scale(1.05); }
   100% { background-position: 0% 50%; transform: scale(1); }
 }
+
+@keyframes tcgMythicFrameShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes tcgCrownFloat {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-2px) scale(1.06); }
+}
+
+.tcg-card.rarity-mythic {
+  border: 6px solid transparent !important;
+  background:
+    linear-gradient(160deg, #1a0610 0%, #09030c 100%) padding-box,
+    linear-gradient(135deg, #f43f5e, #fbbf24, #c084fc, #38bdf8, #f43f5e) border-box !important;
+  background-size: 100% 100%, 300% 300% !important;
+  box-shadow:
+    0 0 24px rgba(244, 63, 94, 0.55),
+    0 0 44px rgba(168, 85, 247, 0.35),
+    inset 0 0 20px rgba(251, 191, 36, 0.25) !important;
+  animation: tcgMythicFrameShift 4s linear infinite !important;
+}
+
+.tcg-card.rarity-mythic .tcg-card-header {
+  background: linear-gradient(90deg, rgba(244, 63, 94, 0.32), rgba(251, 191, 36, 0.28), rgba(168, 85, 247, 0.32)) !important;
+  border-bottom: 1px solid rgba(251, 191, 36, 0.45);
+  color: #fde047 !important;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.75);
+}
+
+.tcg-card.rarity-mythic .tcg-card-header span:first-child::before {
+  content: "👑 ";
+  display: inline-block;
+  animation: tcgCrownFloat 2s ease-in-out infinite;
+}
+
+.tcg-card.rarity-mythic img {
+  border-color: rgba(251, 191, 36, 0.55) !important;
+  box-shadow: 0 0 18px rgba(244, 63, 94, 0.4);
+}
+
+.tcg-card.rarity-mythic .tcg-card-body {
+  background: linear-gradient(180deg, rgba(34, 8, 22, 0.92), rgba(12, 4, 16, 0.96)) !important;
+  border-top: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.tcg-card.rarity-mythic .tcg-card-title {
+  background: linear-gradient(90deg, #ffffff, #fde047, #fda4af);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.3px;
+}
+
+.tcg-card.rarity-mythic .tcg-card-footer {
+  border-top-color: rgba(251, 191, 36, 0.3) !important;
+  color: #fde047 !important;
+}
+
+.tcg-card.rarity-legendary {
+  border: 6px solid transparent !important;
+  background:
+    linear-gradient(165deg, #1f1706 0%, #0d0a04 100%) padding-box,
+    linear-gradient(135deg, #b45309, #fde047, #f59e0b, #fef08a, #b45309) border-box !important;
+  background-size: 100% 100%, 250% 250% !important;
+  box-shadow:
+    0 0 20px rgba(234, 179, 8, 0.5),
+    inset 0 0 16px rgba(253, 224, 71, 0.25) !important;
+  animation: tcgMythicFrameShift 5s linear infinite !important;
+}
+
+.tcg-card.rarity-legendary .tcg-card-header {
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.28), rgba(245, 158, 11, 0.16)) !important;
+  color: #fef08a !important;
+  text-shadow: 0 0 8px rgba(234, 179, 8, 0.65);
+}
+
+.tcg-card.rarity-legendary .tcg-card-header span:first-child::before {
+  content: "✦ ";
+  color: #fde047;
+}
+
+.tcg-card.rarity-legendary .tcg-card-body {
+  background: linear-gradient(180deg, rgba(28, 20, 6, 0.9), rgba(14, 10, 4, 0.96)) !important;
+}
+
+.tcg-card.rarity-legendary .tcg-card-title {
+  color: #fef08a !important;
+}
+
+.tcg-card.rarity-epic {
+  border: 6px solid transparent !important;
+  background:
+    linear-gradient(165deg, #170d29 0%, #0b0614 100%) padding-box,
+    linear-gradient(135deg, #7e22ce, #e879f9, #6366f1) border-box !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.35), inset 0 0 12px rgba(192, 132, 252, 0.18) !important;
+}
+
+.tcg-card.rarity-epic .tcg-card-header {
+  background: rgba(168, 85, 247, 0.22) !important;
+  color: #f0abfc !important;
+}
+
+.tcg-card.rarity-epic .tcg-card-header span:first-child::before {
+  content: "◆ ";
+}
