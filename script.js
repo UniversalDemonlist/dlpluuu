@@ -8146,3 +8146,152 @@ window._gdlTcgCore = (function () {
     }
   };
 })();
+
+(function unifyMythicAndTokenSuspenseCinematic() {
+  if (!window._gdlTcgCore) return;
+
+  let lastClickedBtn = null;
+  document.addEventListener("pointerdown", (e) => {
+    const btn = e.target.closest("button");
+    if (btn) lastClickedBtn = btn;
+  }, true);
+
+  window._gdlTcgCore.triggerCinematic = function (type, cardHtml) {
+    document.getElementById("tcg-cinematic-overlay")?.remove();
+    document.querySelector(".tcg-gold-screen-flash")?.remove();
+    document.querySelector(".tcg-button-tear-clone")?.remove();
+    document.querySelector(".tcg-suspense-text")?.remove();
+
+    const isToken = type === "points";
+    const overlay = document.createElement("div");
+    overlay.id = "tcg-cinematic-overlay";
+    if (isToken) overlay.classList.add("jackpot-mode");
+
+    const sourceBtn = lastClickedBtn || document.getElementById("tcg-buy-std");
+    const rect = sourceBtn ? sourceBtn.getBoundingClientRect() : null;
+    const hasValidRect = rect && rect.width > 10 && rect.height > 10;
+
+    const btnText = sourceBtn ? sourceBtn.textContent.trim() : "Open Pack";
+    const computed = sourceBtn ? window.getComputedStyle(sourceBtn) : null;
+
+    const claimCode = "GDL-TOKEN-" + Math.random().toString(36).slice(2, 8).toUpperCase() + "-" + Date.now().toString(36).toUpperCase();
+
+    overlay.innerHTML = `
+      <div class="tcg-suspense-text">YOU FOUND:</div>
+      <div class="tcg-cine-content suspense-reveal">
+        <h1 class="tcg-cine-title">${isToken ? "EXTREME TOKEN!" : "MYTHIC PULL!"}</h1>
+        <div class="tcg-cine-card-wrap">${cardHtml}</div>
+        <p class="tcg-cine-sub">${
+          isToken
+            ? `ULTRA RARE DROP! Share a video of you pulling this (with code <strong>${claimCode}</strong>) in the Discord server to claim your <strong>Extreme Token</strong>!`
+            : `INSANE PULL! You just pulled a <strong>Mythic</strong> card!`
+        }</p>
+        <button type="button" id="tcg-cine-close-btn" class="dp-back-btn" style="margin:0;">Continue</button>
+      </div>
+    `;
+
+    const tearWrapper = document.createElement("div");
+    tearWrapper.className = "tcg-tear-stage button-tear tcg-button-tear-clone";
+
+    if (hasValidRect) {
+      tearWrapper.style.left = `${rect.left}px`;
+      tearWrapper.style.top = `${rect.top}px`;
+      tearWrapper.style.width = `${rect.width}px`;
+      tearWrapper.style.height = `${rect.height}px`;
+    } else {
+      tearWrapper.style.left = "50%";
+      tearWrapper.style.top = "50%";
+      tearWrapper.style.transform = "translate(-50%, -50%)";
+      tearWrapper.style.width = "160px";
+      tearWrapper.style.height = "42px";
+    }
+
+    const bg = computed ? computed.backgroundColor : "var(--accent-blue)";
+    const color = computed ? computed.color : "#ffffff";
+    const radius = computed ? computed.borderRadius : "8px";
+    const font = computed ? computed.font : "700 14px sans-serif";
+
+    tearWrapper.innerHTML = `
+      <div class="tcg-tear-half btn-clone-half top" style="background:${bg} !important;color:${color} !important;border-radius:${radius} !important;font:${font} !important;">${btnText}</div>
+      <div class="tcg-tear-seam"></div>
+      <div class="tcg-tear-half btn-clone-half bottom" style="background:${bg} !important;color:${color} !important;border-radius:${radius} !important;font:${font} !important;">${btnText}</div>
+    `;
+
+    if (sourceBtn) {
+      sourceBtn.style.visibility = "hidden";
+      setTimeout(() => {
+        sourceBtn.style.visibility = "";
+      }, 1250);
+    }
+
+    const flash = document.createElement("div");
+    flash.className = "tcg-gold-screen-flash";
+
+    document.body.append(overlay, tearWrapper, flash);
+
+    setTimeout(() => tearWrapper.remove(), 1200);
+    setTimeout(() => flash.remove(), 1650);
+
+    document.getElementById("tcg-cine-close-btn")?.addEventListener("click", () => {
+      overlay.remove();
+      tearWrapper.remove();
+      flash.remove();
+    });
+  };
+
+  function triggerOnAnyMythicOrToken() {
+    const stage = document.querySelector("#tcg-pack-results .tcg-swipe-stage");
+    if (!stage) return;
+
+    const cards = Array.from(stage.querySelectorAll(".tcg-card:not(.swiped-out)"));
+    if (cards.length === 0) return;
+
+    const topCard = cards[cards.length - 1];
+    if (!topCard || topCard.dataset.mythicCineShown) return;
+
+    const isToken = topCard.classList.contains("list-points-reward");
+    const isAnyMythic = topCard.classList.contains("rarity-mythic");
+
+    if (isToken) {
+      topCard.dataset.mythicCineShown = "1";
+      window._gdlTcgCore.triggerCinematic("points", topCard.outerHTML);
+    } else if (isAnyMythic) {
+      topCard.dataset.mythicCineShown = "1";
+      window._gdlTcgCore.triggerCinematic("mythic", topCard.outerHTML);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const resultsBox = document.getElementById("tcg-pack-results");
+    if (resultsBox) {
+      new MutationObserver(() => {
+        setTimeout(triggerOnAnyMythicOrToken, 20);
+      }).observe(resultsBox, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["class"]
+      });
+    }
+
+    const oldMythicBtn = document.getElementById("tcg-test-mythic-btn");
+    if (oldMythicBtn) {
+      const btn = oldMythicBtn.cloneNode(true);
+      btn.textContent = "Get Mythic";
+      oldMythicBtn.replaceWith(btn);
+      btn.addEventListener("click", () => {
+        const pool = window._gdlTcgCore.getPool();
+        const mythic = pool.find(d => d.position <= 10) || pool;
+        if (!mythic) return;
+        const html = window._gdlTcgCore.buildCardHtml({
+          demon: mythic,
+          qty: 1,
+          isNew: true,
+          isHolo: false,
+          isGold: false
+        });
+        window._gdlTcgCore.triggerCinematic("mythic", html);
+      });
+    }
+  });
+})();
