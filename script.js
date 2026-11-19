@@ -7357,3 +7357,157 @@ window._gdlTcgCore = (function () {
     buildCardHtml
   };
 })();
+
+(function initTcgGoldAndJackpotRunner() {
+  const PACK_SIZE = 10;
+  const GODPACK_CHANCE = 0.03;
+  const HOLO_CHANCE = 0.15;
+  const GOLD_CHANCE = 0.035;
+  const LIST_POINTS_CHANCE = 0.0008;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const core = window._gdlTcgCore;
+    const openBtn = document.getElementById("tcg-buy-std");
+    const packBox = openBtn?.closest(".tcg-pack-box");
+    const resultsBox = document.getElementById("tcg-pack-results");
+    if (!core || !openBtn || !resultsBox) return;
+
+    const freshBtn = openBtn.cloneNode(true);
+    openBtn.replaceWith(freshBtn);
+
+    freshBtn.addEventListener("click", () => {
+      const pool = core.getPool();
+      if (pool.length === 0) return;
+
+      const cardsData = core.readJson(core.SAVE_KEY, { cards: {} }).cards || {};
+      const holosData = core.readJson(core.HOLO_KEY, {});
+      const goldsData = core.readJson(core.GOLD_KEY, {});
+      const isGodPack = Math.random() < GODPACK_CHANCE;
+
+      const pulled = [];
+      for (let i = 0; i < PACK_SIZE; i++) {
+        if (Math.random() < LIST_POINTS_CHANCE) {
+          pulled.push({ isPointsCard: true });
+          continue;
+        }
+
+        const demon = core.pickWeightedDemon(pool, isGodPack);
+        const id = String(demon.id);
+        const prev = cardsData[id] || 0;
+        cardsData[id] = prev + 1;
+
+        const rolledHolo = Math.random() < (isGodPack ? 0.65 : HOLO_CHANCE);
+        const rolledGold = Math.random() < (isGodPack ? 0.22 : GOLD_CHANCE);
+
+        if (rolledHolo) holosData[demon.name] = true;
+        if (rolledGold) goldsData[demon.name] = true;
+
+        pulled.push({
+          demon,
+          qty: cardsData[id],
+          isNew: prev === 0,
+          isHolo: Boolean(holosData[demon.name]),
+          isGold: Boolean(goldsData[demon.name]),
+          isGoldenHoloMythic: demon.position <= 10 && rolledGold && rolledHolo
+        });
+      }
+
+      core.writeJson(core.SAVE_KEY, { cards: cardsData });
+      core.writeJson(core.HOLO_KEY, holosData);
+      core.writeJson(core.GOLD_KEY, goldsData);
+
+      const uniqueEl = document.getElementById("tcg-unique");
+      const totalPoolEl = document.getElementById("tcg-total-pool");
+      const totalCardsEl = document.getElementById("tcg-total-cards");
+      if (totalPoolEl) totalPoolEl.textContent = pool.length;
+      if (uniqueEl) uniqueEl.textContent = pool.filter(d => (cardsData[String(d.id)] || 0) > 0).length;
+      if (totalCardsEl) totalCardsEl.textContent = Object.values(cardsData).reduce((a, b) => a + (Number(b) || 0), 0).toLocaleString();
+
+      if (packBox) packBox.style.display = "none";
+      resultsBox.className = "tcg-swipe-mode";
+      resultsBox.innerHTML = "";
+
+      if (isGodPack) {
+        const banner = document.createElement("div");
+        banner.className = "tcg-godpack-banner";
+        banner.textContent = "★ GOD PACK! ★";
+        resultsBox.appendChild(banner);
+      }
+
+      const counter = document.createElement("div");
+      counter.className = "tcg-swipe-counter";
+      counter.textContent = `Card 1 / ${PACK_SIZE} — Click card to swipe`;
+
+      const stage = document.createElement("div");
+      stage.className = "tcg-swipe-stage";
+
+      const cardEls = pulled.map((item, idx) => {
+        const wrap = document.createElement("div");
+        wrap.innerHTML = core.buildCardHtml(item).trim();
+        const el = wrap.firstElementChild;
+        el.style.zIndex = String(PACK_SIZE - idx);
+        el.style.transform = idx === 0 ? "" : `scale(${Math.max(0.9, 1 - idx * 0.015)}) translateY(${Math.min(12, idx * 2)}px)`;
+        return el;
+      });
+
+      for (let i = cardEls.length - 1; i >= 0; i--) {
+        stage.appendChild(cardEls[i]);
+      }
+
+      function checkSpecialReveal(item) {
+        if (!item) return;
+        if (item.isPointsCard) {
+          core.triggerCinematic("points", core.buildCardHtml(item));
+        } else if (item.isGoldenHoloMythic) {
+          core.triggerCinematic("golden-holo-mythic", core.buildCardHtml(item));
+        }
+      }
+
+      checkSpecialReveal(pulled);
+
+      let currentIndex = 0;
+      stage.addEventListener("click", () => {
+        if (currentIndex >= cardEls.length) return;
+
+        cardEls[currentIndex].classList.add("swiped-out");
+        currentIndex++;
+
+        if (currentIndex < cardEls.length) {
+          cardEls[currentIndex].style.transform = "";
+          counter.textContent = `Card ${currentIndex + 1} / ${PACK_SIZE} — Click card to swipe`;
+          checkSpecialReveal(pulled[currentIndex]);
+        } else {
+          setTimeout(() => {
+            resultsBox.className = "tcg-grid";
+            resultsBox.innerHTML = "";
+            if (packBox) packBox.style.display = "";
+          }, 340);
+        }
+      });
+
+      resultsBox.append(counter, stage);
+    });
+
+    const binderGrid = document.getElementById("tcg-binder-grid");
+    if (binderGrid) {
+      new MutationObserver(() => {
+        const golds = core.readJson(core.GOLD_KEY, {});
+        binderGrid.querySelectorAll(".tcg-card.owned").forEach(card => {
+          if (card.dataset.goldChecked) return;
+          card.dataset.goldChecked = "1";
+          const title = card.querySelector(".tcg-card-title")?.textContent?.trim() || "";
+          if (title && golds[title]) {
+            card.classList.add("gold");
+            const header = card.querySelector(".tcg-card-header");
+            if (header && !header.querySelector(".tcg-gold-tag")) {
+              const tag = document.createElement("span");
+              tag.className = "tcg-gold-tag";
+              tag.textContent = "GOLD";
+              header.insertBefore(tag, header.children[1] || null);
+            }
+          }
+        });
+      }).observe(binderGrid, { childList: true });
+    }
+  });
+})();
