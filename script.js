@@ -8317,3 +8317,118 @@ window._gdlTcgCore = (function () {
     });
   };
 })();
+
+(function () {
+  const PACK_SIZE = 10;
+  const CHANCES = { god: 0.002, holo: 0.08, gold: 0.005, pts: 0.00004 };
+  let binder = {};
+
+  ["gdl_tcg_binder_free_v1", "gdl_tcg_holo_v1", "gdl_tcg_gold_v1"].forEach(k => {
+    try { localStorage.removeItem(k); } catch {}
+  });
+
+  const getPool = () => (typeof getVisibleDemons === "function" ? getVisibleDemons() : globalDemons || []).filter(d => !d.cosmetic && d.position);
+  const getEntry = id => (binder[String(id)] ??= { normal: 0, holo: 0, gold: 0, goldHolo: 0 });
+  const getTotal = e => e ? e.normal + e.holo + e.gold + e.goldHolo : 0;
+
+  function getRarity(pos) {
+    if (pos <= 10) return { label: "Mythic", cls: "rarity-mythic" };
+    if (pos <= 35) return { label: "Legendary", cls: "rarity-legendary" };
+    if (pos <= 75) return { label: "Epic", cls: "rarity-epic" };
+    if (pos <= 200) return { label: "Rare", cls: "rarity-rare" };
+    return { label: "Common", cls: "rarity-common" };
+  }
+
+  function getThumb(d) {
+    return d.thumbnail?.trim() || (typeof getYoutubeThumbnail === "function" && getYoutubeThumbnail(d.verification)) || `https://prevter.me{encodeURIComponent(d.id)}`;
+  }
+
+  function updateHUD() {
+    const pool = getPool();
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set("tcg-total-pool", pool.length);
+    set("tcg-unique", pool.filter(d => getTotal(binder[String(d.id)]) > 0).length);
+    set("tcg-total-cards", Object.values(binder).reduce((a, e) => a + getTotal(e), 0).toLocaleString());
+  }
+
+  function showStatus(msg, isErr = false) {
+    const el = document.getElementById("tcg-status-msg");
+    if (!el) return;
+    el.style.color = isErr ? "#ef4444" : "var(--accent-green)";
+    el.textContent = msg;
+    setTimeout(() => { if (el.textContent === msg) el.textContent = ""; }, 3500);
+  }
+
+  function encodeSave() {
+    const compact = {};
+    Object.entries(binder).forEach(([id, e]) => {
+      const n = Math.max(0, Math.floor(Number(e.normal) || 0));
+      const h = Math.max(0, Math.floor(Number(e.holo) || 0));
+      const g = Math.max(0, Math.floor(Number(e.gold) || 0));
+      const gh = Math.max(0, Math.floor(Number(e.goldHolo) || 0));
+      if (n + h + g + gh > 0) compact[String(id)] = [n, h, g, gh];
+    });
+    if (Object.keys(compact).length === 0) return "";
+    const bytes = new TextEncoder().encode(JSON.stringify(compact));
+    let bin = "";
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return "GDTC3-" + btoa(bin);
+  }
+
+  function decodeSave(raw) {
+    const code = String(raw || "").trim();
+    if (!code) return false;
+
+    const decodeB64 = b64 => {
+      const bin = atob(b64.replace(/\s+/g, ""));
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(bytes));
+    };
+
+    if (code.startsWith("GDTC3-")) {
+      const parsed = decodeB64(code.slice(6));
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+      const next = {};
+      Object.entries(parsed).forEach(([id, arr]) => {
+        if (!Array.isArray(arr) || arr.length < 4) return;
+        const cleanId = String(id).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 30);
+        if (!cleanId) return;
+        const n = Math.max(0, Math.min(999999, Math.floor(Number(arr) || 0)));
+        const h = Math.max(0, Math.min(999999, Math.floor(Number(arr) || 0)));
+        const g = Math.max(0, Math.min(999999, Math.floor(Number(arr) || 0)));
+        const gh = Math.max(0, Math.min(999999, Math.floor(Number(arr) || 0)));
+        if (n + h + g + gh > 0) next[cleanId] = { normal: n, holo: h, gold: g, goldHolo: gh };
+      });
+      if (Object.keys(next).length === 0) return false;
+      binder = next;
+      return true;
+    }
+
+    if (code.startsWith("GDTC2-") || code.startsWith("GDTC1-")) {
+      const parsed = decodeB64(code.slice(6));
+      if (!parsed || typeof parsed.cards !== "object") return false;
+      const pool = getPool();
+      const next = {};
+      Object.entries(parsed.cards).forEach(([id, qty]) => {
+        const count = Math.max(0, Math.min(999999, Math.floor(Number(qty) || 0)));
+        if (count <= 0) return;
+        const cleanId = String(id).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 30);
+        const demon = pool.find(d => String(d.id) === cleanId);
+        const name = demon?.name || "";
+        const isHolo = Boolean(parsed.holos?.[name]);
+        const isGold = Boolean(parsed.golds?.[name]);
+        next[cleanId] = {
+          normal: !isHolo && !isGold ? count : Math.max(0, count - 1),
+          holo: isHolo && !isGold ? 1 : 0,
+          gold: isGold && !isHolo ? 1 : 0,
+          goldHolo: isGold && isHolo ? 1 : 0
+        };
+      });
+      if (Object.keys(next).length === 0) return false;
+      binder = next;
+      return true;
+    }
+
+    return false;
+  }
