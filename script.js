@@ -8745,3 +8745,21 @@ function saveByName(binderData, poolList) {
     setTimeout(() => clearInterval(poll), 10000);
   }
 })();
+
+function assignUniqueDemonKeys(demonsList) {
+  const list = Array.isArray(demonsList) ? demonsList : (typeof globalDemons !== "undefined" ? globalDemons : []);
+  const seen = new Set();
+
+  list.forEach((d, idx) => {
+    if (!d || !d.name) return;
+    if (d._origId === undefined) d._origId = d.id;
+    const n = String(d.name).trim().toLowerCase();
+    const v = String(d.verifier || "").replace(/\[c\]/gi, "").trim().toLowerCase();
+    let key = `name:${n}|verifier:${v}`;
+    if (seen.has(key)) key += `|${idx}`;
+    seen.add(key);
+    d.id = key;
+  });
+
+  return list;
+}
