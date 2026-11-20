@@ -4989,3 +4989,26 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   border-color: #713f12 !important;
   color: #fef08a !important;
 }
+
+.tcg-swipe-stage {
+  box-shadow: 0 4px 0 var(--bg-panel), 0 6px 0 var(--border-subtle), 0 10px 0 var(--bg-panel), 0 12px 0 var(--border-subtle);
+  border-radius: 10px;
+}
+
+.tcg-swipe-stage .tcg-card {
+  transform: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.tcg-swipe-stage .tcg-card:not(.swiped-out):last-of-type,
+.tcg-swipe-stage .tcg-card:not(.swiped-out):has(~ .swiped-out) {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.tcg-swipe-stage .tcg-card.swiped-out {
+  transform: translateX(135%) rotate(18deg) scale(0.92) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
