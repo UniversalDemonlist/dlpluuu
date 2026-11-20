@@ -8725,3 +8725,23 @@ function saveByName(binderData, poolList) {
   for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
   return "GDTCN-" + btoa(binary);
 }
+
+(function destroyIdCollection() {
+  const patch = () => {
+    if (!Array.isArray(globalDemons) || globalDemons.length === 0) return false;
+    globalDemons.forEach(d => {
+      if (d && d.name) {
+        d._origId = d.id;
+        d.id = "name:" + String(d.name).trim().toLowerCase();
+      }
+    });
+    return true;
+  };
+
+  if (!patch()) {
+    const poll = setInterval(() => {
+      if (patch()) clearInterval(poll);
+    }, 50);
+    setTimeout(() => clearInterval(poll), 10000);
+  }
+})();
