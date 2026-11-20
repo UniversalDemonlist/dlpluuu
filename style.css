@@ -5012,3 +5012,23 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+#tcg-cinematic-overlay .tcg-cine-content,
+#tcg-cinematic-overlay .tcg-suspense-text {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  animation: tcgRevealAfterTear 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards !important;
+}
+
+@keyframes tcgRevealAfterTear {
+  0% {
+    opacity: 0;
+    visibility: visible;
+    transform: scale(0.92) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+  }
+}
