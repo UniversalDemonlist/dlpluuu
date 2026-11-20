@@ -8699,3 +8699,29 @@ window._gdlTcgCore = (function () {
     setTimeout(() => clearInterval(poll), 8000);
   });
 })();
+
+function saveByName(binderData, poolList) {
+  const payload = {};
+  const demons = Array.isArray(poolList) ? poolList : (typeof globalDemons !== "undefined" ? globalDemons : []);
+
+  Object.entries(binderData || {}).forEach(([key, entry]) => {
+    if (!entry || typeof entry !== "object") return;
+    const n = Math.max(0, Math.floor(Number(entry.normal) || 0));
+    const h = Math.max(0, Math.floor(Number(entry.holo) || 0));
+    const g = Math.max(0, Math.floor(Number(entry.gold) || 0));
+    const gh = Math.max(0, Math.floor(Number(entry.goldHolo) || 0));
+    if (n + h + g + gh === 0) return;
+
+    const match = demons.find(d => String(d.id) === String(key) || String(d.name || "").trim().toLowerCase() === String(key).trim().toLowerCase());
+    const levelName = match ? String(match.name).trim() : String(key).replace(/^name:/i, "").trim();
+    if (!levelName) return;
+
+    payload[levelName] = [n, h, g, gh];
+  });
+
+  if (Object.keys(payload).length === 0) return "";
+  const bytes = new TextEncoder().encode(JSON.stringify(payload));
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return "GDTCN-" + btoa(binary);
+}
