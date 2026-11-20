@@ -8432,3 +8432,121 @@ window._gdlTcgCore = (function () {
 
     return false;
   }
+
+   function buildCard(item, missing = false) {
+    if (item.isPointsCard) {
+      return `<div class="tcg-card owned list-points-reward"><div class="tcg-gold-plated-demon"><img src="extreme.png" alt="10000 List Points"></div></div>`;
+    }
+    const { demon: d, qty = 0, isNew = false, isHolo = false, isGold = false } = item;
+    const r = getRarity(d.position);
+    const ver = typeof cleanDisplayName === "function" ? cleanDisplayName(d.verifier) : (d.verifier || "Unknown");
+    const pts = (5500 / Math.sqrt(d.position)).toFixed(1);
+
+    return `
+      <div class="tcg-card ${missing ? "missing" : `owned ${r.cls}${isHolo ? " holo" : ""}${isGold ? " gold" : ""}`}">
+        ${!missing && isNew ? '<span class="tcg-new-badge">NEW</span>' : ""}
+        <div class="tcg-card-header">
+          <span>${missing ? "Locked" : r.label}</span>
+          ${!missing && isGold ? '<span class="tcg-gold-tag">GOLD</span>' : ""}
+          ${!missing && isHolo ? '<span class="tcg-holo-tag">HOLO</span>' : ""}
+          <span>#${d.position}${!missing && qty > 1 ? ` • x${qty}` : ""}</span>
+        </div>
+        <img src="${getThumb(d)}" alt="${d.name}" onerror="this.src='extreme.png'">
+        <div class="tcg-card-body">
+          <div>
+            <h3 class="tcg-card-title">${missing ? "???" : d.name}</h3>
+            <span class="tcg-card-sub">${missing ? "Open packs to unlock" : `Verified by ${ver} • ${pts} pts`}</span>
+          </div>
+          <div class="tcg-card-footer">
+            <span>${missing ? "LOCKED" : (item.footer || "GDL+ CARDS")}</span>
+            <span>${missing ? "" : r.label}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function triggerCinematic(mode, cardHtml) {
+    document.querySelectorAll("#tcg-cinematic-overlay, .tcg-gold-screen-flash, .tcg-button-tear-clone").forEach(el => el.remove());
+
+    const code = "GDL-10000PTS-" + Math.random().toString(36).slice(2, 8).toUpperCase() + "-" + Date.now().toString(36).toUpperCase();
+    const meta = {
+      points: ["10000 LIST POINTS!", `ULTRA RARE DROP! Share a video of you pulling this (with code <strong>${code}</strong>) in the Discord server to claim your <strong>10000 List Points</strong>!`],
+      "mythic-gold-holo": ["MYTHIC GOLD HOLO!", "ULTRA RARE PULL! You pulled a <strong>Mythic Gold Holo</strong> card!"],
+      mythic: ["MYTHIC CARD!", "RARE PULL! You pulled a <strong>Mythic</strong> card!"]
+    }[mode];
+
+    const overlay = document.createElement("div");
+    overlay.id = "tcg-cinematic-overlay";
+    overlay.innerHTML = `
+      <div class="tcg-suspense-text">YOU FOUND:</div>
+      <div class="tcg-cine-content suspense-reveal">
+        <h1 class="tcg-cine-title">${meta[0]}</h1>
+        <div class="tcg-cine-card-wrap">${cardHtml}</div>
+        <p class="tcg-cine-sub">${meta[1]}</p>
+        <button type="button" id="tcg-cine-close-btn" class="dp-back-btn" style="margin:0;">Continue</button>
+      </div>`;
+
+    const flash = document.createElement("div");
+    flash.className = "tcg-gold-screen-flash";
+
+    document.body.append(overlay, flash);
+    setTimeout(() => flash.remove(), 1650);
+    document.getElementById("tcg-cine-close-btn")?.addEventListener("click", () => {
+      overlay.remove();
+      flash.remove();
+    });
+  }
+
+  function pickDemon(pool, god) {
+    const tiers = [
+      pool.filter(d => d.position <= 10),
+      pool.filter(d => d.position > 10 && d.position <= 35),
+      pool.filter(d => d.position > 35 && d.position <= 75),
+      pool.filter(d => d.position > 75 && d.position <= 200),
+      pool.filter(d => d.position > 200)
+    ];
+    const pick = arr => (arr.length ? arr : pool)[Math.floor(Math.random() * (arr.length ? arr : pool).length)];
+    const r = Math.random();
+    if (god) return pick(r < 0.2 ? tiers[0] : r < 0.55 ? tiers[1] : tiers[2]);
+    return pick(r < 0.001 ? tiers[0] : r < 0.005 ? tiers[1] : r < 0.025 ? tiers[2] : r < 0.09 ? tiers[3] : tiers[4]);
+  }
+
+  function renderBinder() {
+    const grid = document.getElementById("tcg-binder-grid");
+    if (!grid) return;
+    const q = (document.getElementById("tcg-search")?.value || "").toLowerCase().trim();
+    const f = document.getElementById("tcg-filter")?.value || "all";
+
+    const items = getPool().filter(d => {
+      const owned = getTotal(binder[String(d.id)]) > 0;
+      if ((f === "owned" && !owned) || (f === "missing" && owned)) return false;
+      return !q || d.name.toLowerCase().includes(q) || String(d.position).includes(q);
+    });
+
+    grid.innerHTML = items.length ? "" : '<p style="color:var(--text-muted);">No matching cards found.</p>';
+    items.forEach(d => {
+      const e = binder[String(d.id)];
+      const qty = getTotal(e);
+      const wrap = document.createElement("div");
+      const tags = e ? [e.goldHolo && `${e.goldHolo} Gold Holo`, e.gold && `${e.gold} Gold`, e.holo && `${e.holo} Holo`, e.normal && `${e.normal} Std`].filter(Boolean).join(", ") : "";
+      wrap.innerHTML = buildCard({
+        demon: d,
+        qty,
+        isHolo: Boolean(e?.goldHolo || e?.holo),
+        isGold: Boolean(e?.goldHolo || e?.gold),
+        footer: tags || "OWNED"
+      }, qty === 0).trim();
+      const el = wrap.firstElementChild;
+      if (qty > 0 && typeof openDemonPage === "function") el.addEventListener("click", () => openDemonPage(d));
+      grid.appendChild(el);
+    });
+  }
+
+  function checkReveal(item) {
+    if (!item || item.seen) return;
+    if (item.isPointsCard) { item.seen = true; triggerCinematic("points", buildCard(item)); }
+    else if (item.demon?.position <= 10) {
+      item.seen = true;
+      triggerCinematic(item.isGold && item.isHolo ? "mythic-gold-holo" : "mythic", buildCard(item));
+    }
+  }
