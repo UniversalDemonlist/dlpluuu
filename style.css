@@ -4944,3 +4944,48 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   clip-path: polygon(56% 0, 100% 0, 100% 100%, 54% 100%, 46% 75%, 58% 50%, 48% 25%);
   animation: cssPreTearRight 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
 }
+
+.tcg-card.gold {
+  border: 2px solid #f59e0b !important;
+  background: linear-gradient(145deg, #fde047 0%, #eab308 35%, #ca8a04 65%, #fef08a 100%) !important;
+  box-shadow: 0 6px 18px rgba(234, 179, 8, 0.35), inset 0 0 0 1px rgba(255, 251, 235, 0.55) !important;
+}
+
+.tcg-card.gold .tcg-card-header {
+  background: linear-gradient(90deg, rgba(161, 98, 7, 0.35), rgba(254, 240, 138, 0.45), rgba(161, 98, 7, 0.35)) !important;
+  border-bottom: 1px solid rgba(113, 63, 18, 0.45) !important;
+  color: #422006 !important;
+  font-weight: 900 !important;
+}
+
+.tcg-card.gold img {
+  border-top: 1px solid rgba(113, 63, 18, 0.45) !important;
+  border-bottom: 1px solid rgba(113, 63, 18, 0.45) !important;
+  filter: sepia(0.75) saturate(2.6) hue-rotate(4deg) brightness(1.06) contrast(1.1) !important;
+}
+
+.tcg-card.gold .tcg-card-body {
+  background: linear-gradient(180deg, rgba(254, 240, 138, 0.45), rgba(202, 138, 4, 0.6)) !important;
+}
+
+.tcg-card.gold .tcg-card-title {
+  color: #271503 !important;
+  -webkit-text-fill-color: #271503 !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+}
+
+.tcg-card.gold .tcg-card-sub {
+  color: #422006 !important;
+  font-weight: 600 !important;
+}
+
+.tcg-card.gold .tcg-card-footer {
+  border-top: 1px solid rgba(113, 63, 18, 0.4) !important;
+  color: #422006 !important;
+}
+
+.tcg-card.gold .tcg-gold-tag {
+  background: #422006 !important;
+  border-color: #713f12 !important;
+  color: #fef08a !important;
+}
