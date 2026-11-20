@@ -8550,3 +8550,152 @@ window._gdlTcgCore = (function () {
       triggerCinematic(item.isGold && item.isHolo ? "mythic-gold-holo" : "mythic", buildCard(item));
     }
   }
+
+   document.addEventListener("DOMContentLoaded", () => {
+    const oldTab = document.getElementById("tcg");
+    if (!oldTab) return;
+    const tab = oldTab.cloneNode(true);
+    oldTab.replaceWith(tab);
+
+    const openBtn = tab.querySelector("#tcg-buy-std");
+    const packBox = openBtn?.closest(".tcg-pack-box");
+    const results = tab.querySelector("#tcg-pack-results");
+    const actionsBar = tab.querySelector(".cl-io-actions");
+
+    if (packBox?.querySelector("p")) packBox.querySelector("p").textContent = "10 random cards from the list. Click a card to flip to the next one.";
+
+    if (actionsBar) {
+      actionsBar.querySelectorAll("button").forEach(b => {
+        if (b.id !== "tcg-reset-btn" && !b.classList.contains("tcg-debug-btn")) b.remove();
+      });
+
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.className = "sidebar-action-btn";
+      copyBtn.textContent = "Copy Save Code";
+
+      const loadBtn = document.createElement("button");
+      loadBtn.type = "button";
+      loadBtn.className = "dp-back-btn";
+      loadBtn.textContent = "Load Code";
+
+      actionsBar.prepend(copyBtn, loadBtn);
+
+      copyBtn.addEventListener("click", () => {
+        const code = encodeSave();
+        if (!code) return showStatus("Open a pack first before saving.", true);
+        if (navigator.clipboard?.writeText) {
+          navigator.clipboard.writeText(code).then(() => showStatus("Save code copied to clipboard!")).catch(() => prompt("Copy your save code:", code));
+        } else {
+          prompt("Copy your save code:", code);
+        }
+      });
+
+      loadBtn.addEventListener("click", () => {
+        const code = prompt("Paste your GDTC3-... (or GDTC1 / GDTC2) save code:");
+        if (!code) return;
+        try {
+          if (!decodeSave(code)) return showStatus("Invalid save code.", true);
+          updateHUD();
+          renderBinder();
+          showStatus("Save code loaded!");
+        } catch {
+          showStatus("Failed to decode save code.", true);
+        }
+      });
+    }
+
+    function runPack(forced = null) {
+      const pool = getPool();
+      if (!pool.length) return;
+      const god = Math.random() < CHANCES.god;
+      const pulled = Array.from({ length: PACK_SIZE }, (_, i) => {
+        if (i === 0 && forced) return forced;
+        if (Math.random() < CHANCES.pts) return { isPointsCard: true };
+        const demon = pickDemon(pool, god);
+        const entry = getEntry(demon.id);
+        const isNew = getTotal(entry) === 0;
+        const isHolo = Math.random() < (god ? 0.5 : CHANCES.holo);
+        const isGold = Math.random() < (god ? 0.08 : CHANCES.gold);
+        entry[isGold && isHolo ? "goldHolo" : isGold ? "gold" : isHolo ? "holo" : "normal"]++;
+        return { demon, qty: getTotal(entry), isNew, isHolo, isGold };
+      });
+
+      updateHUD();
+      if (packBox) packBox.style.display = "none";
+      results.className = "tcg-swipe-mode";
+      results.innerHTML = `<div class="tcg-swipe-counter">Card 1 / ${PACK_SIZE} — Click card to flip</div><div class="tcg-swipe-stage"></div>`;
+
+      const counter = results.querySelector(".tcg-swipe-counter");
+      const stage = results.querySelector(".tcg-swipe-stage");
+      const cards = pulled.map((item, idx) => {
+        const w = document.createElement("div");
+        w.innerHTML = buildCard(item).trim();
+        const el = w.firstElementChild;
+        el.style.zIndex = String(PACK_SIZE - idx);
+        if (idx > 0) el.style.transform = `scale(${Math.max(0.9, 1 - idx * 0.015)}) translateY(${Math.min(12, idx * 2)}px)`;
+        return el;
+      });
+
+      [...cards].reverse().forEach(c => stage.appendChild(c));
+      checkReveal(pulled);
+
+      let idx = 0;
+      stage.addEventListener("click", () => {
+        if (idx >= cards.length) return;
+        cards[idx++].classList.add("swiped-out");
+        if (idx < cards.length) {
+          cards[idx].style.transform = "";
+          counter.textContent = `Card ${idx + 1} / ${PACK_SIZE} — Click card to flip`;
+          checkReveal(pulled[idx]);
+        } else {
+          setTimeout(() => { results.className = "tcg-grid"; results.innerHTML = ""; if (packBox) packBox.style.display = ""; }, 340);
+        }
+      });
+    }
+
+    openBtn?.addEventListener("click", () => runPack());
+    tab.querySelector("#tcg-reset-btn")?.addEventListener("click", () => {
+      if (!confirm("Reset your current session binder?")) return;
+      binder = {};
+      updateHUD();
+      results.className = "tcg-grid";
+      results.innerHTML = "";
+      if (packBox) packBox.style.display = "";
+      renderBinder();
+      showStatus("Binder reset.");
+    });
+
+    tab.querySelector("#tcg-search")?.addEventListener("input", renderBinder);
+    tab.querySelector("#tcg-filter")?.addEventListener("change", renderBinder);
+
+    tab.querySelectorAll(".tcg-view-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        tab.querySelectorAll(".tcg-view-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const isBinder = btn.dataset.tcgview === "binder";
+        tab.querySelector("#tcg-pane-packs").style.display = isBinder ? "none" : "block";
+        tab.querySelector("#tcg-pane-binder").style.display = isBinder ? "block" : "none";
+        if (isBinder) renderBinder();
+      });
+    });
+
+    tab.querySelector("#tcg-test-mythic-btn")?.addEventListener("click", () => {
+      const m = getPool().find(d => d.position <= 10) || getPool();
+      if (!m) return;
+      const e = getEntry(m.id);
+      const isNew = getTotal(e) === 0;
+      e.goldHolo++;
+      runPack({ demon: m, qty: getTotal(e), isNew, isHolo: true, isGold: true });
+    });
+
+    tab.querySelector("#tcg-test-points-btn")?.addEventListener("click", () => runPack({ isPointsCard: true }));
+    document.querySelector('.extras-menu-item[data-tab="tcg"]')?.addEventListener("click", () => {
+      updateHUD();
+      if (tab.querySelector("#tcg-pane-binder")?.style.display !== "none") renderBinder();
+    });
+
+    const poll = setInterval(() => { if (getPool().length) { clearInterval(poll); updateHUD(); } }, 150);
+    setTimeout(() => clearInterval(poll), 8000);
+  });
+})();
