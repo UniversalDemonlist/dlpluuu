@@ -8295,3 +8295,25 @@ window._gdlTcgCore = (function () {
     }
   });
 })();
+
+(function () {
+  if (!window._gdlTcgCore) return;
+  const orig = window._gdlTcgCore.triggerCinematic;
+  window._gdlTcgCore.triggerCinematic = function (type, cardHtml) {
+    orig.apply(this, arguments);
+    if (type !== "points") return;
+    const overlay = document.getElementById("tcg-cinematic-overlay");
+    if (!overlay) return;
+    overlay.innerHTML = overlay.innerHTML
+      .replace(/GDL-TOKEN-/g, "GDL-10000PTS-")
+      .replace(/GDL-1000PTS-/g, "GDL-10000PTS-")
+      .replace(/EXTREME TOKEN!/gi, "10000 LIST POINTS!")
+      .replace(/Extreme Token/gi, "10000 List Points")
+      .replace(/1,?000 List Points/gi, "10000 List Points");
+    document.getElementById("tcg-cine-close-btn")?.addEventListener("click", () => {
+      overlay.remove();
+      document.querySelector(".tcg-button-tear-clone")?.remove();
+      document.querySelector(".tcg-gold-screen-flash")?.remove();
+    });
+  };
+})();
