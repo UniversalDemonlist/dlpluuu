@@ -4731,7 +4731,6 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   font-size: 1.65rem !important;
 }
 
-/* CSS-only diagonal pierce slash across the revealed card */
 .tcg-cine-card-wrap {
   position: relative;
   overflow: visible;
