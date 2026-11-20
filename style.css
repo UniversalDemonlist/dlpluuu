@@ -4770,3 +4770,177 @@ html body:not(.dark):has(#tcg.active):not(:has(#old-bg-toggle:checked)) {
   opacity: 0;
   animation: cssOnlyPierceSlash 0.85s cubic-bezier(0.16, 1, 0.3, 1) 1.95s forwards;
 }
+
+.tcg-godpack-banner,
+.tcg-cine-rays,
+.tcg-insane-rays,
+.tcg-button-tear-clone {
+  display: none !important;
+}
+
+.tcg-card {
+  aspect-ratio: 5 / 7 !important;
+  border-radius: 10px !important;
+  border: 2px solid var(--border-subtle) !important;
+  background: var(--bg-card) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  animation: none !important;
+  filter: none !important;
+  transition: transform 0.16s ease, border-color 0.16s ease !important;
+}
+
+.tcg-card.owned:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.tcg-card-header {
+  background: var(--bg-input) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  border-radius: 0 !important;
+  padding: 8px 12px !important;
+  color: var(--text-muted) !important;
+  text-shadow: none !important;
+}
+
+.tcg-card.rarity-mythic .tcg-card-header span:first-child::before,
+.tcg-card.rarity-legendary .tcg-card-header span:first-child::before,
+.tcg-card.rarity-epic .tcg-card-header span:first-child::before {
+  content: none !important;
+}
+
+.tcg-card img {
+  border-top: none !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  box-shadow: none !important;
+}
+
+.tcg-card-body {
+  background: var(--bg-card) !important;
+  border-top: none !important;
+  border-radius: 0 !important;
+  padding: 12px !important;
+}
+
+.tcg-card-title {
+  background: none !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+  color: var(--text-main) !important;
+}
+
+.tcg-card-footer {
+  border-top: 1px solid var(--border-subtle) !important;
+  color: var(--text-muted) !important;
+}
+
+.tcg-card.rarity-rare { border-color: #38bdf8 !important; }
+.tcg-card.rarity-rare .tcg-card-header { color: #38bdf8 !important; }
+.tcg-card.rarity-epic { border-color: #a855f7 !important; }
+.tcg-card.rarity-epic .tcg-card-header { color: #c084fc !important; }
+.tcg-card.rarity-legendary { border-color: #eab308 !important; }
+.tcg-card.rarity-legendary .tcg-card-header { color: #facc15 !important; }
+.tcg-card.rarity-mythic { border-color: #ef4444 !important; }
+.tcg-card.rarity-mythic .tcg-card-header { color: #f87171 !important; }
+.tcg-card.gold { border-color: #f59e0b !important; }
+
+.tcg-card.holo {
+  animation: none !important;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2) !important;
+}
+
+.tcg-card.holo::after {
+  opacity: 0.35;
+}
+
+.tcg-holo-tag,
+.tcg-gold-tag {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.tcg-gold-tag { border-color: #eab308 !important; color: #facc15 !important; }
+.tcg-holo-tag { border-color: #38bdf8 !important; color: #38bdf8 !important; }
+
+#tcg-cinematic-overlay,
+#tcg-cinematic-overlay.jackpot-mode {
+  background: rgba(9, 11, 17, 0.94) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.tcg-cine-title {
+  background: none !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+  color: var(--text-main) !important;
+  filter: none !important;
+  animation: none !important;
+  font-size: 1.65rem !important;
+}
+
+@keyframes cssPreTearLeft {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: translate(-54%, -50%) rotate(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-135%, -85%) rotate(-22deg) scale(0.9);
+  }
+}
+
+@keyframes cssPreTearRight {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: translate(-46%, -50%) rotate(2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(35%, -15%) rotate(22deg) scale(0.9);
+  }
+}
+
+#tcg-cinematic-overlay::before,
+#tcg-cinematic-overlay::after {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 336px;
+  border-radius: 10px;
+  background:
+    url("ne.png") center / 52px 52px no-repeat,
+    linear-gradient(155deg, var(--bg-card) 0%, var(--bg-input) 100%);
+  border: 2px solid var(--border-accent);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  z-index: 99999998;
+  opacity: 0;
+}
+
+#tcg-cinematic-overlay::before {
+  clip-path: polygon(0 0, 56% 0, 48% 25%, 58% 50%, 46% 75%, 54% 100%, 0 100%);
+  animation: cssPreTearLeft 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+#tcg-cinematic-overlay::after {
+  clip-path: polygon(56% 0, 100% 0, 100% 100%, 54% 100%, 46% 75%, 58% 50%, 48% 25%);
+  animation: cssPreTearRight 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
